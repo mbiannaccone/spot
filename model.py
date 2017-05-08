@@ -2,7 +2,6 @@
 
 from flask_sqlalchemy import SQLAlchemy
 import correlation
-from datetime import datetime
 
 db = SQLAlchemy()
 
@@ -10,8 +9,8 @@ db = SQLAlchemy()
 # Model definitions
 
 
-class Users(db.Model):
-    """Users of the site."""
+class User(db.Model):
+    """A user of the site."""
 
     __tablename__ = "users"
 
@@ -23,12 +22,14 @@ class Users(db.Model):
     zipcode = db.Column(db.String(15), nullable=False)
     phone = db.Column(db.String(25))
 
+    breeder = db.relationship('Breeder', uselist=False, backref='user')
+
     def __repr__(self):
         return '<User %s, email: %s>' % (self.user_id, self.email)
 
 
-class Breeders(db.Model):
-    """Breeders on the site."""
+class Breeder(db.Model):
+    """A breeder on the site."""
 
     __tablename__ = "breeders"
 
@@ -44,8 +45,8 @@ class Breeders(db.Model):
         return '<Breeder %s, name: %s>' % (self.user_id, self.name)
 
 
-class BreederPhotos(db.Model):
-    """Photos for the breeders homepage."""
+class BreederPhoto(db.Model):
+    """A photo for the breeder's homepage."""
 
     __tablename__ = "breeder_photos"
 
@@ -54,12 +55,14 @@ class BreederPhotos(db.Model):
     photo = db.Column(db.String(200), nullable=False)
     caption = db.Column(db.String(500))
 
+    breeder = db.relationship('Breeder', backref='photos')
+
     def __repr__(self):
         return '<Photo %s, user_id: %s>' % (self.photo_id, self.user_id)
 
 
-class BlogPosts(db.Model):
-    """Blog posts from the breeder."""
+class Blog(db.Model):
+    """A blog post from the breeder."""
 
     __tablename__ = "blog_posts"
 
@@ -69,14 +72,16 @@ class BlogPosts(db.Model):
     category = db.Column(db.String(25), nullable=False)
     post = db.Column(db.String(5000), nullable=False)
 
+    breeder = db.relationship('Breeder', backref='blogs')
+
     def __repr__(self):
         return '<Blog Post %s, user_id: %s, category: %s' % (self.blog_id,
                                                              self.user_id,
                                                              self.category)
 
 
-class Awards(db.Model):
-    """Certifications/Awards the breeder has won."""
+class Award(db.Model):
+    """A certification/award that the breeder has won."""
 
     __tablename__ = "awards"
 
@@ -87,6 +92,9 @@ class Awards(db.Model):
     description = db.Column(db.String(400))
     date = db.Column(db.DateTime)
 
+    breeder = db.relationship('Breeder', backref='awards')
+    dog = db.relationship('Dog', backref='awards')
+
     def __repr__(self):
         return '<Award %s, user_id: %s, dog_id: %s, name: %s>' % (self.award_id,
                                                                   self.user_id,
@@ -94,8 +102,8 @@ class Awards(db.Model):
                                                                   self.name)
 
 
-class Litters(db.Model):
-    """Litters of puppies from a breeder."""
+class Litter(db.Model):
+    """A litter of puppies from a breeder."""
 
     __tablename__ = "litters"
 
@@ -105,9 +113,10 @@ class Litters(db.Model):
     date_born = db.Column(db.DateTime)
     date_available = db.Column(db.DateTime)
     description = db.Column(db.String(1000))
-    dam_id = db.Column(db.Integer, db.ForeignKey('dogs.dog_id'))
-    sire_id = db.Column(db.Integer, db.ForeignKey('dogs.dog_id'))
     num_pups = db.Column(db.Integer)
+
+    breeder = db.relationship('Breeder', backref='litters')
+    dogs = db.relationship('Dog', secondary="dog_litter", backref="litters")
 
     def __repr__(self):
         return '<Litter %s, user_id: %s, breed: %s>' % (self.litter_id,
@@ -115,8 +124,8 @@ class Litters(db.Model):
                                                         self.breed)
 
 
-class LitterPhotos(db.Model):
-    """Photos of litters for a litter's homepage."""
+class LitterPhoto(db.Model):
+    """A photo of a litter."""
 
     __tablename__ = "litter_photos"
 
@@ -125,13 +134,15 @@ class LitterPhotos(db.Model):
     photo = db.Column(db.String(200), nullable=False)
     caption = db.Column(db.String(500))
 
+    litter = db.relationship('Litter', backref='photos')
+
     def __repr__(self):
         return '<Litter Photo %s, litter_id: %s>' % (self.photo_id,
                                                      self.litter_id)
 
 
-class Pups(db.Model):
-    """Individual puppies from a litter."""
+class Pup(db.Model):
+    """A puppy from a litter."""
 
     __tablename__ = "pups"
 
@@ -139,9 +150,12 @@ class Pups(db.Model):
     litter_id = db.Column(db.Integer, db.ForeignKey('litters.litter_id'))
     name = db.Column(db.String(50))
     available = db.Column(db.String(1), default='y')  # once taken, update to n
-    gender = db.Column(db.String(1), db.ForeignKey('genders.gender_id'))
+    gender_id = db.Column(db.String(1), db.ForeignKey('genders.gender_id'))
     description = db.Column(db.String(1000))
     price = db.Column(db.Float)
+
+    litter = db.relationship('Litter', backref='pups')
+    gender = db.relationship('Gender', backref='pups')
 
     def __repr__(self):
         return '<Pup %s, name: %s, litter_id: %s>' % (self.pup_id,
@@ -149,8 +163,8 @@ class Pups(db.Model):
                                                       self.litter_id)
 
 
-class PupPhotos(db.Model):
-    """Photos of individual puppies."""
+class PupPhoto(db.Model):
+    """A photo of a puppy."""
 
     __tablename__ = "pup_photos"
 
@@ -159,12 +173,29 @@ class PupPhotos(db.Model):
     photo = db.Column(db.String(200), nullable=False)
     caption = db.Column(db.String(500))
 
+    pup = db.relationship('Pup', backref='photos')
+
     def __repr__(self):
         return '<Pup Photo %s, pup_id: %s>' % (self.photo_id, self.pup_id)
 
 
-class Dogs(db.Model):
-    """Individual dams and sires owned by the breeder."""
+class DogLitter(db.Model):
+    """Association table to connect Dog and Litter."""
+
+    __tablename__ = "dog_litter"
+
+    doglitter_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    litter_id = db.Column(db.Integer, db.ForeignKey('litters.litter_id'))
+    dog_id = db.Column(db.Integer, db.ForeignKey('dogs.dog_id'))
+
+    def __repr__(self):
+        return '<DogLitter %s, litter_id: %s, dog_id: %s>' % (self.doglitter_id,
+                                                              self.litter_id,
+                                                              self.dog_id)
+
+
+class Dog(db.Model):
+    """A dam and sire owned by the breeder."""
 
     __tablename__ = "dogs"
 
@@ -172,8 +203,10 @@ class Dogs(db.Model):
     name = db.Column(db.String(50))
     litter_id = db.Column(db.Integer, db.ForeignKey('litters.litter_id'))
     date_born = db.Column(db.DateTime)
-    gender = db.Column(db.String(1), db.ForeignKey('genders.gender_id'))
+    gender_id = db.Column(db.String(1), db.ForeignKey('genders.gender_id'))
     description = db.Column(db.String(1000))
+
+    gender = db.relationship('Gender', backref='dogs')
 
     def __repr__(self):
         return '<Dog %s, name: %s, gender: %s>' % (self.dog_id,
@@ -181,8 +214,8 @@ class Dogs(db.Model):
                                                    self.gender)
 
 
-class DogPhotos(db.Model):
-    """Photos of individual dogs."""
+class DogPhoto(db.Model):
+    """A phogo of a dog(dam or sire)."""
 
     __tablename__ = "dog_photos"
 
@@ -191,12 +224,14 @@ class DogPhotos(db.Model):
     photo = db.Column(db.String(200), nullable=False)
     caption = db.Column(db.String(500))
 
+    dog = db.relationship('Dog', backref='photos')
+
     def __repr__(self):
         return '<Dog Photo %s, dog_id: %s>' % (self.photo_id, self.dog_id)
 
 
-class Genders(db.Model):
-    """Genders (male or female) for pups and dogs."""
+class Gender(db.Model):
+    """A gender (male or female) for pups and dogs."""
 
     __tablename__ = "genders"
 
@@ -207,8 +242,8 @@ class Genders(db.Model):
         return '<Gender %s, %s>' % (self.gender_id, self.gender)
 
 
-class Events(db.Model):
-    """Breeder events."""
+class Event(db.Model):
+    """A breeder events."""
 
     __tablename__ = "events"
 
@@ -218,14 +253,16 @@ class Events(db.Model):
     description = db.Column(db.String(1000))
     date = db.Column(db.DateTime)
 
+    breeder = db.relationship('Breeder', backref='events')
+
     def __repr__(self):
         return '<Event %s, user_id: %s, name: %s>' % (self.event_id,
                                                       self.user_id,
                                                       self.name)
 
 
-class EventPhotos(db.Model):
-    """Photos from breeder events."""
+class EventPhoto(db.Model):
+    """A photo from a breeder event."""
 
     __tablename__ = "event_photos"
 
@@ -233,6 +270,8 @@ class EventPhotos(db.Model):
     event_id = db.Coumn(db.Integer, db.ForeignKey('events.event_id'))
     photo = db.Column(db.String(200), nullable=False)
     caption = db.Column(db.String(500))
+
+    event = db.relationship('Event', backref='photos')
 
     def __repr__(self):
         return '<Event Photo %s, event_id: %s>' % (self.photo_id, self.event_id)
