@@ -1,7 +1,6 @@
 """Models and database functions for project."""
 
 from flask_sqlalchemy import SQLAlchemy
-import correlation
 
 db = SQLAlchemy()
 
@@ -331,6 +330,7 @@ class BreedChar(db.Model):
     breedchar_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     breed_id = db.Column(db.Integer, db.ForeignKey('breeds.breed_id'))
     char_id = db.Column(db.Integer, db.ForeignKey('chars.char_id'))
+    description = db.Column(db.String(5000))
 
     breed = db.relationship('Breed', backref='breed_chars')
     char = db.relationship('Char', backref='breed_chars')
