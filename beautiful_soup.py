@@ -44,6 +44,8 @@ def get_characteristics(url):
         char_list.append(item.parent.get_text(strip=True))
     return char_list
 
+affen_soup = beautiful_soup('http://www.akc.org/dog-breeds/affenpinscher')
+
 
 def parse_characteristics(char_list):
     """Parses through a list of char html and saves facts to a dictionary."""

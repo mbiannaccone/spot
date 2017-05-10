@@ -275,10 +275,12 @@ class Breed(db.Model):
     akc_url = db.Column(db.String(100))
     group_id = db.Column(db.Integer, db.ForeignKey('groups.group_id'))
     size_id = db.Column(db.Integer, db.ForeignKey('sizes.size_id'))
+    energy_id = db.Column(db.Integer, db.ForeignKey('energies.energy_id'))
     description = db.Column(db.String(500))
 
     group = db.relationship('Group', backref='breeds')
     size = db.relationship('Size', backref='breeds')
+    energy = db.relationship('Energy', backref='breeds')
 
     def __repr__(self):
         return '<Breed %s, name: %s>' % (self.breed_id, self.name)
@@ -303,10 +305,22 @@ class Size(db.Model):
     __tablename__ = "sizes"
 
     size_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    name = db.Column(db.String(6), nullable=False)
+    size = db.Column(db.String(6), nullable=False)
 
     def __repr__(self):
-        return '<Size %s>' % (self.name)
+        return '<Size %s>' % (self.size)
+
+
+class Energy(db.Model):
+    """A breed energy level."""
+
+    __tablename__ = "energies"
+
+    energy_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    energy = db.Column(db.String(6), nullable=False)
+
+    def __repr__(self):
+        return '<Energy %s>' % (self.energy)
 
 
 class BreedChar(db.Model):
