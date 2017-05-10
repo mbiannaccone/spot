@@ -33,8 +33,9 @@ class Breeder(db.Model):
 
     __tablename__ = "breeders"
 
-    # do i need to also designate as primary key?
-    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
+    user_id = db.Column(db.Integer,
+                        db.ForeignKey('users.user_id'),
+                        primary_key=True)
     bio = db.Column(db.String(5000))
     name = db.Column(db.String(100))
     address = db.Column(db.String(200))
@@ -109,14 +110,17 @@ class Litter(db.Model):
 
     litter_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('breeders.user_id'))
-    breed = db.Column(db.String(100), nullable=False)
+    breed_id = db.Column(db.Integer, db.ForeignKey('breeds.breed_id'))
     date_born = db.Column(db.DateTime)
     date_available = db.Column(db.DateTime)
     description = db.Column(db.String(1000))
     num_pups = db.Column(db.Integer)
+    sire_id = db.Columnm(db.Integer, db.ForeignKey('dogs.dog_id'))
+    dam_id = db.Columnm(db.Integer, db.ForeignKey('dogs.dog_id'))
 
+    dog = db.relationship('Dog', backref='litters')
     breeder = db.relationship('Breeder', backref='litters')
-    dogs = db.relationship('Dog', secondary="dog_litter", backref="litters")
+    breed = db.relationship('Breed', backref='litters')
 
     def __repr__(self):
         return '<Litter %s, user_id: %s, breed: %s>' % (self.litter_id,
@@ -179,29 +183,13 @@ class PupPhoto(db.Model):
         return '<Pup Photo %s, pup_id: %s>' % (self.photo_id, self.pup_id)
 
 
-class DogLitter(db.Model):
-    """Association table to connect Dog and Litter."""
-
-    __tablename__ = "dog_litter"
-
-    doglitter_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    litter_id = db.Column(db.Integer, db.ForeignKey('litters.litter_id'))
-    dog_id = db.Column(db.Integer, db.ForeignKey('dogs.dog_id'))
-
-    def __repr__(self):
-        return '<DogLitter %s, litter_id: %s, dog_id: %s>' % (self.doglitter_id,
-                                                              self.litter_id,
-                                                              self.dog_id)
-
-
 class Dog(db.Model):
-    """A dam and sire owned by the breeder."""
+    """A dam or sire owned by the breeder."""
 
     __tablename__ = "dogs"
 
     dog_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     name = db.Column(db.String(50))
-    litter_id = db.Column(db.Integer, db.ForeignKey('litters.litter_id'))
     date_born = db.Column(db.DateTime)
     gender_id = db.Column(db.String(1), db.ForeignKey('genders.gender_id'))
     description = db.Column(db.String(1000))
@@ -275,6 +263,78 @@ class EventPhoto(db.Model):
 
     def __repr__(self):
         return '<Event Photo %s, event_id: %s>' % (self.photo_id, self.event_id)
+
+
+class Breed(db.Model):
+    """A dog breed."""
+
+    __tablename__ = "breeds"
+
+    breed_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    name = db.Column(db.String(50), nullable=False)
+    akc_url = db.Column(db.String(100))
+    group_id = db.Column(db.Integer, db.ForeignKey('groups.group_id'))
+    size_id = db.Column(db.Integer, db.ForeignKey('sizes.size_id'))
+    description = db.Column(db.String(500))
+
+    group = db.relationship('Group', backref='breeds')
+    size = db.relationship('Size', backref='breeds')
+
+    def __repr__(self):
+        return '<Breed %s, name: %s>' % (self.breed_id, self.name)
+
+
+class Group(db.Model):
+    """A breed group."""
+
+    __tablename__ = "groups"
+
+    group_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    name = db.Column(db.String(50), nullable=False)
+    description = db.Column(db.String(2000))
+
+    def __repr__(self):
+        return '<Group %s, name: %s>' % (self.group_id, self.name)
+
+
+class Size(db.Model):
+    """A breed size."""
+
+    __tablename__ = "sizes"
+
+    size_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    name = db.Column(db.String(6), nullable=False)
+
+    def __repr__(self):
+        return '<Size %s>' % (self.name)
+
+
+class BreedChar(db.Model):
+    """A breed's characteristic."""
+
+    __tablename__ = "breed_chars"
+
+    breedchar_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    breed_id = db.Column(db.Integer, db.ForeignKey('breeds.breed_id'))
+    char_id = db.Column(db.Integer, db.ForeignKey('chars.char_id'))
+
+    breed = db.relationship('Breed', backref='breed_chars')
+    char = db.relationship('Char', backref='breed_chars')
+
+    def __repr__(self):
+        return '<Breed_id: %s, Char_id: %s>' % (self.breed_id, self.char_id)
+
+
+class Char(db.Model):
+    """A characteristic."""
+
+    __tablename__ = "chars"
+
+    char_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    char = db.Column(db.String(100))
+
+    def __repr__(self):
+        return '<Char: %s>' % (self.char)
 
 
 ##############################################################################

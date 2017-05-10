@@ -29,6 +29,8 @@ HERDING_GROUP = ['Australian Cattle Dog',
                  'Spanish Water Dog',
                  'Swedish Vallhund']
 
+SPORTING_GROUP_DESCRIPTION = "Naturally active and alert, Sporting dogs make likeable, well-rounded companions. Members of the Group include pointers, retrievers, setters and spaniels. Remarkable for their instincts in water and woods, many of these breeds actively continue to participate in hunting and other field activities. Potential owners of Sporting dogs need to realize that most require regular, invigorating exercise."
+
 HERDING_GROUP_DESCRIPTION = "The Herding Group, created in 1983, is the newest AKC classification; its members were formerly members of the Working Group. All breeds share the fabulous ability to control the movement of other animals. A remarkable example is the low-set Corgi, perhaps one foot tall at the shoulders, that can drive a herd of cows many times its size to pasture by leaping and nipping at their heels. The vast majority of Herding dogs, as household pets, never cross paths with a farm animal. Nevertheless, pure instinct prompts many of these dogs to gently herd their owners, especially the children of the family. In general, these intelligent dogs make excellent companions and respond beautifully to training exercises."
 
 HOUND_GROUP = ['Afghan Hound',
