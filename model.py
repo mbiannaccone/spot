@@ -153,7 +153,7 @@ class Pup(db.Model):
     pup_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     litter_id = db.Column(db.Integer, db.ForeignKey('litters.litter_id'))
     name = db.Column(db.String(50))
-    available = db.Column(db.String(1), default='y')  # once taken, update to n
+    available = db.Column(db.Boolean, default=True)
     gender_id = db.Column(db.String(1), db.ForeignKey('genders.gender_id'))
     description = db.Column(db.String(1000))
     price = db.Column(db.Float)

@@ -1,9 +1,9 @@
 import requests
 from bs4 import BeautifulSoup
 
-breeds_info = {}
 
 def beautiful_soup(url):
+    """ Returns html from a website."""
     response = requests.get(url)
     html = response.content
     soup = BeautifulSoup(html, 'html.parser')
@@ -11,9 +11,11 @@ def beautiful_soup(url):
 
 
 def get_all_breeds():
+    """ Gets all breeds from akc home page and returns a dictionary with url."""
     url = "http://www.akc.org/dog-breeds/"
     breed_soup = beautiful_soup(url)
     breeds = breed_soup.findAll('option')
+    breeds_info = {}
 
     for breed in breeds:
         breed_name = breed.get_text()
@@ -30,10 +32,9 @@ def get_all_breeds():
                               'By Dog Breed']:
             breed_url = url+breed_name.replace(' ', '-').lower()
             breeds_info[breed_name] = breed_url
+            breeds_info['St. Bernard'] = 'http://www.akc.org/dog-breeds/st-bernard'
 
-get_all_breeds()
-
-all_groups = ['Australian Cattle Dog', 'Australian Shepherd', 'Bearded Collie', 'Beauceron', 'Belgian Malinois', 'Belgian Sheepdog', 'Belgian Tervuren', 'Bergamasco', 'Berger Picard', 'Border Collie', 'Bouvier des Flandres', 'Briard', 'Canaan Dog', 'Cardigan Welsh Corgi', 'Collie', 'Entlebucher Mountain Dog', 'Finnish Lapphund', 'German Shepherd Dog', 'Icelandic Sheepdog', 'Miniature American Shepherd', 'Norwegian Buhund', 'Old English Sheepdog', 'Pembroke Welsh Corgi', 'Polish Lowland Sheepdog', 'Puli', 'Pumi', 'Pyrenean Shepherd', 'Shetland Sheepdog', 'Spanish Water Dog', 'Swedish Vallhund', 'Afghan Hound', 'American English Coonhound', 'American Foxhound', 'Basenji', 'Basset Hound', 'Beagle', 'Black and Tan Coonhound', 'Bloodhound', 'Bluetick Coonhound', 'Borzoi', "Cirneco dell'Etna", 'Dachshund', 'English Foxhound', 'Greyhound', 'Harrier', 'Ibizan Hound', 'Irish Wolfhound', 'Norwegian Elkhound', 'Otterhound', 'Petit Basset Griffon Vendeen', 'Pharaoh Hound', 'Plott', 'Portuguese Podengo Pequeno', 'Redbone Coonhound', 'Rhodesian Ridgeback', 'Saluki', 'Scottish Deerhound', 'Sloughi', 'Treeing Walker Coonhound', 'Whippet', 'American Eskimo Dog', 'Bichon Frise', 'Boston Terrier', 'Bulldog', 'Chinese Shar-Pei', 'Chow Chow', 'Coton de Tulear', 'Dalmatian', 'Finnish Spitz', 'French Bulldog', 'Keeshond', 'Lhasa Apso', 'Lowchen', 'Norwegian Lundehund', 'Poodle', 'Schipperke', 'Shiba Inu', 'Tibetan Spaniel', 'Tibetan Terrier', 'Xoloitzcuintli', 'Airedale Terrier', 'American Hairless Terrier', 'American Staffordshire Terrier', 'Australian Terrier', 'Bedlington Terrier', 'Border Terrier', 'Bull Terrier', 'Cairn Terrier', 'Cesky Terrier', 'Dandie Dinmont Terrier', 'Glen of Imaal Terrier', 'Irish Terrier', 'Kerry Blue Terrier', 'Lakeland Terrier', 'Manchester Terrier', 'Miniature Bull Terrier', 'Miniature Schnauzer', 'Norfolk Terrier', 'Norwich Terrier', 'Parson Russell Terrier', 'Rat Terrier', 'Russell Terrier', 'Scottish Terrier', 'Sealyham Terrier', 'Skye Terrier', 'Smooth Fox Terrier', 'Soft Coated Wheaten Terrier', 'Staffordshire Bull Terrier', 'Welsh Terrier', 'West Highland White Terrier', 'Wire Fox Terrier', 'Affenpinscher', 'Brussels Griffon', 'Cavalier King Charles Spaniel', 'Chihuahua', 'Chinese Crested', 'English Toy Spaniel', 'Havanese', 'Italian Greyhound', 'Japanese Chin', 'Maltese', 'Manchester Terrier', 'Miniature Pinscher', 'Papillon', 'Pekingese', 'Pomeranian', 'Poodle', 'Pug', 'Shih Tzu', 'Silky Terrier', 'Toy Fox Terrier', 'Yorkshire Terrier', 'Akita', 'Alaskan Malamute', 'Anatolian Shepherd Dog', 'Bernese Mountain Dog', 'Black Russian Terrier', 'Boerboel', 'Boxer', 'Bullmastiff', 'Cane Corso', 'Chinook', 'Doberman Pinscher', 'Dogue de Bordeaux', 'German Pinscher', 'Giant Schnauzer', 'Great Dane', 'Great Pyrenees', 'Greater Swiss Mountain Dog', 'Komondor', 'Kuvasz', 'Leonberger', 'Mastiff', 'Neapolitan Mastiff', 'Newfoundland', 'Portuguese Water Dog', 'Rottweiler', 'Samoyed', 'Siberian Husky', 'Standard Schnauzer', 'Tibetan Mastiff', 'St. Bernard', 'American Leopard Hound', 'Appenzeller Sennenhunde', 'Azawakh', 'Barbet', 'Basset Fauve de Bretagne', 'Belgian Laekenois', 'Biewer Terrier', 'Bolognese', 'Bracco Italiano', 'Braque du Bourbonnais', 'Brazue Francais Pyrenean', 'Broholmer', 'Catahoula Leopard Dog', 'Caucasian Shepherd Dog', 'Central Asian Shepherd Dog', 'Czechoslovakian Vlcak', 'Danish-Swedish Farmdog', 'Deutscher Wachtelhund', 'Dogo Argentino', 'Drentsche Patrijshond', 'Drever', 'Dutch Shepherd', 'Estrela Mountain Dog', 'Eurasier', 'French Spaniel', 'German Longhaired Pointer', 'German Spitz', 'Grand Basset Griffon Vendeen', 'Hamiltonstovare', 'Hokkaido', 'Hovawart', 'Jagdterrier', 'Jindo', 'Kai Ken', 'Karelian Bear Dog', 'Kishu Ken', 'Kromfohrlander', 'Lancashire Heeler', 'Mudi', 'Nederlandse Kooikerhondje', 'Norrbottenspets', 'Perro de Presa Canario', 'Peruvian Inca Orchid', 'Portuguese Pondengo', 'Portuguese Pointer', 'Portuguese Sheepdog', 'Pudelpointer', 'Pyrenean Mastiff', 'Rafeiro do Alentejo', 'Russian Toy', 'Russian Tsvetnaya Bolonka', 'Schapendoes', 'Shikoku', 'Slovensky Cuvac', 'Slovensky Kopov', 'Small Munsterlander Pointer', 'Spanish Mastiff', 'Stabyhoun', 'Swedish Lapphund', 'Teddy Roosevelt Terrier', 'Thai Ridgeback', 'Tornjak', 'Tosa', 'Transylvanian Hound', 'Treeing Tennessee Brindle', 'Working Kelpie']
+    return breeds_info
 
 
 def get_characteristics(url):
@@ -44,36 +45,89 @@ def get_characteristics(url):
         char_list.append(item.parent.get_text(strip=True))
     return char_list
 
-affen_soup = beautiful_soup('http://www.akc.org/dog-breeds/affenpinscher')
 
-
-def parse_characteristics(char_list):
-    """Parses through a list of char html and saves facts to a dictionary."""
+def make_char_dict():
+    """ Takes char_list from get_characteristics function and makes a dictionary."""
     char_dict = {}
-    # Fun Fact - index 0
-    start = char_list[0].index('?') + 1
-    char_dict['Fun Fact'] = char_list[0][start:]
+    for breed, url in breeds_info.items():
+        char_dict[breed] = get_characteristics(url)
+    return char_dict
 
-    # History - index 1
-    year = char_list[1][7:11]
-    char_dict['History'] = year + " - " + char_list[1][11:]
 
-    # General Appearance - index 7
-    if char_list[7][:18] == 'General Appearance':
-        char_dict['General Appearance'] = char_list[7][18:]
+def make_breed_char_dict():
+    """ Makes dictionary of each breed and all its characteristics. """
+    # initializes breed_char_dict
+    breed_char_dict = {}
+    # adds each breed name in as a key, and an empty dictionary as a value
+    for breed in breeds_info:
+        breed_char_dict[breed] = {}
 
-    # Head - index 8
-    if char_list[8][:4] == 'Head':
-        char_dict['Head'] = "The head is" + char_list[8][13:]
+    for breed, chars in char_dict.items():
+        # Fun Fact
+        for char in chars:
+            if 'Did you know?' in char:
+                start = char.index('?') + 1
+                breed_char_dict[breed]['Fun Fact'] = char[start:].replace('Read More', '')
+        # History
+        for char in chars:
+            if 'History' in char[:10]:
+                start = char.index('History') + len('History')
+                year = char[start: start + 4]
+                breed_char_dict[breed]['History'] = year + " - " + char[start + 4:].replace('Read More', '')
+        # General Appearance
+        for char in chars:
+            if 'General Appearance' in char[:20]:
+                start = char.index('General Appearance') + len('General Appearance')
+                breed_char_dict[breed]['General Appearance'] = char[start:].replace('Read More', '')
+        # Head
+        for char in chars:
+            if 'Head' in char[:6]:
+                start = char.index('Head') + len('Head')
+                breed_char_dict[breed]['Head'] = char[start:].replace('Read More', '')
+        # Body
+        for char in chars:
+            if 'Body' in char[:6]:
+                start = char.index('Body') + len('Body')
+                breed_char_dict[breed]['Body'] = char[start:].replace('Read More', '')
+        # Forequarters
+        for char in chars:
+            if 'Forequarters' in char[:15]:
+                start = char.index('Forequarters') + len('Forequarters')
+                breed_char_dict[breed]['Forequarters'] = char[start:].replace('Read More', '')
+        # Hindquarters
+        for char in chars:
+            if 'Hindquarters' in char[:15]:
+                start = char.index('Hindquarters') + len('Hindquarters')
+                breed_char_dict[breed]['Hindquarters'] = char[start:].replace('Read More', '')
+        # Grooming
+        for char in chars:
+            if '&Grooming' in char[:20]:
+                start = char.index('&Grooming') + len('&Grooming')
+                breed_char_dict[breed]['Grooming'] = char[start:].replace('Read More', '')
+        # Coat
+        for char in chars:
+            if 'Coat' in char[:6] and 'Grooming' not in char[:20]:
+                start = char.index('Coat') + len('Coat')
+                breed_char_dict[breed]['Coat'] = char[start:].replace('Read More', '')
+        # Nutrition & Feeding
+        for char in chars:
+            if 'Nutrition& Feeding' in char[:30]:
+                start = char.index('Nutrition& Feeding') + len('Nutrition& Feeding')
+                breed_char_dict[breed]['Nutrition & Feeding'] = char[start:].replace('Read More', '')
+        # Exercise
+        for char in chars:
+            if 'Exercise' in char[:10]:
+                start = char.index('Exercise') + len('Exercise')
+                breed_char_dict[breed]['Exercise'] = char[start:].replace('Read More', '')
+        # Health
+        for char in chars:
+            if 'Health' in char[:8]:
+                start = char.index('Health') + len('Health')
+                breed_char_dict[breed]['Health'] = char[start:].replace('Read More', '')
 
-    # Body - index 9
-    if char_list[9][:4] == 'Body':
-        char_dict['Body'] = char_list[9][4:]
+    return breed_char_dict
 
-    print char_dict
 
-afghan = get_characteristics('http://www.akc.org/dog-breeds/afghan-hound')
-parse_characteristics(afghan)
-
-affen = get_characteristics('http://www.akc.org/dog-breeds/affenpinscher')
-parse_characteristics(affen)
+breeds_info = get_all_breeds()
+char_dict = make_char_dict()
+breed_char_dict = make_breed_char_dict()
