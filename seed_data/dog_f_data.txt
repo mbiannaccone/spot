@@ -1,4 +1,3 @@
-name	date_born	gender
 Mable	4/30/2013	M
 Jaclyn	8/16/2009	M
 Agretha	7/8/2012	M

@@ -1,4 +1,3 @@
-name	available	gender	price
 Aleda	false	M	5236
 Beryl	false	F	13434
 Hayley	false	M	10863

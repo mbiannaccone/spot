@@ -7,7 +7,7 @@ from model import (Award, Blog, Breed, BreedChar, Breeder, BreederPhoto, Char,
 from model import connect_to_db, db
 from server import app
 from datetime import datetime, timedelta
-from random import randint
+from random import randint, choice
 
 
 def load_genders():
@@ -125,16 +125,34 @@ def load_breeds():
     for row in open("seed_data/breed_data.txt"):
         row = row.rstrip().split('\t')
         name, descr, group, size, energy, url, pic = row
-        group_dict = {'Sporting Group': 1, 'Herding Group': 2, 'Hound Group': 3,
-                      'Non-Sporting Group': 4, 'Terrier Group': 5, 'Toy Group': 6,
-                      'Working Group': 7, 'Foundation Stock Service': 8}
-        group_id = group_dict[group]
+        group_obj = Group.query.filter(Group.name == group).one()
 
-        breed = Breed(name=name, akc_url=url, group_id=group_id, size_id=size,
-                      energy_id=energy, description=descr, photo=pic)
+        breed = Breed(name=name, akc_url=url, group_id=group_obj.group_id,
+                      size_id=size, energy_id=energy, description=descr, photo=pic)
         db.session.add(breed)
 
     db.session.commit()
+
+
+def load_dogs():
+    """ Loads in dogs from dog_f_data.txt and dog_m_data.txt. """
+
+    print "Dogs"
+
+    def load_dog_file(file_name, gender_id):
+        for row in open(file_name):
+            row = row.rstrip().split('\t')
+            name, date, gender = row
+            date_born = datetime.strptime(date, "%m/%d/%Y")
+
+            dog = Dog(name=name, date_born=date_born, gender_id=gender_id,
+                      description="I'm super cute.")
+            db.session.add(dog)
+
+        db.session.commit()
+
+    load_dog_file("seed_data/dog_f_data.txt", 'f')
+    load_dog_file("seed_data/dog_m_data.txt", 'm')
 
 
 def load_litters():
@@ -148,10 +166,13 @@ def load_litters():
         date_available = date_born + timedelta(days=56)
         num_pups = row[3]
         descr = 'so cute'
-        user_id = randint(1, 560)
-        breed_id = randint(1, 256)
-        sire_id = randint(501, 1000)
-        dam_id = randint(1, 500)
+
+        user_id = choice([i[0] for i in db.session.query(Breeder.user_id).all()])
+        breed_id = choice([i[0] for i in db.session.query(Breed.breed_id).all()])
+        sire_id = choice([i[0] for i in db.session.query(Dog.dog_id)
+                         .filter(Dog.gender_id == 'm').all()])
+        dam_id = choice([i[0] for i in db.session.query(Dog.dog_id)
+                         .filter(Dog.gender_id == 'f').all()])
 
         litter = Litter(user_id=user_id, breed_id=breed_id, date_born=date_born,
                         date_available=date_available, description=descr,
@@ -162,6 +183,64 @@ def load_litters():
     db.session.commit()
 
 
+def load_pups():
+    """ Loads in puppies from pup_data.txt. """
+
+    print "Pups"
+
+    for row in open("seed_data/pup_data.txt"):
+        row = row.rstrip().split('\t')
+        name, avail, gender, price = row
+        gender_id = gender.lower()
+
+        litter_min_max = db.session.query(func.min(Litter.litter_id),
+                                          func.max(Litter.litter_id)).one()
+        litter_id = randint(litter_min_max[0], litter_min_max[-1])
+
+        if avail == 'false':
+            available = False
+        else:
+            available = True
+
+        pup = Pup(litter_id=litter_id, name=name, available=available,
+                  gender_id=gender_id, description="I'm adorable!", price=price)
+        db.session.add(pup)
+
+    db.session.commit()
+
+
+def load_breedchars():
+    """ Loads in breed chars from breedchar_data.txt. """
+
+    print "BreedChars"
+
+    for row in open("seed_data/breedchar_data.txt"):
+        row = row.rstrip().split('\t')
+        breed, char, descr = row
+        breed_obj = Breed.query.filter(Breed.name == breed).one()
+        char_obj = Char.query.filter(Char.char == char).one()
+
+        breedchar = BreedChar(breed_id=breed_obj.breed_id, char_id=char_obj.char_id,
+                              description=descr)
+        db.session.add(breedchar)
+
+    db.session.commit()
+
+
+def load_events():
+    """ Loads in events from event_data.txt. """
+
+    print "Events"
+
+    for row in opn("seed_data/event_data.txt"):
+        row = row.rstrip().split('\t')
+        name, descr, date = row
+
+        breeder_min_max = db.session.query(func.min(Breeder.user_id),
+                                           func.max(Breeder.user_id)).one()
+        user_id = randint(breeder_min_max[0], breeder_min_max[1])
+
+
 if __name__ == "__main__":
     connect_to_db(app)
 
@@ -169,12 +248,15 @@ if __name__ == "__main__":
     db.create_all()
 
     # Seed the tables with data
-    load_genders()
-    load_energies()
-    load_chars()
-    load_sizes()
-    load_groups()
-    load_users()
-    load_breeders()
-    load_breeds()
-    # load_litters()    
+    # load_genders()
+    # load_energies()
+    # load_chars()
+    # load_sizes()
+    # load_groups()
+    # load_users()
+    # load_breeders()
+    # load_breeds()
+    # load_dogs()
+    # load_litters()
+    # load_pups()
+    # load_breedchars()

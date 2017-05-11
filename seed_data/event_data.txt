@@ -1,4 +1,3 @@
-name	description	date
 It	Vision-oriented object-oriented projection	1/30/2017
 Ronstring	Implemented systematic solution	11/17/2016
 Job	Quality-focused solution-oriented solution	7/6/2016
