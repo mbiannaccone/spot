@@ -6,7 +6,7 @@ from model import (Award, Blog, Breed, BreedChar, Breeder, BreederPhoto, Char,
 from model import connect_to_db, db
 from server import app
 from datetime import datetime, timedelta
-from random import choice
+from random import choice, randint
 
 
 def load_genders():
@@ -101,10 +101,12 @@ def load_breeders():
 
     print "Breeders"
 
+    all_users = [i[0] for i in db.session.query(User.user_id).all()]
+
     for row in open("seed_data/breeder_data.txt"):
         row = row.rstrip().split('\t')
         bio, name, addy, ph, em = row
-        user_id = choice([i[0] for i in db.session.query(User.user_id).all()])
+        user_id = all_users.pop(randint(0, len(all_users) - 1))
 
         breeder = Breeder(bio=bio, name=name, address=addy, phone=ph[-13:],
                           email=em, user_id=user_id)
@@ -378,7 +380,7 @@ if __name__ == "__main__":
     load_pups()
     load_breedchars()
 
-    # These run mult times so that plenty of photos/events/awards for each
+    # These run mult times to make plenty of photos/events/awards for each
     load_events()
     load_events()
     load_events()
