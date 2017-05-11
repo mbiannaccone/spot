@@ -114,10 +114,11 @@ class Litter(db.Model):
     date_available = db.Column(db.DateTime)
     description = db.Column(db.String(1000))
     num_pups = db.Column(db.Integer)
-    sire_id = db.Columnm(db.Integer, db.ForeignKey('dogs.dog_id'))
-    dam_id = db.Columnm(db.Integer, db.ForeignKey('dogs.dog_id'))
+    sire_id = db.Column(db.Integer, db.ForeignKey('dogs.dog_id'))
+    dam_id = db.Column(db.Integer, db.ForeignKey('dogs.dog_id'))
 
-    dog = db.relationship('Dog', backref='litters')
+    sire_obj = db.relationship('Dog', foreign_keys=[sire_id])
+    dam_obj = db.relationship('Dog', foreign_keys=[dam_id])
     breeder = db.relationship('Breeder', backref='litters')
     breed = db.relationship('Breed', backref='litters')
 
@@ -254,7 +255,7 @@ class EventPhoto(db.Model):
     __tablename__ = "event_photos"
 
     photo_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    event_id = db.Coumn(db.Integer, db.ForeignKey('events.event_id'))
+    event_id = db.Column(db.Integer, db.ForeignKey('events.event_id'))
     photo = db.Column(db.String(200), nullable=False)
     caption = db.Column(db.String(500))
 
@@ -273,8 +274,8 @@ class Breed(db.Model):
     name = db.Column(db.String(50), nullable=False)
     akc_url = db.Column(db.String(100))
     group_id = db.Column(db.Integer, db.ForeignKey('groups.group_id'))
-    size_id = db.Column(db.Integer, db.ForeignKey('sizes.size_id'))
-    energy_id = db.Column(db.Integer, db.ForeignKey('energies.energy_id'))
+    size_id = db.Column(db.String(1), db.ForeignKey('sizes.size_id'))
+    energy_id = db.Column(db.String(1), db.ForeignKey('energies.energy_id'))
     description = db.Column(db.String(500))
 
     group = db.relationship('Group', backref='breeds')
@@ -303,7 +304,7 @@ class Size(db.Model):
 
     __tablename__ = "sizes"
 
-    size_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    size_id = db.Column(db.String(1), primary_key=True)
     size = db.Column(db.String(6), nullable=False)
 
     def __repr__(self):
@@ -315,7 +316,7 @@ class Energy(db.Model):
 
     __tablename__ = "energies"
 
-    energy_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    energy_id = db.Column(db.String(1), primary_key=True)
     energy = db.Column(db.String(6), nullable=False)
 
     def __repr__(self):

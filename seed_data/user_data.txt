@@ -1,4 +1,3 @@
-id	first_name	last_name	email	password	zipcode	phone
 2	Leonanie	Hedlestone	lhedlestone0@pcworld.com	TcVwgYA58uW	36527	47-(787)840-1361
 3	Mahmoud	Jansik	mjansik1@ebay.co.uk	QD6TfHxK2v	95363	86-(430)787-7898
 4	Starla	Josselsohn	sjosselsohn2@boston.com	jOyNMt	54474	46-(730)881-8888
