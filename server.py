@@ -3,9 +3,9 @@ from flask import (Flask, render_template, redirect, request, flash, session,
                    jsonify)
 from flask_debugtoolbar import DebugToolbarExtension
 from datetime import datetime
-from model import (Award, Blog, Breed, BreedChar, Breeder, BreederPhoto, Char,
-                   Dog, DogPhoto, Energy, Event, EventPhoto, Gender, Group,
-                   Litter, LitterPhoto, Pup, PupPhoto, Size, User)
+from model import (Award, Blog, Breed, BreedChar, Breeder, BreederPhoto, PupPhoto,
+                   Dog, DogPhoto, Energy, Event, EventPhoto, Gender, Group, Pup,
+                   Litter, LitterPhoto, Char, Size, User, BreedSpot, BreederSpot)
 from model import connect_to_db, db
 
 app = Flask(__name__)

@@ -32,9 +32,9 @@ class Breeder(db.Model):
 
     __tablename__ = "breeders"
 
-    user_id = db.Column(db.Integer,
-                        db.ForeignKey('users.user_id'),
-                        primary_key=True)
+    breeder_id = db.Column(db.Integer,
+                           db.ForeignKey('users.user_id'),
+                           primary_key=True)
     bio = db.Column(db.String(5000))
     name = db.Column(db.String(100))
     address = db.Column(db.String(200))
@@ -42,7 +42,7 @@ class Breeder(db.Model):
     email = db.Column(db.String(50), nullable=False)
 
     def __repr__(self):
-        return '<Breeder %s, name: %s>' % (self.user_id, self.name)
+        return '<Breeder %s, name: %s>' % (self.breeder_id, self.name)
 
 
 class BreederPhoto(db.Model):
@@ -51,14 +51,14 @@ class BreederPhoto(db.Model):
     __tablename__ = "breeder_photos"
 
     photo_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('breeders.user_id'))
+    breeder_id = db.Column(db.Integer, db.ForeignKey('breeders.breeder_id'))
     photo = db.Column(db.String(200), nullable=False)
     caption = db.Column(db.String(500))
 
     breeder = db.relationship('Breeder', backref='photos')
 
     def __repr__(self):
-        return '<Photo %s, user_id: %s>' % (self.photo_id, self.user_id)
+        return '<Photo %s, breeder_id: %s>' % (self.photo_id, self.breeder_id)
 
 
 class Blog(db.Model):
@@ -67,7 +67,7 @@ class Blog(db.Model):
     __tablename__ = "blog_posts"
 
     blog_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('breeders.user_id'))
+    breeder_id = db.Column(db.Integer, db.ForeignKey('breeders.breeder_id'))
     date = db.Column(db.DateTime)
     category = db.Column(db.String(25), nullable=False)
     post = db.Column(db.String(5000), nullable=False)
@@ -75,9 +75,9 @@ class Blog(db.Model):
     breeder = db.relationship('Breeder', backref='blogs')
 
     def __repr__(self):
-        return '<Blog Post %s, user_id: %s, category: %s' % (self.blog_id,
-                                                             self.user_id,
-                                                             self.category)
+        return '<Blog Post %s, breeder_id: %s, category: %s' % (self.blog_id,
+                                                                self.breeder_id,
+                                                                self.category)
 
 
 class Award(db.Model):
@@ -86,7 +86,7 @@ class Award(db.Model):
     __tablename__ = "awards"
 
     award_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('breeders.user_id'))
+    breeder_id = db.Column(db.Integer, db.ForeignKey('breeders.breeder_id'))
     dog_id = db.Column(db.Integer, db.ForeignKey('dogs.dog_id'))
     name = db.Column(db.String(100), nullable=False)
     description = db.Column(db.String(400))
@@ -96,10 +96,10 @@ class Award(db.Model):
     dog = db.relationship('Dog', backref='awards')
 
     def __repr__(self):
-        return '<Award %s, user_id: %s, dog_id: %s, name: %s>' % (self.award_id,
-                                                                  self.user_id,
-                                                                  self.dog_id,
-                                                                  self.name)
+        return '<Award %s, breeder_id: %s, dog_id: %s, name: %s>' % (self.award_id,
+                                                                     self.breeder_id,
+                                                                     self.dog_id,
+                                                                     self.name)
 
 
 class Litter(db.Model):
@@ -108,7 +108,7 @@ class Litter(db.Model):
     __tablename__ = "litters"
 
     litter_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('breeders.user_id'))
+    breeder_id = db.Column(db.Integer, db.ForeignKey('breeders.breeder_id'))
     breed_id = db.Column(db.Integer, db.ForeignKey('breeds.breed_id'))
     date_born = db.Column(db.DateTime)
     date_available = db.Column(db.DateTime)
@@ -117,15 +117,15 @@ class Litter(db.Model):
     sire_id = db.Column(db.Integer, db.ForeignKey('dogs.dog_id'))
     dam_id = db.Column(db.Integer, db.ForeignKey('dogs.dog_id'))
 
-    sire_obj = db.relationship('Dog', foreign_keys=[sire_id])
-    dam_obj = db.relationship('Dog', foreign_keys=[dam_id])
+    sire = db.relationship('Dog', foreign_keys=[sire_id])
+    dam = db.relationship('Dog', foreign_keys=[dam_id])
     breeder = db.relationship('Breeder', backref='litters')
     breed = db.relationship('Breed', backref='litters')
 
     def __repr__(self):
-        return '<Litter %s, user_id: %s, breed: %s>' % (self.litter_id,
-                                                        self.user_id,
-                                                        self.breed)
+        return '<Litter %s, breeder_id: %s, breed: %s>' % (self.litter_id,
+                                                           self.breeder_id,
+                                                           self.breed)
 
 
 class LitterPhoto(db.Model):
@@ -236,7 +236,7 @@ class Event(db.Model):
     __tablename__ = "events"
 
     event_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('breeders.user_id'))
+    breeder_id = db.Column(db.Integer, db.ForeignKey('breeders.breeder_id'))
     name = db.Column(db.String(100))
     description = db.Column(db.String(1000))
     date = db.Column(db.DateTime)
@@ -244,9 +244,9 @@ class Event(db.Model):
     breeder = db.relationship('Breeder', backref='events')
 
     def __repr__(self):
-        return '<Event %s, user_id: %s, name: %s>' % (self.event_id,
-                                                      self.user_id,
-                                                      self.name)
+        return '<Event %s, breeder_id: %s, name: %s>' % (self.event_id,
+                                                         self.breeder_id,
+                                                         self.name)
 
 
 class EventPhoto(db.Model):
@@ -353,8 +353,40 @@ class Char(db.Model):
         return '<Char: %s>' % (self.char)
 
 
+class BreederSpot(db.Model):
+    """A breeder that a user has spotted ('liked')."""
+
+    __tablename__ = "breeder_spots"
+
+    spot_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
+    breeder_id = db.Column(db.Integer, db.ForeignKey('breeders.breeder_id'))
+
+    user = db.relationship('User', backref='breeder_spots')
+    breeder = db.relationship('Breeder', backref='breeder_spots')
+
+    def __repr__(self):
+        return '<User %s, Breeder %s>' % (self.user_id, self.breeder_id)
+
+
+class BreedSpot(db.Model):
+    """A breed that a user has spotted ('liked')."""
+
+    __tablename__ = "breed_spots"
+
+    spot_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
+    breed_id = db.Column(db.Integer, db.ForeignKey('breeds.breed_id'))
+
+    user = db.relationship('User', backref='breed_spots')
+    breed = db.relationship('Breed', backref='breed_spots')
+
+    def __repr__(self):
+        return '<User %s, Breed %s>' % (self.user_id, self.breeder_id)
+
 ##############################################################################
 # Helper functions
+
 
 def connect_to_db(app):
     """Connect the database to our Flask app."""

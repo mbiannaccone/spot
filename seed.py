@@ -1,8 +1,8 @@
 """Utility file to store data in database."""
 
-from model import (Award, Blog, Breed, BreedChar, Breeder, BreederPhoto, Char,
-                   Dog, DogPhoto, Energy, Event, EventPhoto, Gender, Group,
-                   Litter, LitterPhoto, Pup, PupPhoto, Size, User)
+from model import (Award, Blog, Breed, BreedChar, Breeder, BreederPhoto, PupPhoto,
+                   Dog, DogPhoto, Energy, Event, EventPhoto, Gender, Group, Pup,
+                   Litter, LitterPhoto, Char, Size, User, BreedSpot, BreederSpot)
 from model import connect_to_db, db
 from server import app
 from datetime import datetime, timedelta
@@ -106,10 +106,10 @@ def load_breeders():
     for row in open("seed_data/breeder_data.txt"):
         row = row.rstrip().split('\t')
         bio, name, addy, ph, em = row
-        user_id = all_users.pop(randint(0, len(all_users) - 1))
+        breeder_id = all_users.pop(randint(0, len(all_users) - 1))
 
         breeder = Breeder(bio=bio, name=name, address=addy, phone=ph[-13:],
-                          email=em, user_id=user_id)
+                          email=em, breeder_id=breeder_id)
 
         db.session.add(breeder)
 
@@ -129,6 +129,44 @@ def load_breeds():
         breed = Breed(name=name, akc_url=url, group_id=group_obj.group_id,
                       size_id=size, energy_id=energy, description=descr, photo=pic)
         db.session.add(breed)
+
+    db.session.commit()
+
+
+def load_breeder_spots():
+    """ Randomly generates breeder spots for users. """
+
+    print "Breeder Spots"
+
+    all_users = [i[0] for i in db.session.query(User.user_id).all()]
+    all_breeders = [i[0] for i in db.session.query(Breeder.breeder_id).all()]
+    non_breeders = [i for i in all_users if i not in all_breeders]
+
+    for i in range(1, 1500):
+        user_id = choice(non_breeders)
+        breeder_id = choice(all_breeders)
+
+        breeder_spot = BreederSpot(user_id=user_id, breeder_id=breeder_id)
+        db.session.add(breeder_spot)
+
+    db.session.commit()
+
+
+def load_breed_spots():
+    """ Randomnly generates breed spots for users. """
+
+    print "Breed Spots"
+
+    all_users = [i[0] for i in db.session.query(User.user_id).all()]
+    all_breeders = [i[0] for i in db.session.query(Breeder.breeder_id).all()]
+    non_breeders = [i for i in all_users if i not in all_breeders]
+
+    for num in range(1, 1500):
+        user_id = choice(non_breeders)
+        breed_id = choice([i[0] for i in db.session.query(Breed.breed_id).all()])
+
+        breed_spot = BreedSpot(user_id=user_id, breed_id=breed_id)
+        db.session.add(breed_spot)
 
     db.session.commit()
 
@@ -165,14 +203,14 @@ def load_litters():
         date_available = date_born + timedelta(days=56)
         num_pups = row[3]
         descr = 'so cute'
-        user_id = choice([i[0] for i in db.session.query(Breeder.user_id).all()])
+        breeder_id = choice([i[0] for i in db.session.query(Breeder.breeder_id).all()])
         breed_id = choice([i[0] for i in db.session.query(Breed.breed_id).all()])
         sire_id = choice([i[0] for i in db.session.query(Dog.dog_id)
                          .filter(Dog.gender_id == 'm').all()])
         dam_id = choice([i[0] for i in db.session.query(Dog.dog_id)
                          .filter(Dog.gender_id == 'f').all()])
 
-        litter = Litter(user_id=user_id, breed_id=breed_id, date_born=date_born,
+        litter = Litter(breeder_id=breeder_id, breed_id=breed_id, date_born=date_born,
                         date_available=date_available, description=descr,
                         num_pups=num_pups, sire_id=sire_id, dam_id=dam_id)
 
@@ -230,10 +268,10 @@ def load_events():
     for row in open("seed_data/event_data.txt"):
         row = row.rstrip().split('\t')
         name, descr, date_str = row
-        user_id = choice([i[0] for i in db.session.query(Breeder.user_id).all()])
+        breeder_id = choice([i[0] for i in db.session.query(Breeder.breeder_id).all()])
         date = datetime.strptime(date_str, "%m/%d/%Y")
 
-        event = Event(user_id=user_id, name=name, description=descr, date=date)
+        event = Event(breeder_id=breeder_id, name=name, description=descr, date=date)
         db.session.add(event)
 
     db.session.commit()
@@ -248,10 +286,10 @@ def load_awards():
         row = row.rstrip().split('\t')
         name, descr, date_str = row
         date = datetime.strptime(date_str, "%m/%d/%Y")
-        user_id = choice([i[0] for i in db.session.query(Breeder.user_id).all()])
+        breeder_id = choice([i[0] for i in db.session.query(Breeder.breeder_id).all()])
         dog_id = choice([i[0] for i in db.session.query(Dog.dog_id).all()])
 
-        award = Award(user_id=user_id, dog_id=dog_id, name=name,
+        award = Award(breeder_id=breeder_id, dog_id=dog_id, name=name,
                       description=descr, date=date)
         db.session.add(award)
 
@@ -267,9 +305,9 @@ def load_blog_posts():
         row = row.rstrip().split('\t')
         cat, post, date_str = row
         date = datetime.strptime(date_str, "%m/%d/%Y")
-        user_id = choice([i[0] for i in db.session.query(Breeder.user_id).all()])
+        breeder_id = choice([i[0] for i in db.session.query(Breeder.breeder_id).all()])
 
-        blog = Blog(user_id=user_id, date=date, category=cat, post=post)
+        blog = Blog(breeder_id=breeder_id, date=date, category=cat, post=post)
         db.session.add(blog)
 
     db.session.commit()
@@ -283,10 +321,10 @@ def load_breeder_photo():
     for row in open("seed_data/photo_data.txt"):
         row = row.rstrip().split('\t')
         p, caption = row
-        user_id = choice([i[0] for i in db.session.query(Breeder.user_id).all()])
+        breeder_id = choice([i[0] for i in db.session.query(Breeder.breeder_id).all()])
         photo = 'http://www.randomdoggiegenerator.com/randomdoggie.php'
 
-        b_photo = BreederPhoto(user_id=user_id, photo=photo, caption=caption)
+        b_photo = BreederPhoto(breeder_id=breeder_id, photo=photo, caption=caption)
         db.session.add(b_photo)
 
     db.session.commit()
@@ -359,6 +397,7 @@ def load_pup_photo():
 
     db.session.commit()
 
+###############################################################################
 
 if __name__ == "__main__":
     connect_to_db(app)
@@ -375,6 +414,8 @@ if __name__ == "__main__":
     load_users()
     load_breeders()
     load_breeds()
+    load_breeder_spots()
+    load_breed_spots()
     load_dogs()
     load_litters()
     load_pups()
