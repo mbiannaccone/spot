@@ -14,7 +14,7 @@ class User(db.Model):
     __tablename__ = "users"
 
     user_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    email = db.Column(db.String(50), nullable=False)
+    email = db.Column(db.String(50), nullable=False, unique=True)
     password = db.Column(db.String(50), nullable=False)
     fname = db.Column(db.String(50))
     lname = db.Column(db.String(50))
@@ -277,6 +277,7 @@ class Breed(db.Model):
     size_id = db.Column(db.String(1), db.ForeignKey('sizes.size_id'))
     energy_id = db.Column(db.String(1), db.ForeignKey('energies.energy_id'))
     description = db.Column(db.String(500))
+    photo = db.Column(db.String(150))
 
     group = db.relationship('Group', backref='breeds')
     size = db.relationship('Size', backref='breeds')
