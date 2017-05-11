@@ -1,13 +1,12 @@
 """Utility file to store data in database."""
 
-from sqlalchemy import func
 from model import (Award, Blog, Breed, BreedChar, Breeder, BreederPhoto, Char,
                    Dog, DogPhoto, Energy, Event, EventPhoto, Gender, Group,
                    Litter, LitterPhoto, Pup, PupPhoto, Size, User)
 from model import connect_to_db, db
 from server import app
 from datetime import datetime, timedelta
-from random import randint, choice
+from random import choice
 
 
 def load_genders():
@@ -102,15 +101,13 @@ def load_breeders():
 
     print "Breeders"
 
-    counter = 0
-
     for row in open("seed_data/breeder_data.txt"):
         row = row.rstrip().split('\t')
         bio, name, addy, ph, em = row
-        counter += 1
+        user_id = choice([i[0] for i in db.session.query(User.user_id).all()])
 
         breeder = Breeder(bio=bio, name=name, address=addy, phone=ph[-13:],
-                          email=em, user_id=counter)
+                          email=em, user_id=user_id)
 
         db.session.add(breeder)
 
@@ -166,7 +163,6 @@ def load_litters():
         date_available = date_born + timedelta(days=56)
         num_pups = row[3]
         descr = 'so cute'
-
         user_id = choice([i[0] for i in db.session.query(Breeder.user_id).all()])
         breed_id = choice([i[0] for i in db.session.query(Breed.breed_id).all()])
         sire_id = choice([i[0] for i in db.session.query(Dog.dog_id)
@@ -192,10 +188,7 @@ def load_pups():
         row = row.rstrip().split('\t')
         name, avail, gender, price = row
         gender_id = gender.lower()
-
-        litter_min_max = db.session.query(func.min(Litter.litter_id),
-                                          func.max(Litter.litter_id)).one()
-        litter_id = randint(litter_min_max[0], litter_min_max[-1])
+        litter_id = choice([i[0] for i in db.session.query(Litter.litter_id).all()])
 
         if avail == 'false':
             available = False
@@ -232,13 +225,137 @@ def load_events():
 
     print "Events"
 
-    for row in opn("seed_data/event_data.txt"):
+    for row in open("seed_data/event_data.txt"):
         row = row.rstrip().split('\t')
-        name, descr, date = row
+        name, descr, date_str = row
+        user_id = choice([i[0] for i in db.session.query(Breeder.user_id).all()])
+        date = datetime.strptime(date_str, "%m/%d/%Y")
 
-        breeder_min_max = db.session.query(func.min(Breeder.user_id),
-                                           func.max(Breeder.user_id)).one()
-        user_id = randint(breeder_min_max[0], breeder_min_max[1])
+        event = Event(user_id=user_id, name=name, description=descr, date=date)
+        db.session.add(event)
+
+    db.session.commit()
+
+
+def load_awards():
+    """ Loads in awards from award_data.txt. """
+
+    print "Awards"
+
+    for row in open("seed_data/award_data.txt"):
+        row = row.rstrip().split('\t')
+        name, descr, date_str = row
+        date = datetime.strptime(date_str, "%m/%d/%Y")
+        user_id = choice([i[0] for i in db.session.query(Breeder.user_id).all()])
+        dog_id = choice([i[0] for i in db.session.query(Dog.dog_id).all()])
+
+        award = Award(user_id=user_id, dog_id=dog_id, name=name,
+                      description=descr, date=date)
+        db.session.add(award)
+
+    db.session.commit()
+
+
+def load_blog_posts():
+    """ Loads in blog posts from blog_data.txt. """
+
+    print "Blog Posts"
+
+    for row in open("seed_data/blog_data.txt"):
+        row = row.rstrip().split('\t')
+        cat, post, date_str = row
+        date = datetime.strptime(date_str, "%m/%d/%Y")
+        user_id = choice([i[0] for i in db.session.query(Breeder.user_id).all()])
+
+        blog = Blog(user_id=user_id, date=date, category=cat, post=post)
+        db.session.add(blog)
+
+    db.session.commit()
+
+
+def load_breeder_photo():
+    """ Loads in photo captions from photo_data.txt. """
+
+    print "Breeder Photos"
+
+    for row in open("seed_data/photo_data.txt"):
+        row = row.rstrip().split('\t')
+        p, caption = row
+        user_id = choice([i[0] for i in db.session.query(Breeder.user_id).all()])
+        photo = 'http://www.randomdoggiegenerator.com/randomdoggie.php'
+
+        b_photo = BreederPhoto(user_id=user_id, photo=photo, caption=caption)
+        db.session.add(b_photo)
+
+    db.session.commit()
+
+
+def load_dog_photo():
+    """ Loads in photo captions from photo_data.txt. """
+
+    print "Dog Photos"
+
+    for row in open("seed_data/photo_data.txt"):
+        row = row.rstrip().split('\t')
+        p, caption = row
+        dog_id = choice([i[0] for i in db.session.query(Dog.dog_id).all()])
+        photo = 'http://www.randomdoggiegenerator.com/randomdoggie.php'
+
+        d_photo = DogPhoto(dog_id=dog_id, photo=photo, caption=caption)
+        db.session.add(d_photo)
+
+    db.session.commit()
+
+
+def load_event_photo():
+    """ Loads in photo captions from photo_data.txt. """
+
+    print "Event Photos"
+
+    for row in open("seed_data/photo_data.txt"):
+        row = row.rstrip().split('\t')
+        p, caption = row
+        event_id = choice([i[0] for i in db.session.query(Event.event_id).all()])
+        photo = 'https://unsplash.it/400/400/?random'
+
+        e_photo = EventPhoto(event_id=event_id, photo=photo, caption=caption)
+        db.session.add(e_photo)
+
+    db.session.commit()
+
+
+def load_litter_photo():
+    """ Loads in photo captions from photo_data.txt. """
+
+    print "Litter Photos"
+
+    for row in open("seed_data/photo_data.txt"):
+        row = row.rstrip().split('\t')
+        p, caption = row
+        litter_id = choice([i[0] for i in db.session.query(Litter.litter_id).all()])
+        photo = 'http://www.randomdoggiegenerator.com/randomdoggie.php'
+
+        l_photo = LitterPhoto(litter_id=litter_id, photo=photo, caption=caption)
+        db.session.add(l_photo)
+
+    db.session.commit()
+
+
+def load_pup_photo():
+    """ Loads in photo captions from photo_data.txt. """
+
+    print "Pup Photos"
+
+    for row in open("seed_data/photo_data.txt"):
+        row = row.rstrip().split('\t')
+        p, caption = row
+        pup_id = choice([i[0] for i in db.session.query(Pup.pup_id).all()])
+        photo = 'http://www.randomdoggiegenerator.com/randomdoggie.php'
+
+        p_photo = PupPhoto(pup_id=pup_id, photo=photo, caption=caption)
+        db.session.add(p_photo)
+
+    db.session.commit()
 
 
 if __name__ == "__main__":
@@ -248,15 +365,48 @@ if __name__ == "__main__":
     db.create_all()
 
     # Seed the tables with data
-    # load_genders()
-    # load_energies()
-    # load_chars()
-    # load_sizes()
-    # load_groups()
-    # load_users()
-    # load_breeders()
-    # load_breeds()
-    # load_dogs()
-    # load_litters()
-    # load_pups()
-    # load_breedchars()
+    load_genders()
+    load_energies()
+    load_chars()
+    load_sizes()
+    load_groups()
+    load_users()
+    load_breeders()
+    load_breeds()
+    load_dogs()
+    load_litters()
+    load_pups()
+    load_breedchars()
+
+    # These run mult times so that plenty of photos/events/awards for each
+    load_events()
+    load_events()
+    load_events()
+
+    load_awards()
+    load_awards()
+    load_awards()
+
+    load_blog_posts()
+    load_blog_posts()
+    load_blog_posts()
+
+    load_breeder_photo()
+    load_breeder_photo()
+    load_breeder_photo()
+
+    load_dog_photo()
+    load_dog_photo()
+    load_dog_photo()
+
+    load_event_photo()
+    load_event_photo()
+    load_event_photo()
+
+    load_litter_photo()
+    load_litter_photo()
+    load_litter_photo()
+
+    load_pup_photo()
+    load_pup_photo()
+    load_pup_photo()

@@ -1,4 +1,3 @@
-photo	caption
 	Front-line coherent projection
 	Proactive tertiary throughput
 	Programmable executive open architecture
