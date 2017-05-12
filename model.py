@@ -382,7 +382,7 @@ class BreedSpot(db.Model):
     breed = db.relationship('Breed', backref='breed_spots')
 
     def __repr__(self):
-        return '<User %s, Breed %s>' % (self.user_id, self.breeder_id)
+        return '<User %s, Breed %s>' % (self.user_id, self.breed_id)
 
 ##############################################################################
 # Helper functions
