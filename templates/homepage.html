@@ -1,16 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h3>welcome to:</h3>
+<h4>welcome to:</h4>
 <h1>Spot</h1><span>the best friend finder.</span>
 
-<div>new to Spot? please register</div>
-<form action="/profile" method="POST">
-    <span>email:<input type="text" name="email"></span><br>
-    <span>password:<input type="text" name="pwd"></span><br>
-    <span>zipcode:<input type="text" name="zip" pattern="[0-9]{5}"></span>
-    <input type="submit", value="register">
-</form>
+<div>new to Spot? <a href='/register'>please register</a></div>
 
 <div>already a member? <a href='/login'>please login</a></div>
 

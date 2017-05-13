@@ -32,6 +32,33 @@ def index():
                            chars=chars)
 
 
+@app.route('/register')
+def register():
+    """ Renders register template form. """
+
+    return render_template('register.html')
+
+
+@app.route('/register', methods=["POST"])
+def register_process():
+    """ Checks if email already exists, and if not creates a new user. """
+
+    email = request.form.get("email")
+    pwd = request.form.get("pwd")
+    zipcode = request.form.get("zip")
+
+    if db.session.query(User).filter(User.email == email).first() is None:
+        new_user = User(email=email, password=pwd, zipcode=zipcode)
+        db.session.add(new_user)
+        db.session.commit()
+        flash("Logged in as %s" % email)
+        session['user_id'] = new_user.user_id
+        return redirect('/user/%s' % new_user.user_id)
+    else:
+        flash("A user account with that email already exists, please login.")
+        return redirect('/login')
+
+
 @app.route('/login')
 def login_page():
     """ Renders login page. """
@@ -48,14 +75,22 @@ def login_process():
     if db.session.query(User).filter(User.email == email, User.password == pwd
                                      ).first() is None:
         flash("Email/password combination do not match.")
-        print 'got to if'
         return redirect('/login')
     else:
-        print 'got to else'
-        flash("Logged in! as %s" % email)
+        flash("Logged in as %s" % email)
         user = User.query.filter(User.email == email).one()
         session['user_id'] = user.user_id
         return redirect('/user/%s' % user.user_id)
+
+
+@app.route("/logout")
+def logout_process():
+    """Logs out current user."""
+
+    del session['user_id']
+    flash("You are now logged out. Goodbye!")
+
+    return redirect("/")
 
 
 @app.route('/user/<user_id>')
@@ -63,6 +98,7 @@ def user_profile(user_id):
     """ User's profile page. """
 
     print 'hi im in the user page.'
+    return redirect('/')
 
 
 @app.route('/breed-search')
