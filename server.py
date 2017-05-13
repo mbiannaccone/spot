@@ -104,7 +104,18 @@ def user_profile(user_id):
 @app.route('/breed-search')
 def breed_search():
     """ Breed search results. """
-    pass
+
+    size = request.args.get('size')
+    group = request.args.get('group')
+    energy = request.args.get('energy')
+
+    y_n_chars = []
+    for char in Char.query.filter(Char.char_id > 12).all():
+        if request.args.get(char):
+            y_n_chars.append(char)
+
+    return render_template('breed-search.html', size=size, group=group,
+                           energy=energy, y_n_chars=y_n_chars)
 
 
 @app.route('/breed-search/<breed_id>')

@@ -9,7 +9,7 @@
 <div>already a member? <a href='/login'>please login</a></div>
 
 <h5>spot a breed</h5>
-<form action="/breed-search" method="GET">
+<form action="/breed-search">
 
     <select name="size">
         <option disabled selected value>size</option>
@@ -33,10 +33,12 @@
     </select>
 
     {% for char in chars %}
-    <br><input type="checkbox" name="char" value="{{ char.char }}">{{ char.char.lower() }}
+    <br><input type="checkbox" name="{{ char.char }}" value="yes">{{ char.char.lower() }}
     {% endfor %}
 
-    <div>try a keyword:<input type="text" name="keyword"></div>
+    <div>try a keyword: <input type="text" name="keyword"></div>
+
+    <input type="submit", value="search">
 
 </form>
 

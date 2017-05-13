@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block content %}
+
+size: {{ size }}
+group: {{ group }}
+energy: {{ energy }}
+chars: {{% for char in y_n_chars }}
+char
+{{% endfor %}}
+
+{% endblock %}
