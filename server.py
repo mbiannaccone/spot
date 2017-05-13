@@ -33,14 +33,14 @@ def index():
 
 
 @app.route('/login')
-def login():
+def login_page():
     """ Renders login page. """
     return render_template('/login.html')
 
 
-@app.route('/login', methods=["POST"])
-def profile():
-    """ User's profile. """
+@app.route('/login', methods=['POST'])
+def login_process():
+    """ Checks if email/pwd are correct and redirects to profile. """
 
     email = request.form.get("email")
     pwd = request.form.get("pwd")
@@ -48,12 +48,21 @@ def profile():
     if db.session.query(User).filter(User.email == email, User.password == pwd
                                      ).first() is None:
         flash("Email/password combination do not match.")
+        print 'got to if'
         return redirect('/login')
     else:
+        print 'got to else'
         flash("Logged in! as %s" % email)
         user = User.query.filter(User.email == email).one()
         session['user_id'] = user.user_id
-        return redirect('/login')
+        return redirect('/user/%s' % user.user_id)
+
+
+@app.route('/user/<user_id>')
+def user_profile(user_id):
+    """ User's profile page. """
+
+    print 'hi im in the user page.'
 
 
 @app.route('/breed-search')

@@ -2435,42 +2435,42 @@ Jagdterrier	Nutrition & Feeding	Good nutrition for Jagdterriers is very importan
 Jagdterrier	Exercise	Need regular exercise to keep them healthy and fit both physically and mentally.
 Jagdterrier	History	2014 - The Jagdterrier was recorded in the Foundation Stock Service since June 2014.
 Slovensky Cuvac	Fun Fact	The Slovensky Cuvac has been assigned the Herding Group designation.
-Bulldog	Best Apartment Dweller	Yes
-Shih Tzu	Best Apartment Dweller	Yes
-Cavalier King Charles Spaniel	Best Apartment Dweller	Yes
-Bichon Frise	Best Apartment Dweller	Yes
-French Bulldog	Best Apartment Dweller	Yes
-Greyhound	Best Apartment Dweller	Yes
-Havanese	Best Apartment Dweller	Yes
-Maltese	Best Apartment Dweller	Yes
-Chinese Crested	Best Apartment Dweller	Yes
-Labrador Retriever	Best Family Dog	Yes
-Bulldog	Best Family Dog	Yes
-Golden Retriever	Best Family Dog	Yes
-Beagle	Best Family Dog	Yes
-Pug	Best Family Dog	Yes
-Irish Setter	Best Family Dog	Yes
-Brussels Griffon	Best Family Dog	Yes
-Newfoundland	Best Family Dog	Yes
-French Bulldog	Best Family Dog	Yes
-Collie	Best Family Dog	Yes
-Bullmastiff	Best Guard Dog	Yes
-Doberman Pinscher	Best Guard Dog	Yes
-Giant Schnauzer	Best Guard Dog	Yes
-Akita	Best Guard Dog	Yes
-German Shepherd Dog	Best Guard Dog	Yes
-Staffordshire Bull Terrier	Best Guard Dog	Yes
-Rottweiler	Best Guard Dog	Yes
-Puli	Best Guard Dog	Yes
-Rhodesian Ridgeback	Best Guard Dog	Yes
-Bulldog	Best Dog for Kids	Yes
-Beagle	Best Dog for Kids	Yes
-Newfoundland	Best Dog for Kids	Yes
-Labrador Retriever	Best Dog for Kids	Yes
-Soft Coated Wheaten Terrier	Best Dog for Kids	Yes
-Weimaraner	Best Dog for Kids	Yes
-Bull Terrier	Best Dog for Kids	Yes
-Boxer	Best Dog for Kids	Yes
+Bulldog	Apartment Dweller	Yes
+Shih Tzu	Apartment Dweller	Yes
+Cavalier King Charles Spaniel	Apartment Dweller	Yes
+Bichon Frise	Apartment Dweller	Yes
+French Bulldog	Apartment Dweller	Yes
+Greyhound	Apartment Dweller	Yes
+Havanese	Apartment Dweller	Yes
+Maltese	Apartment Dweller	Yes
+Chinese Crested	Apartment Dweller	Yes
+Labrador Retriever	Family Dog	Yes
+Bulldog	Family Dog	Yes
+Golden Retriever	Family Dog	Yes
+Beagle	Family Dog	Yes
+Pug	Family Dog	Yes
+Irish Setter	Family Dog	Yes
+Brussels Griffon	Family Dog	Yes
+Newfoundland	Family Dog	Yes
+French Bulldog	Family Dog	Yes
+Collie	Family Dog	Yes
+Bullmastiff	Guard Dog	Yes
+Doberman Pinscher	Guard Dog	Yes
+Giant Schnauzer	Guard Dog	Yes
+Akita	Guard Dog	Yes
+German Shepherd Dog	Guard Dog	Yes
+Staffordshire Bull Terrier	Guard Dog	Yes
+Rottweiler	Guard Dog	Yes
+Puli	Guard Dog	Yes
+Rhodesian Ridgeback	Guard Dog	Yes
+Bulldog	Good with Kids	Yes
+Beagle	Good with Kids	Yes
+Newfoundland	Good with Kids	Yes
+Labrador Retriever	Good with Kids	Yes
+Soft Coated Wheaten Terrier	Good with Kids	Yes
+Weimaraner	Good with Kids	Yes
+Bull Terrier	Good with Kids	Yes
+Boxer	Good with Kids	Yes
 Bedlington Terrier	Hypoallergenic	Yes
 Bichon Frise	Hypoallergenic	Yes
 Chinese Crested	Hypoallergenic	Yes
