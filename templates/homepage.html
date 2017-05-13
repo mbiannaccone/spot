@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h3>welcome to:</h3>
+<h1>Spot</h1><span>the best friend finder.</span>
+
+<div>new to Spot? please register</div>
+<form action="/profile" method="POST">
+    <span>email:<input type="text" name="email"></span><br>
+    <span>password:<input type="text" name="pwd"></span><br>
+    <span>zipcode:<input type="text" name="zip" pattern="[0-9]{5}"></span>
+    <input type="submit", value="register">
+</form>
+
+<div>already a member? <a href='/login'>please login</a></div>
+
+<h5>spot a breed</h5>
+<form action="/breed-search" method="GET">
+
+    <select name="size">
+        <option disabled selected value>size</option>
+        {% for size in sizes %}
+        <option value="{{ size.size}} ">{{ size.size.lower() }}</option>
+        {% endfor %}
+    </select>
+
+    <select name="group">
+        <option disabled selected value>group</option>
+        {% for group in groups %}
+        <option value="{{ group.name }}">{{ group.name.lower() }}</option>
+        {% endfor %}
+    </select>
+
+    <select name="energy">
+        <option disabled selected value>energy level</option>
+        {% for energy in energies %}
+        <option value="{{ energy.energy }}">{{ energy.energy.lower() }}</option>
+        {% endfor %}
+    </select>
+
+    {% for char in chars %}
+    <br><input type="checkbox" name="char" value="{{ char.char }}">{{ char.char.lower() }}
+    {% endfor %}
+
+    <div>try a keyword:<input type="text" name="keyword"></div>
+
+</form>
+
+{% endblock %}
