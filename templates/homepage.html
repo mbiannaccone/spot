@@ -14,26 +14,26 @@
     <select name="size">
         <option disabled selected value>size</option>
         {% for size in sizes %}
-        <option value="{{ size.size}} ">{{ size.size.lower() }}</option>
+        <option value="{{ size.size_id }}">{{ size.size }}</option>
         {% endfor %}
     </select>
 
     <select name="group">
         <option disabled selected value>group</option>
         {% for group in groups %}
-        <option value="{{ group.name }}">{{ group.name.lower() }}</option>
+        <option value="{{ group.group_id }}">{{ group.name }}</option>
         {% endfor %}
     </select>
 
     <select name="energy">
         <option disabled selected value>energy level</option>
         {% for energy in energies %}
-        <option value="{{ energy.energy }}">{{ energy.energy.lower() }}</option>
+        <option value="{{ energy.energy_id }}">{{ energy.energy }}</option>
         {% endfor %}
     </select>
 
     {% for char in chars %}
-    <br><input type="checkbox" name="{{ char.char }}" value="yes">{{ char.char.lower() }}
+    <br><input type="checkbox" name="{{ char.char_id }}" value="{{ char.char_id }}">{{ char.char.lower() }}
     {% endfor %}
 
     <div>try a keyword: <input type="text" name="keyword"></div>

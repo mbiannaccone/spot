@@ -105,17 +105,47 @@ def user_profile(user_id):
 def breed_search():
     """ Breed search results. """
 
-    size = request.args.get('size')
-    group = request.args.get('group')
-    energy = request.args.get('energy')
+    size_id = request.args.get('size')
+    group_id = request.args.get('group')
+    energy_id = request.args.get('energy')
 
-    y_n_chars = []
+    print size_id
+
+    chars = []
     for char in Char.query.filter(Char.char_id > 12).all():
-        if request.args.get(char):
-            y_n_chars.append(char)
+        print char
+        print char.char_id
+        value = request.args.get(str(char.char_id))
+        if value:
+            chars.append(int(value))
+    print chars
 
-    return render_template('breed-search.html', size=size, group=group,
-                           energy=energy, y_n_chars=y_n_chars)
+    search_results = {}
+
+    if size_id:
+        for breed in Size.query.get(size_id).breeds:
+            search_results[breed] = 5
+
+    if group_id:
+        for breed in Group.query.get(group_id).breeds:
+            if breed not in search_results:
+                search_results[breed] = 0
+            search_results[breed] += 5
+
+    if energy_id:
+        for breed in Energy.query.get(energy_id).breeds:
+            if breed not in search_results:
+                search_results[breed] = 0
+            search_results[breed] += 5
+
+    if chars:
+        for char_id in chars:
+            for breed_char in Char.query.get(char_id).breed_chars:
+                if breed_char.breed not in search_results:
+                    search_results[breed_char.breed] = 0
+                search_results[breed_char.breed] += 5
+
+    return render_template('breed-search.html', search_results=search_results)
 
 
 @app.route('/breed-search/<breed_id>')

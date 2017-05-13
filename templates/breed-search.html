@@ -1,11 +1,9 @@
 {% extends 'base.html' %}
 {% block content %}
 
-size: {{ size }}
-group: {{ group }}
-energy: {{ energy }}
-chars: {{% for char in y_n_chars }}
-char
-{{% endfor %}}
+results: 
+{% for breed, rank in search_results.items() %}
+{{ breed.name }}: {{ rank }}<br>
+{% endfor %}
 
 {% endblock %}
