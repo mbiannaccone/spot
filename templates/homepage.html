@@ -38,8 +38,26 @@
 
     <div>try a keyword: <input type="text" name="keyword"></div>
 
-    <input type="submit", value="search">
+    <input type="submit" name="search" value="search by filters">
+    <span> ~ or ~ </span>
+    <input type="submit" name="search all" value="search all breeds">
 
 </form>
+
+<h5>spot a breeder</h5>
+<form action="/breeder-search">
+
+    <div>location: <input type="text" name="location"></div>
+
+    <div>breed: <select required name="breed">
+        <option disabled selected value>choose a breed</option>
+        {% for breed in breeds %}
+        <option value="{{ breed.breed_id }}">{{ breed.name }}</option>
+        {% endfor %}
+    </div>
+
+    <input type="submit", value="search">
+</form>
+
 
 {% endblock %}

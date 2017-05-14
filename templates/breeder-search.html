@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h4><a href='/breeds/{{ breed.breed_id}}'>{{ breed.name }}</a> results:</h4> 
+{% for breeder in breeders %}
+<a href='/breeders/{{ breeder.breeder_id }}'>{{ breeder.name }}</a><br>
+{{ breeder.email }}<br>
+{{ breeder.address }}<br>
+{{ breeder.phone }}<br><br>
+
+{% endfor %}
+
+{% endblock %}
