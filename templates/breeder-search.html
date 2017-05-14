@@ -3,11 +3,10 @@
 
 <h4><a href='/breeds/{{ breed.breed_id}}'>{{ breed.name }}</a> results:</h4> 
 {% for breeder in breeders %}
-<a href='/breeders/{{ breeder.breeder_id }}'>{{ breeder.name }}</a><br>
+<a href='/breeders/{{ breeder.breeder_id }}'>{{ breeders.index(breeder) + 1}} - {{ breeder.name }}</a><br>
 {{ breeder.email }}<br>
 {{ breeder.address }}<br>
 {{ breeder.phone }}<br><br>
-
 {% endfor %}
 
 {% endblock %}

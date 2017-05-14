@@ -146,9 +146,9 @@ def breed_search():
     return render_template('breed-search.html', search_results=search_results)
 
 
-@app.route('/breed-search/<breed_id>')
+@app.route('/breeds/<breed_id>')
 def breed_info(breed_id):
-    """ A breed's info page. """
+    """ Renders a breed's info page. """
     pass
 
 
@@ -156,20 +156,38 @@ def breed_info(breed_id):
 def breeder_search():
     """ Breeder search results. """
 
-    print 'hello got here'
-
     location = request.args.get("location")
     breed = int(request.args.get('breed'))
 
     breeders = db.session.query(Breeder).join(Litter, Breed).filter(Breed.breed_id == breed)
-    print breeders
 
     return render_template('breeder-search.html', breeders=breeders, breed=Breed.query.get(breed))
 
 
-@app.route('/breeder-search/<breeder_id>')
-def breeder_info(breed_id):
-    pass
+@app.route('/breeders/<breeder_id>')
+def breeder_info(breeder_id):
+    """ Renders a breeder's info page. """
+
+    breeder = Breeder.query.get(breeder_id)
+    photos = db.session.query(BreederPhoto).join(Breeder).filter(
+                                    BreederPhoto.breeder_id == breeder_id).all()
+    litters = db.session.query(Litter).join(Breeder).filter(
+                                          Litter.breeder_id == breeder_id).all()
+    events = db.session.query(Event).join(Breeder).filter(
+                                           Event.breeder_id == breeder_id).all()
+    dogs = []
+    for litter in litters:
+        dogs.append(Dog.query.get(litter.sire_id))
+        dogs.append(Dog.query.get(litter.dam_id))
+
+    awards = db.session.query(Award, Dog.name).join(Breeder, Dog).filter(
+                                           Award.breeder_id == breeder_id).all()
+    blogs = db.session.query(Blog).join(Breeder).filter(
+                                            Blog.breeder_id == breeder_id).all()
+
+    return render_template('breeder-info.html', breeder=breeder, photos=photos,
+                           litters=litters, events=events, dogs=dogs,
+                           awards=awards, blogs=blogs)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h2>{{ breeder.name }}</h2>
+{{ breeder.bio }}<br>
+{{ breeder.address }}<br>
+{{ breeder.phone }}<br>
+{{ breeder.email }}
+
+<h4>Photos:</h4>
+{% for photo in photos %}
+<img src="{{ photo.photo }}"><br>
+{{ photo.caption }}<br>
+{% endfor %}
+
+<h4>Litters:</h4>
+<ul>
+{% for litter in litters %}
+    <li>
+        <a href='/breeders/{{ breeder.breeder_id }}/litters/{{ litter.litter_id }}'>litter #{{ litters|length - litters.index(litter) }}</a><br>
+        date born: {{ litter.date_born }}<br>
+        date available: {{ litter.date_available }}<br>
+        # puppies: {{ litter.num_pups }}<br>
+        description: {{ litter.description}}<br>
+    </li>
+{% endfor %}
+</ul>
+
+<h4>Dogs:</h4>
+Sires<ul>
+{% for dog in dogs %}
+    {% if dog.gender_id == 'm' %}
+    <li><a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ dog.dog_id }}'>{{ dog.name }}</a><br>
+        date born: {{ dog.date_born }}<br>
+        description: {{ dog.description}}<br>
+    </li>
+    {% endif %}
+{% endfor %}
+</ul>
+Dams<ul>
+{% for dog in dogs %}
+    {% if dog.gender_id == 'f' %}
+    <li><a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ dog.dog_id }}'>{{ dog.name }}</a><br>
+        date born: {{ dog.date_born }}<br>
+        description: {{ dog.description}}<br>
+    </li>
+    {% endif %}
+{% endfor %}
+</ul>
+
+<h4>Awards:</h4>
+<ul>
+{% for award in awards %}
+    <li>
+        {{ award[0].name }}</a> - {{ award[0].date }}<br>
+        Winner: <a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ award[0].dog_id }}'>{{ award[1] }}</a><br>
+        {{ award[0].description }}<br>
+    </li>
+{% endfor %}
+</ul>
+
+<h4>Events:</h4>
+<ul>
+{% for event in events %}
+    <li>
+        <a href='/breeders/{{ breeder.breeder_id }}/events/{{ event.event_id }}'>{{ event.name }}</a> - {{ event.date }}<br>
+        {{ event.description }}<br>
+    </li>
+{% endfor %}
+</ul>
+
+<h4>Blog:</h4>
+<ul>
+{% for blog in blogs %}
+    <li>
+        {{ blog.date }}: {{ blog.category }}<br>
+        {{ blog.post }}<br>
+    </li>
+{% endfor %}
+</ul>
+
+
+{% endblock %}
