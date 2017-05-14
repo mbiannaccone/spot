@@ -2,8 +2,8 @@
 {% block content %}
 
 results: 
-{% for breed, rank in search_results.items() %}
-{{ breed.name }}: {{ rank }}<br>
+{% for search_result in search_results %}
+{{ search_result[1].name }}: {{ search_result[0] }}<br>
 {% endfor %}
 
 {% endblock %}

@@ -113,37 +113,31 @@ def breed_search():
 
     chars = []
     for char in Char.query.filter(Char.char_id > 12).all():
-        print char
-        print char.char_id
         value = request.args.get(str(char.char_id))
         if value:
             chars.append(int(value))
-    print chars
 
-    search_results = {}
+    search = {breed: 0 for breed in Breed.query.all()}
 
     if size_id:
         for breed in Size.query.get(size_id).breeds:
-            search_results[breed] = 5
+            search[breed] += 5
 
     if group_id:
         for breed in Group.query.get(group_id).breeds:
-            if breed not in search_results:
-                search_results[breed] = 0
-            search_results[breed] += 5
+            search[breed] += 5
 
     if energy_id:
         for breed in Energy.query.get(energy_id).breeds:
-            if breed not in search_results:
-                search_results[breed] = 0
-            search_results[breed] += 5
+            search[breed] += 5
 
     if chars:
         for char_id in chars:
             for breed_char in Char.query.get(char_id).breed_chars:
-                if breed_char.breed not in search_results:
-                    search_results[breed_char.breed] = 0
-                search_results[breed_char.breed] += 5
+                search[breed_char.breed] += 5
+
+    search_results = [(result, breed) for breed, result in search.items() if result != 0]
+    search_results.sort(reverse=True)
 
     return render_template('breed-search.html', search_results=search_results)
 
