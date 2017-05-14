@@ -169,12 +169,9 @@ def breeder_info(breeder_id):
     """ Renders a breeder's info page. """
 
     breeder = Breeder.query.get(breeder_id)
-    photos = db.session.query(BreederPhoto).join(Breeder).filter(
-                                    BreederPhoto.breeder_id == breeder_id).all()
-    litters = db.session.query(Litter).join(Breeder).filter(
-                                          Litter.breeder_id == breeder_id).all()
-    events = db.session.query(Event).join(Breeder).filter(
-                                           Event.breeder_id == breeder_id).all()
+    photos = breeder.photos
+    litters = breeder.litters
+    events = breeder.events
     dogs = []
     for litter in litters:
         dogs.append(Dog.query.get(litter.sire_id))
@@ -188,6 +185,28 @@ def breeder_info(breeder_id):
     return render_template('breeder-info.html', breeder=breeder, photos=photos,
                            litters=litters, events=events, dogs=dogs,
                            awards=awards, blogs=blogs)
+
+
+@app.route('/breeders/<breeder_id>/litters/<litter_id>')
+def litter_info(breeder_id, litter_id):
+    """ Renders a litter's info page. """
+
+    breeder = Breeder.query.get(breeder_id)
+    litter = Litter.query.get(litter_id)
+    breed = litter.breed
+    sire = Dog.query.get(litter.sire_id)
+    dam = Dog.query.get(litter.dam_id)
+    pups = litter.pups
+    photos = litter.photos
+
+    return render_template('litters-info.html',
+                           breeder=breeder,
+                           litter=litter,
+                           breed=breed,
+                           sire=sire,
+                           dam=dam,
+                           pups=pups,
+                           photos=photos)
 
 
 if __name__ == "__main__":
