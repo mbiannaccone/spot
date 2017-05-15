@@ -170,17 +170,12 @@ def breeder_info(breeder_id):
 
     breeder = Breeder.query.get(breeder_id)
     photos = breeder.photos
-    litters = breeder.litters
+    litters = [(litter, litter.breed) for litter in breeder.litters]
     events = breeder.events
-    dogs = []
-    for litter in litters:
-        dogs.append(Dog.query.get(litter.sire_id))
-        dogs.append(Dog.query.get(litter.dam_id))
-
-    awards = db.session.query(Award, Dog.name).join(Breeder, Dog).filter(
-                                           Award.breeder_id == breeder_id).all()
-    blogs = db.session.query(Blog).join(Breeder).filter(
-                                            Blog.breeder_id == breeder_id).all()
+    dogs = [(Dog.query.get(litter.sire_id),
+            Dog.query.get(litter.dam_id)) for litter in breeder.litters]
+    awards = [(award, award.dog) for award in breeder.awards]
+    blogs = breeder.blogs
 
     return render_template('breeder-info.html', breeder=breeder, photos=photos,
                            litters=litters, events=events, dogs=dogs,
@@ -196,16 +191,34 @@ def litter_info(breeder_id, litter_id):
     breed = litter.breed
     sire = Dog.query.get(litter.sire_id)
     dam = Dog.query.get(litter.dam_id)
-    pups = litter.pups
+    f_pups = [(pup, pup.photos) for pup in litter.pups if pup.gender_id == 'f']
+    m_pups = [(pup, pup.photos) for pup in litter.pups if pup.gender_id == 'm']
     photos = litter.photos
 
-    return render_template('litters-info.html',
+    return render_template('litter-info.html',
                            breeder=breeder,
                            litter=litter,
                            breed=breed,
                            sire=sire,
                            dam=dam,
-                           pups=pups,
+                           f_pups=f_pups,
+                           m_pups=m_pups,
+                           photos=photos)
+
+
+@app.route('/breeders/<breeder_id>/dogs/<dog_id>')
+def dog_info(breeder_id, dog_id):
+    """ Renders a dog's info page. """
+
+    breeder = Breeder.query.get(breeder_id)
+    dog = Dog.query.get(dog_id)
+    awards = dog.awards
+    photos = dog.photos
+
+    return render_template('dogs-info.html',
+                           breeder=breeder,
+                           dog=dog,
+                           awards=awards,
                            photos=photos)
 
 

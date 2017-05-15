@@ -397,6 +397,30 @@ def load_pup_photo():
 
     db.session.commit()
 
+
+def more_pups():
+    """ adds pups to litters where num_pups does not correspond. """
+
+    print "more pups"
+
+    for litter in Litter.query.all():
+        pups_needed = litter.num_pups - len(litter.pups)
+        if pups_needed > 0:
+            for i in range(0, pups_needed):
+                gender_id = choice(['m', 'f'])
+                name = choice([pup.name for pup in Pup.query.all() if pup.gender_id == gender_id])
+                available = choice([True, False])
+                description = "i'm really really cute!"
+                price = randint(300, 10000)
+                new_pup = Pup(litter_id=litter.litter_id,
+                              name=name,
+                              available=available,
+                              gender_id=gender_id,
+                              description=description,
+                              price=price)
+                db.session.add(new_pup)
+            db.session.commit()
+
 ###############################################################################
 
 if __name__ == "__main__":
@@ -419,7 +443,13 @@ if __name__ == "__main__":
     # load_dogs()
     # load_litters()
     # load_pups()
+    # load_pups()
+    # load_pups()
+    # load_pups()
     # load_breedchars()
+
+    #to fix the # of pups in the db (to match litter size)
+    # more_pups()
 
     # These run mult times to make plenty of photos/events/awards for each
     # load_events()

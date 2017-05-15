@@ -15,9 +15,9 @@
 
 <h4>Litters:</h4>
 <ul>
-{% for litter in litters %}
+{% for litter, breed in litters %}
     <li>
-        <a href='/breeders/{{ breeder.breeder_id }}/litters/{{ litter.litter_id }}'>litter #{{ litters|length - litters.index(litter) }}</a><br>
+        <a href='/breeders/{{ breeder.breeder_id }}/litters/{{ litter.litter_id }}'>litter #{{ loop.revindex }}</a> - <a href='/breeds/{{ breed.breed_id }}'>{{ breed.name }}</a><br>
         date born: {{ litter.date_born }}<br>
         date available: {{ litter.date_available }}<br>
         # puppies: {{ litter.num_pups }}<br>
@@ -28,33 +28,29 @@
 
 <h4>Dogs:</h4>
 Sires<ul>
-{% for dog in dogs %}
-    {% if dog.gender_id == 'm' %}
-    <li><a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ dog.dog_id }}'>{{ dog.name }}</a><br>
-        date born: {{ dog.date_born }}<br>
-        description: {{ dog.description}}<br>
+{% for sire, dam in dogs %}
+    <li><a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ sire.dog_id }}'>{{ sire.name }}</a><br>
+        date born: {{ sire.date_born }}<br>
+        description: {{ sire.description}}<br>
     </li>
-    {% endif %}
 {% endfor %}
 </ul>
 Dams<ul>
-{% for dog in dogs %}
-    {% if dog.gender_id == 'f' %}
-    <li><a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ dog.dog_id }}'>{{ dog.name }}</a><br>
-        date born: {{ dog.date_born }}<br>
-        description: {{ dog.description}}<br>
+{% for sire, dam in dogs %}
+    <li><a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ dam.dog_id }}'>{{ dam.name }}</a><br>
+        date born: {{ dam.date_born }}<br>
+        description: {{ dam.description}}<br>
     </li>
-    {% endif %}
 {% endfor %}
 </ul>
 
 <h4>Awards:</h4>
 <ul>
-{% for award in awards %}
+{% for award, dog in awards %}
     <li>
-        {{ award[0].name }}</a> - {{ award[0].date }}<br>
-        Winner: <a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ award[0].dog_id }}'>{{ award[1] }}</a><br>
-        {{ award[0].description }}<br>
+        {{ award.name }}</a> - {{ award.date }}<br>
+        Winner: <a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ award.dog_id }}'>{{ dog.name }}</a><br>
+        {{ award.description }}<br>
     </li>
 {% endfor %}
 </ul>

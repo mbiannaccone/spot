@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div>
+    Breed: <a href='/breeds/{{ breed.breed_id }}'>{{ breed.name }}</a>
+</div>
+<div>
+    Breeder: <a href='/breeders/{{ breeder.breeder_id}}'>{{ breeder.name }}</a>
+</div>
+<div>
+    Sire: <a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ sire.dog_id }}'>{{ sire.name }}</a>
+</div>
+<div>
+    Dam: <a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ dam.dog_id }}'>{{ dam.name }}</a>
+</div>
+<div>{{ litter.description }}</div>
+<div>
+    Born: {{ litter.date_born }}
+</div>
+<div>
+    Available: {{ litter.date_available }}
+</div>
+<div>
+    Photos:<br>
+    {% for photo in photos %}
+        <img src="{{ photo.photo }}"><br>
+        {{ photo.caption }}<br>
+    {% endfor %}
+</div>
+<div>
+    Puppies: {{ litter.num_pups }}
+    <ul>
+        <li>{{ f_pups|length }} female:</li>
+            {% for pup, pup_photos in f_pups %}
+            <ul>
+                <li>{{ pup.name }}</li>
+                <ul>
+                    <li>{{ pup.description }}</li>
+                    <li>
+                        {% if pup.available %}
+                        Available
+                        {% else %}
+                        Sold
+                        {% endif %}
+                    </li>
+                    <li>{{ "${:,.2f}".format(pup.price) }}</li>
+                    <li>Photos: {% for pup_photo in pup_photos %}
+                        <ul>
+                            <li>
+                                <img src='{{ pup_photo.photo }}'><br>{{ pup_photo.caption }}<br>
+                            </li>
+                        </ul>
+                        {% endfor %}
+                    </li>
+                </ul>
+            </ul>
+            {% endfor %}
+
+        <li>{{ m_pups|length }} male:</li>
+            {% for pup, pup_photos in m_pups %}
+                <ul>
+                    <li>{{ pup.name }}</li>
+                    <ul>
+                        <li>{{ pup.description }}</li>
+                        <li>
+                            {% if pup.available %}
+                            Available
+                            {% else %}
+                            Sold
+                            {% endif %}
+                        </li>
+                        <li>{{ "${:,.2f}".format(pup.price) }}</li>
+                        <li>Photos: {% for pup_photo in pup_photos %}
+                            <ul>
+                                <li>
+                                    <img src='{{ pup_photo.photo }}'><br>{{ pup_photo.caption }}<br>
+                                </li>
+                            </ul>
+                            {% endfor %}
+                        </li>
+                    </ul>
+                </ul>
+                {% endfor %}
+    </ul>
+</div>
+
+{% endblock %}
