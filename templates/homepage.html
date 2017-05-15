@@ -18,17 +18,17 @@
         {% endfor %}
     </select>
 
-    <select name="group">
-        <option disabled selected value>group</option>
-        {% for group in groups %}
-        <option value="{{ group.group_id }}">{{ group.name }}</option>
-        {% endfor %}
-    </select>
-
     <select name="energy">
         <option disabled selected value>energy level</option>
         {% for energy in energies %}
         <option value="{{ energy.energy_id }}">{{ energy.energy }}</option>
+        {% endfor %}
+    </select>
+
+    <select name="group">
+        <option disabled selected value>group</option>
+        {% for group in groups %}
+        <option value="{{ group.group_id }}">{{ group.name }}</option>
         {% endfor %}
     </select>
 

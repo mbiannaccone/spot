@@ -5,11 +5,11 @@
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
     {% with messages = get_flashed_messages() %}
         {% if messages %}
-        <ul class=flashes>
+        <span class=flashes>
         {% for message in messages %}
-            <li>{{ message }}</li>
+            {{ message }}<br>
         {% endfor %}
-    </ul>
+    </span>
     {% endif %}
 {% endwith %}
 </head>

@@ -114,6 +114,7 @@ def breed_search():
         size_id = request.args.get('size')
         group_id = request.args.get('group')
         energy_id = request.args.get('energy')
+        keyword = request.args.get('keyword')
 
         chars = []
         for char in Char.query.filter(Char.char_id > 12).all():
@@ -125,20 +126,28 @@ def breed_search():
 
         if size_id:
             for breed in Size.query.get(size_id).breeds:
-                search[breed] += 5
+                search[breed] += 25
 
         if group_id:
             for breed in Group.query.get(group_id).breeds:
-                search[breed] += 5
+                search[breed] += 25
 
         if energy_id:
             for breed in Energy.query.get(energy_id).breeds:
-                search[breed] += 5
+                search[breed] += 25
 
         if chars:
             for char_id in chars:
                 for breed_char in Char.query.get(char_id).breed_chars:
-                    search[breed_char.breed] += 5
+                    search[breed_char.breed] += 25
+
+        if keyword:
+            for breed_char in BreedChar.query.all():
+                if keyword in breed_char.description:
+                    search[breed_char.breed] += 1
+            for breed in Breed.query.all():
+                if keyword in breed.description:
+                    search[breed] += 1
 
         search_results = [(result, breed) for breed, result in search.items() if result != 0]
         search_results.sort(reverse=True)
