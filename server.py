@@ -214,12 +214,25 @@ def dog_info(breeder_id, dog_id):
     dog = Dog.query.get(dog_id)
     awards = dog.awards
     photos = dog.photos
+    litters = Litter.query.filter((Litter.dam_id == dog.dog_id) |
+                                  (Litter.sire_id == dog.dog_id)).all()
+    breed = litters[0].breed
 
-    return render_template('dogs-info.html',
+    return render_template('dog-info.html',
                            breeder=breeder,
                            dog=dog,
                            awards=awards,
-                           photos=photos)
+                           photos=photos,
+                           litters=litters,
+                           breed=breed)
+
+
+@app.route('/breeders/<breeder_id>/events/<event_id>')
+def event_info(breeder_id, event_id):
+    """ Render's a breeder event's info page. """
+
+
+    return render_template('event-info.html')
 
 
 if __name__ == "__main__":

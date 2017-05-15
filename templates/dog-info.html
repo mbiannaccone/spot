@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h4>{{ dog.name }}</h4>
+
+<div><a href='/breeds/{{ breed.breed_id }}'>{{ breed.name }}</a>
+    {% if dog.gender_id in ['m'] %}
+    Sire
+    {% else %}
+    Dam
+    {% endif %}
+</div>
+
+<div>Born: {{ dog.date_born }}</div>
+
+<div>Breeder: <a href='/breeders/{{ breeder.breeder_id }}'>{{ breeder.name }}</a>
+
+<div>{{ dog.description }}</div>
+
+<div>Awards:
+    <ul> {% for award in awards %}
+        <li>{{ award.name }} - {{ award.date }}</li>
+        <ul>
+            <li>{{ award.description }}</li>
+        </ul>
+        {% endfor %}
+    </ul>
+</div>
+
+<div>Litters:
+    <ul>
+    {% for litter in litters %}
+        <li>
+            <a href='/breeders/{{ breeder.breeder_id }}/litters/{{ litter.litter_id }}'>litter #{{ loop.revindex }}</a><br>
+            date born: {{ litter.date_born }}<br>
+            date available: {{ litter.date_available }}<br>
+            # puppies: {{ litter.num_pups }}<br>
+            description: {{ litter.description}}<br>
+        </li>
+    {% endfor %}
+    </ul>
+</div>
+
+<div>Photos:<br>
+{% for photo in photos %}
+<img src="{{ photo.photo }}"><br>
+{{ photo.caption }}<br>
+{% endfor %}
+</div>
+
+
+{% endblock %}
