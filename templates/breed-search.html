@@ -1,9 +1,16 @@
 {% extends 'base.html' %}
 {% block content %}
 
-results: 
-{% for search_result in search_results %}
-{{ search_result[1].name }}: {{ search_result[0] }}<br>
-{% endfor %}
+<h4>Results</h4>
+    {% for result, breed in search_results %}
+    <div>
+        {{ loop.index }}. <a href="/breeds/{{ breed.breed_id }}">{{ breed.name }}</a> ({{ result }}) - {{ breed.description }}<br>
+        <img src='{{ breed.photo }}'><br>
+        Size: {{ breed.size.size }}<br>
+        Energy: {{ breed.energy.energy }}<br>
+        Group: {{ breed.group.name }}<br><br>
+    </div>
+    {% endfor %}
+
 
 {% endblock %}
