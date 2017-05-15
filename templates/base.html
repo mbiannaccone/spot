@@ -24,6 +24,16 @@
     <form action="/logout">
         <button type="submit">logout</button>
     </form>
+
+    {% if user %}
+        <div>logged in as: {{ user.email }}</div>
+        <form action="/users/{{ user.user_id }}">
+            <button type="submit">profile</button>
+        </form>
+    {% else %}
+        <div>not logged in</div>
+    {% endif %}
+
     {% block content %} put your content here {% endblock %}
 </body>
 </html>

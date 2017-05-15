@@ -26,19 +26,30 @@ def index():
     chars = Char.query.filter(Char.char_id > 12).all()
     breeds = Breed.query.all()
 
+    if 'user_id' in session:
+        user = User.query.get(session['user_id'])
+    else:
+        user = None
+
     return render_template("homepage.html",
                            groups=groups,
                            sizes=sizes,
                            energies=energies,
                            chars=chars,
-                           breeds=breeds)
+                           breeds=breeds,
+                           user=user)
 
 
 @app.route('/register')
 def register():
     """ Renders register template form. """
 
-    return render_template('register.html')
+    if 'user_id' in session:
+        user = User.query.get(session['user_id'])
+    else:
+        user = None
+
+    return render_template('register.html', user=user)
 
 
 @app.route('/register', methods=["POST"])
@@ -64,7 +75,13 @@ def register_process():
 @app.route('/login')
 def login_page():
     """ Renders login page. """
-    return render_template('/login.html')
+
+    if 'user_id' in session:
+        user = User.query.get(session['user_id'])
+    else:
+        user = None
+
+    return render_template('/login.html', user=user)
 
 
 @app.route('/login', methods=['POST'])
@@ -100,7 +117,7 @@ def user_profile(user_id):
     """ User's profile page. """
 
     if 'user_id' not in session:
-        flash("Please log in")
+        flash("Please log in first!")
         return redirect('/login')
     else:
         user = User.query.get(user_id)
@@ -115,6 +132,11 @@ def user_profile(user_id):
 @app.route('/breed-search')
 def breed_search():
     """ Breed search results. """
+
+    if 'user_id' in session:
+        user = User.query.get(session['user_id'])
+    else:
+        user = None
 
     if "search all" in request.args:
         search_results = [(1, breed) for breed in Breed.query.all()]
@@ -161,12 +183,17 @@ def breed_search():
         search_results = [(result, breed) for breed, result in search.items() if result != 0]
         search_results.sort(reverse=True)
 
-    return render_template('breed-search.html', search_results=search_results)
+    return render_template('breed-search.html', search_results=search_results, user=user)
 
 
 @app.route('/breeds/<breed_id>')
 def breed_info(breed_id):
     """ Renders a breed's info page. """
+
+    if 'user_id' in session:
+        user = User.query.get(session['user_id'])
+    else:
+        user = None
 
     breed = Breed.query.get(breed_id)
     group = breed.group
@@ -182,24 +209,38 @@ def breed_info(breed_id):
                            group=group,
                            size=size,
                            energy=energy,
-                           breed_chars=breed_chars)
+                           breed_chars=breed_chars,
+                           user=user)
 
 
 @app.route('/breeder-search')
 def breeder_search():
     """ Breeder search results. """
 
+    if 'user_id' in session:
+        user = User.query.get(session['user_id'])
+    else:
+        user = None
+
     location = request.args.get("location")
     breed = int(request.args.get('breed'))
 
     breeders = db.session.query(Breeder).join(Litter, Breed).filter(Breed.breed_id == breed)
 
-    return render_template('breeder-search.html', breeders=breeders, breed=Breed.query.get(breed))
+    return render_template('breeder-search.html',
+                           breeders=breeders,
+                           breed=Breed.query.get(breed),
+                           user=user)
 
 
 @app.route('/breeders/<breeder_id>')
 def breeder_info(breeder_id):
     """ Renders a breeder's info page. """
+
+    if 'user_id' in session:
+        user = User.query.get(session['user_id'])
+    else:
+        user = None
 
     breeder = Breeder.query.get(breeder_id)
     photos = breeder.photos
@@ -212,12 +253,17 @@ def breeder_info(breeder_id):
 
     return render_template('breeder-info.html', breeder=breeder, photos=photos,
                            litters=litters, events=events, dogs=dogs,
-                           awards=awards, blogs=blogs)
+                           awards=awards, blogs=blogs, user=user)
 
 
 @app.route('/breeders/<breeder_id>/litters/<litter_id>')
 def litter_info(breeder_id, litter_id):
     """ Renders a litter's info page. """
+
+    if 'user_id' in session:
+        user = User.query.get(session['user_id'])
+    else:
+        user = None
 
     breeder = Breeder.query.get(breeder_id)
     litter = Litter.query.get(litter_id)
@@ -236,12 +282,18 @@ def litter_info(breeder_id, litter_id):
                            dam=dam,
                            f_pups=f_pups,
                            m_pups=m_pups,
-                           photos=photos)
+                           photos=photos,
+                           user=user)
 
 
 @app.route('/breeders/<breeder_id>/dogs/<dog_id>')
 def dog_info(breeder_id, dog_id):
     """ Renders a dog's info page. """
+
+    if 'user_id' in session:
+        user = User.query.get(session['user_id'])
+    else:
+        user = None
 
     breeder = Breeder.query.get(breeder_id)
     dog = Dog.query.get(dog_id)
@@ -257,12 +309,18 @@ def dog_info(breeder_id, dog_id):
                            awards=awards,
                            photos=photos,
                            litters=litters,
-                           breed=breed)
+                           breed=breed,
+                           user=user)
 
 
 @app.route('/breeders/<breeder_id>/events/<event_id>')
 def event_info(breeder_id, event_id):
     """ Render's a breeder event's info page. """
+
+    if 'user_id' in session:
+        user = User.query.get(session['user_id'])
+    else:
+        user = None
 
     breeder = Breeder.query.get(breeder_id)
     event = Event.query.get(event_id)
@@ -271,7 +329,8 @@ def event_info(breeder_id, event_id):
     return render_template('event-info.html',
                            breeder=breeder,
                            event=event,
-                           photos=photos)
+                           photos=photos,
+                           user=user)
 
 
 if __name__ == "__main__":
