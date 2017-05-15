@@ -82,7 +82,7 @@ def login_process():
         flash("Logged in as %s" % email)
         user = User.query.filter(User.email == email).one()
         session['user_id'] = user.user_id
-        return redirect('/user/%s' % user.user_id)
+        return redirect('/users/%s' % user.user_id)
 
 
 @app.route("/logout")
@@ -95,12 +95,21 @@ def logout_process():
     return redirect("/")
 
 
-@app.route('/user/<user_id>')
+@app.route('/users/<user_id>')
 def user_profile(user_id):
     """ User's profile page. """
 
-    print 'hi im in the user page.'
-    return redirect('/')
+    if 'user_id' not in session:
+        flash("Please log in")
+        return redirect('/login')
+    else:
+        user = User.query.get(user_id)
+        breed_spots = user.breed_spots
+        breeder_spots = user.breeder_spots
+        return render_template('user-info.html',
+                               user=user,
+                               breed_spots=breed_spots,
+                               breeder_spots=breeder_spots)
 
 
 @app.route('/breed-search')

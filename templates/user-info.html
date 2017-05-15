@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div>First Name: {{ user.fname }}</div>
+<div>Last Name: {{ user.lname }}</div>
+<div>Email: {{ user.email }}</div>
+<div>Password: {{ user.password }}</div>
+<div>Zipcode: {{ user.zipcode }}</div>
+<div>Phone: {{ user.phone }}</div>
+
+<div>
+    you've Spotted the following breeds:
+        {% for breed_spot in breed_spots %}
+            <ul>
+                <li><a href='/breeds/{{ breed_spot.breed.breed_id }}'>{{ breed_spot.breed.name }}</a></li>
+            </ul>
+        {% endfor %}
+</div>
+
+<div>
+    you've Spotted the following breeders:
+        {% for breeder_spot in breeder_spots %}
+            <ul>
+                <li><a href='/breeders/{{ breeder_spot.breeder.breeder_id }}'>{{ breeder_spot.breeder.name }}</a></li>
+            </ul>
+        {% endfor %}
+</div>
+
+
+
+{% endblock %}
