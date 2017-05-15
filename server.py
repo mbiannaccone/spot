@@ -149,9 +149,22 @@ def breed_search():
 @app.route('/breeds/<breed_id>')
 def breed_info(breed_id):
     """ Renders a breed's info page. """
-    
 
-    return render_template('breed-info.html')
+    breed = Breed.query.get(breed_id)
+    group = breed.group
+    size = breed.size
+    energy = breed.energy
+    breed_chars = [(breed_char.char_id,
+                    Char.query.get(breed_char.char_id),
+                    breed_char,) for breed_char in breed.breed_chars]
+    breed_chars.sort()
+
+    return render_template('breed-info.html',
+                           breed=breed,
+                           group=group,
+                           size=size,
+                           energy=energy,
+                           breed_chars=breed_chars)
 
 
 @app.route('/breeder-search')

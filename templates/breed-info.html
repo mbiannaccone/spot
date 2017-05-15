@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<img src='{{ breed.photo }}'>
+
+<h4><a href='{{ breed.akc_url }}'>{{ breed.name }}</a></h4>
+
+<div>{{ breed.description }}</div>
+
+<h5>find a {{ breed.name }} breeder in your area</h5>
+<form action="/breeder-search">
+    <span>location: <input type="text" name="location"></span>
+    <input type="hidden" name="breed" value="{{ breed.breed_id }}">
+    <input type="submit" value="search">
+</form>
+
+<div>Size: {{ size.size }}</div>
+
+<div>Energy: {{ energy.energy }}</div>
+
+<div>
+    Group: {{ breed.group.name }}<br>
+    Group Description: {{ group.description }}
+</div>
+
+<div>
+    Standard Characteristics:
+    <ul>
+        {% for char_id, char, breed_char in breed_chars %}
+        <li>{{ char.char }}: {{ breed_char.description }}</li>
+        {% endfor %}
+    </ul>
+</div>
+
+{% endblock %}
