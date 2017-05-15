@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div>
+    <a href='/breeders/{{ breeder.breeder_id }}'>{{ breeder.name }}</a> Event:
+</div>
+<div>
+    {{ event.date }}
+</div>
+<div>
+    {{ event.description }}
+</div>
+<div>
+    Photos:<br>
+    {% for photo in photos %}
+    <img src="{{ photo.photo }}"><br>
+    {{ photo.caption }}<br>
+    {% endfor %}
+</div>
+
+{% endblock %}

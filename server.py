@@ -149,7 +149,9 @@ def breed_search():
 @app.route('/breeds/<breed_id>')
 def breed_info(breed_id):
     """ Renders a breed's info page. """
-    pass
+    
+
+    return render_template('breed-info.html')
 
 
 @app.route('/breeder-search')
@@ -231,8 +233,14 @@ def dog_info(breeder_id, dog_id):
 def event_info(breeder_id, event_id):
     """ Render's a breeder event's info page. """
 
+    breeder = Breeder.query.get(breeder_id)
+    event = Event.query.get(event_id)
+    photos = event.photos
 
-    return render_template('event-info.html')
+    return render_template('event-info.html',
+                           breeder=breeder,
+                           event=event,
+                           photos=photos)
 
 
 if __name__ == "__main__":
