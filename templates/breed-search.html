@@ -4,7 +4,7 @@
 <h4>Results</h4>
     {% for result, breed in search_results %}
     <div>
-        {{ loop.index }}. <a href="/breeds/{{ breed.breed_id }}">{{ breed.name }}</a> ({{ result }}) - {{ breed.description }}<br>
+        {{ loop.index }}. <a href="/breeds/{{ breed.breed_id }}">{{ breed.name }}</a> - {{ breed.description }}<br>
         <img src='{{ breed.photo }}'><br>
         Size: {{ breed.size.size }}<br>
         Energy: {{ breed.energy.energy }}<br>

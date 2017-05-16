@@ -269,8 +269,8 @@ def litter_info(breeder_id, litter_id):
     breeder = Breeder.query.get(breeder_id)
     litter = Litter.query.get(litter_id)
     breed = litter.breed
-    sire = Dog.query.get(litter.sire_id)
-    dam = Dog.query.get(litter.dam_id)
+    sire = litter.sire
+    dam = litter.dam
     f_pups = [(pup, pup.photos) for pup in litter.pups if pup.gender_id == 'f']
     m_pups = [(pup, pup.photos) for pup in litter.pups if pup.gender_id == 'm']
     photos = litter.photos

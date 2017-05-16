@@ -421,6 +421,17 @@ def more_pups():
                 db.session.add(new_pup)
             db.session.commit()
 
+
+def fix_dogs():
+    """ fixes dogs that are in multiple litters. """
+
+    print "fixing dogs"
+
+    all_dogs = {dog: [] for dog in Dog.query.all()}
+    for litter in Litter.query.all():
+        all_dogs[litter.dam].append(litter)
+        all_dogs[litter.sire].append(litter)
+
 ###############################################################################
 
 if __name__ == "__main__":
