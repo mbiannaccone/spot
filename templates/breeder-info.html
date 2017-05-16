@@ -7,6 +7,20 @@
 {{ breeder.phone }}<br>
 {{ breeder.email }}
 
+<div>Breeder of the following breeds:
+    {% for breed in breeds %}
+    <ul>
+        <li><a href='/breeds/{{ breed.breed_id }}'>{{ breed.name }}</a></li>
+    </ul>
+    {% endfor %}
+</div>
+
+<h5>spot this breeder</h5>
+<form action="/breeder-spot", method="POST">
+    <button type="submit">spot</button>
+    <input type="hidden" name="breeder" value=" {{ breeder.breeder_id }}">
+</form>
+
 <h4>Photos:</h4>
 {% for photo in photos %}
 <img src="{{ photo.photo }}"><br>

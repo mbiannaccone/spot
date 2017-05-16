@@ -121,8 +121,8 @@ def user_profile(user_id):
         return redirect('/login')
     else:
         user = User.query.get(user_id)
-        breed_spots = user.breed_spots
-        breeder_spots = user.breeder_spots
+        breed_spots = list({breed_spot.breed for breed_spot in user.breed_spots})
+        breeder_spots = list({breeder_spot.breeder for breeder_spot in user.breeder_spots})
         return render_template('user-info.html',
                                user=user,
                                breed_spots=breed_spots,
@@ -245,6 +245,7 @@ def breeder_info(breeder_id):
     breeder = Breeder.query.get(breeder_id)
     photos = breeder.photos
     litters = [(litter, litter.breed) for litter in breeder.litters]
+    breeds = list({breed for litter, breed in litters})
     events = breeder.events
     dogs = [(Dog.query.get(litter.sire_id),
             Dog.query.get(litter.dam_id)) for litter in breeder.litters]
@@ -253,7 +254,7 @@ def breeder_info(breeder_id):
 
     return render_template('breeder-info.html', breeder=breeder, photos=photos,
                            litters=litters, events=events, dogs=dogs,
-                           awards=awards, blogs=blogs, user=user)
+                           awards=awards, blogs=blogs, user=user, breeds=breeds)
 
 
 @app.route('/breeders/<breeder_id>/litters/<litter_id>')
@@ -331,6 +332,44 @@ def event_info(breeder_id, event_id):
                            event=event,
                            photos=photos,
                            user=user)
+
+
+@app.route('/breed-spot', methods=["POST"])
+def spot_breed():
+    """ Adds breed to the user's list of spots. """
+
+    if 'user_id' not in session:
+        flash("Please log in first!")
+        return redirect('/login')
+    else:
+        user = User.query.get(session['user_id'])
+        breed_id = request.form.get("breed")
+        breed = Breed.query.get(breed_id)
+
+        breedspot = BreedSpot(user_id=user.user_id, breed_id=breed_id)
+        db.session.add(breedspot)
+        db.session.commit()
+        flash("You've spotted the %s breed!" % breed.name)
+    return redirect('/breeds/%s' % breed_id)
+
+
+@app.route('/breeder-spot', methods=["POST"])
+def spot_breeder():
+    """ Adds breeder to the user's list of spots. """
+
+    if 'user_id' not in session:
+        flash("Please log in first!")
+        return redirect('/login')
+    else:
+        user = User.query.get(session['user_id'])
+        breeder_id = request.form.get("breeder")
+        breeder = Breeder.query.get(breeder_id)
+
+        breederspot = BreederSpot(user_id=user.user_id, breeder_id=breeder_id)
+        db.session.add(breederspot)
+        db.session.commit()
+        flash("You've spotted this breeder: %s" % breeder.name)
+    return redirect('/breeders/%s' % breeder_id)
 
 
 if __name__ == "__main__":

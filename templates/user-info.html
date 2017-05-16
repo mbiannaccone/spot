@@ -12,7 +12,7 @@
     you've Spotted the following breeds:
         {% for breed_spot in breed_spots %}
             <ul>
-                <li><a href='/breeds/{{ breed_spot.breed.breed_id }}'>{{ breed_spot.breed.name }}</a></li>
+                <li><a href='/breeds/{{ breed_spot.breed_id }}'>{{ breed_spot.name }}</a></li>
             </ul>
         {% endfor %}
 </div>
@@ -21,7 +21,7 @@
     you've Spotted the following breeders:
         {% for breeder_spot in breeder_spots %}
             <ul>
-                <li><a href='/breeders/{{ breeder_spot.breeder.breeder_id }}'>{{ breeder_spot.breeder.name }}</a></li>
+                <li><a href='/breeders/{{ breeder_spot.breeder_id }}'>{{ breeder_spot.name }}</a></li>
             </ul>
         {% endfor %}
 </div>

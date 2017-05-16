@@ -14,6 +14,12 @@
     <input type="submit" value="search">
 </form>
 
+<h5>spot this breed</h5>
+<form action="/breed-spot", method="POST">
+    <button type="submit">spot</button>
+    <input type="hidden" name="breed" value=" {{ breed.breed_id }}">
+</form>
+
 <div>Size: {{ size.size }}</div>
 
 <div>Energy: {{ energy.energy }}</div>
