@@ -432,6 +432,21 @@ def fix_dogs():
         all_dogs[litter.dam].append(litter)
         all_dogs[litter.sire].append(litter)
 
+
+def fix_addresses():
+    """ fixes breeder addresses so that they are real, for google maps. """
+
+    print "fixing addresses"
+
+    breeders = Breeder.query.all()
+    counter = -1
+    for row in open("seed_data/addresses.txt"):
+        row = row.rstrip()
+        counter += 1
+        breeders[counter].address = row
+    db.session.commit()
+
+
 ###############################################################################
 
 if __name__ == "__main__":
@@ -461,6 +476,9 @@ if __name__ == "__main__":
 
     #to fix the # of pups in the db (to match litter size)
     # more_pups()
+
+    #to fix the addresses to be real (so that recognized by google maps)
+    # fix_addresses()
 
     # These run mult times to make plenty of photos/events/awards for each
     # load_events()

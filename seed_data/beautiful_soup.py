@@ -128,6 +128,6 @@ def make_breed_char_dict():
     return breed_char_dict
 
 
-breeds_info = get_all_breeds()
-char_dict = make_char_dict()
-breed_char_dict = make_breed_char_dict()
+# breeds_info = get_all_breeds()
+# char_dict = make_char_dict()
+# breed_char_dict = make_breed_char_dict()
