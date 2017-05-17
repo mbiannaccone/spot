@@ -20,7 +20,7 @@
 
 <h4>breeder results near {{ location }}:</h4> 
 {% for breeder in breeders %}
-<a href='/breeders/{{ breeder.breeder_id }}'>{{ loop.index }} - {{ breeder.name }}</a><br>
+<b>{{ loop.index }}</b> - <a href='/breeders/{{ breeder.breeder_id }}'>{{ breeder.name }}</a><br>
 {{ breeder.email }}<br>
 <span class="address" data-address='{{ breeder.address }}'>{{ breeder.address }}</span><br>
 {{ breeder.phone }}<br><br>
@@ -42,7 +42,7 @@
         console.log(addresses);
 
         for (var i = 0; i < addresses.length; i++) {
-            geocodeAddress(geocoder, map, addresses[i], i);
+            geocodeAddress(geocoder, map, addresses[i], i+1);
         }          
       }
 
@@ -50,9 +50,9 @@
         geocoder.geocode({'address': address}, function(results, status) {
           if (status === 'OK') {
             var marker = new google.maps.Marker({
-              map: resultsMap,
               position: results[0].geometry.location,
-              label: num
+              label: String(num),
+              map: resultsMap
             });
           } else {
             alert('Geocode was not successful for the following reason: ' + status);
