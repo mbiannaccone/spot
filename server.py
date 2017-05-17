@@ -230,7 +230,18 @@ def breeder_search():
     return render_template('breeder-search.html',
                            breeders=breeders,
                            breed=Breed.query.get(breed),
-                           user=user)
+                           user=user,
+                           location=location)
+
+
+@app.route('/breeder-search-addresses.json')
+def get_breeder_addresses(breeders):
+    """ Sends breeder addresses as a JSON to breeder-search.html. """
+
+    addresses = [breeder.address for breeder in data]
+    print addresses
+
+    return jsonify(addresses)
 
 
 @app.route('/breeders/<breeder_id>')

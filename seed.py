@@ -440,7 +440,7 @@ def fix_addresses():
 
     breeders = Breeder.query.all()
     counter = -1
-    for row in open("seed_data/addresses.txt"):
+    for row in open("seed_data/newtest.txt"):
         row = row.rstrip()
         counter += 1
         breeders[counter].address = row
