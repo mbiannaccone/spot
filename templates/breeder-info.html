@@ -1,9 +1,21 @@
 {% extends 'base.html' %}
+
+{% block head %}
+
+    <style>
+      #map {
+        height: 300px;
+        width: 300px;
+      }
+    </style>
+
+{% endblock %}
+
 {% block content %}
 
 <h2>{{ breeder.name }}</h2>
 {{ breeder.bio }}<br>
-{{ breeder.address }}<br>
+<span id="address">{{ breeder.address }}</span><br>
 {{ breeder.phone }}<br>
 {{ breeder.email }}
 
@@ -88,5 +100,14 @@ Dams<ul>
     </li>
 {% endfor %}
 </ul>
+
+<div id="map"></div>
+
+    <script src="https://code.jquery.com/jquery.js"></script>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFObsWCCQqa4NCpJrZ4JGUze4rncKmZTw&callback=initMap"
+    async defer></script>
+
+    <script type="text/javascript" src="/static/js/breeder-info-map.js"></script>
 
 {% endblock %}

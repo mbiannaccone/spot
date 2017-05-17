@@ -59,14 +59,23 @@ def register_process():
     email = request.form.get("email")
     pwd = request.form.get("pwd")
     zipcode = request.form.get("zip")
+    fname = request.form.get("fname")
+    lname = request.form.get("lname")
+    phone = request.form.get("phone")
 
     if db.session.query(User).filter(User.email == email).first() is None:
         new_user = User(email=email, password=pwd, zipcode=zipcode)
+        if fname:
+            new_user.fname = fname
+        if lname:
+            new_user.lname = lname
+        if phone:
+            new_user.phone = phone
         db.session.add(new_user)
         db.session.commit()
         flash("Logged in as %s" % email)
         session['user_id'] = new_user.user_id
-        return redirect('/user/%s' % new_user.user_id)
+        return redirect('/users/%s' % new_user.user_id)
     else:
         flash("A user account with that email already exists, please login.")
         return redirect('/login')
