@@ -9,16 +9,15 @@ function initMap() {
 
   var address = document.getElementById("address").innerText;
 
-  geocodeAddress(geocoder, map, address, 1);
+  geocodeAddress(geocoder, map, address);
 }
 
-function geocodeAddress(geocoder, resultsMap, address, num) {
+function geocodeAddress(geocoder, resultsMap, address) {
   geocoder.geocode({'address': address}, function(results, status) {
     if (status === 'OK') {
       resultsMap.setCenter(results[0].geometry.location);
       var marker = new google.maps.Marker({
         position: results[0].geometry.location,
-        label: String(num),
         map: resultsMap
       });
     } else {

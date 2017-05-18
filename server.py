@@ -183,11 +183,14 @@ def breed_search():
 
         if keyword:
             for breed_char in BreedChar.query.all():
-                if keyword in breed_char.description:
+                if keyword.lower() in breed_char.description.lower():
                     search[breed_char.breed] += 1
             for breed in Breed.query.all():
-                if keyword in breed.description:
+                if keyword.lower() in breed.description.lower():
                     search[breed] += 1
+            for breed in Breed.query.all():
+                if keyword.lower() in breed.name.lower():
+                    search[breed] += 25
 
         search_results = [(result, breed) for breed, result in search.items() if result != 0]
         search_results.sort(reverse=True)
