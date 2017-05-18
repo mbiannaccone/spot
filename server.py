@@ -257,13 +257,13 @@ def breeder_info(breeder_id):
     litters = [(litter, litter.breed) for litter in breeder.litters]
     breeds = list({breed for litter, breed in litters})
     events = breeder.events
-    dogs = [(Dog.query.get(litter.sire_id),
-            Dog.query.get(litter.dam_id)) for litter in breeder.litters]
+    sires = list({Dog.query.get(litter.sire_id) for litter in breeder.litters})
+    dams = list({Dog.query.get(litter.dam_id) for litter in breeder.litters})
     awards = [(award, award.dog) for award in breeder.awards]
     blogs = breeder.blogs
 
     return render_template('breeder-info.html', breeder=breeder, photos=photos,
-                           litters=litters, events=events, dogs=dogs,
+                           litters=litters, events=events, sires=sires, dams=dams,
                            awards=awards, blogs=blogs, user=user, breeds=breeds)
 
 

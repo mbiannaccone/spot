@@ -54,7 +54,7 @@
 
 <h4>Dogs:</h4>
 Sires<ul>
-{% for sire, dam in dogs %}
+{% for sire in sires %}
     <li><a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ sire.dog_id }}'>{{ sire.name }}</a><br>
         date born: {{ sire.date_born }}<br>
         description: {{ sire.description}}<br>
@@ -62,7 +62,7 @@ Sires<ul>
 {% endfor %}
 </ul>
 Dams<ul>
-{% for sire, dam in dogs %}
+{% for dam in dams %}
     <li><a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ dam.dog_id }}'>{{ dam.name }}</a><br>
         date born: {{ dam.date_born }}<br>
         description: {{ dam.description}}<br>

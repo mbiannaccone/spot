@@ -422,17 +422,6 @@ def more_pups():
             db.session.commit()
 
 
-def fix_dogs():
-    """ fixes dogs that are in multiple litters. """
-
-    print "fixing dogs"
-
-    all_dogs = {dog: [] for dog in Dog.query.all()}
-    for litter in Litter.query.all():
-        all_dogs[litter.dam].append(litter)
-        all_dogs[litter.sire].append(litter)
-
-
 def fix_addresses():
     """ fixes breeder addresses so that they are real, for google maps. """
 
@@ -445,6 +434,61 @@ def fix_addresses():
         counter += 1
         breeders[counter].address = row
     db.session.commit()
+
+
+def fix_dogs():
+    """ fixes dogs that are in multiple litters. """
+
+    print "fixing dogs"
+
+    breeds = Breed.query.all()
+
+    all_dams = [dog for dog in Dog.query.filter(Dog.gender_id == 'f').all()]
+    dam_breeds = {}
+    for dam in all_dams:
+        rando_breed = choice(breeds)
+        dam_breeds[dam] = rando_breed
+
+    for dam, breed in dam_breeds.items():
+        for litter in db.session.query(Litter).filter(Litter.dam_id == dam.dog_id).all():
+            if litter.breed != breed:
+                litter.breed = breed
+
+    all_sires = [dog for dog in Dog.query.filter(Dog.gender_id == 'm').all()]
+    sire_breeds = {}
+    for sire in all_sires:
+        rando_breed = choice(breeds)
+        sire_breeds[sire] = rando_breed
+
+    for sire, breed in sire_breeds.items():
+        for litter in db.session.query(Litter).filter(Litter.sire_id == sire.dog_id).all():
+            if litter.breed != breed:
+                litter.breed = breed
+
+    db.session.commit()
+
+
+def fix_litters():
+    """ fixes litters have that dam/sire of different breeds. """
+
+    litters = Litter.query.all()
+
+    breed_dogs = [breed: [] for breed in Breed.query.all()]
+
+    for litter in litters:
+        if dam_breeds[litter.dam] != litter.breed:
+            new_dams = [dam for dam in dam_breeds if dam_breeds[dam] == litter.breed]
+            if not new_dams:
+                new_dams = [Dog.query.get(i) for i in range(1001, 1071)]
+            litter.dam_id = choice(new_dams).dog_id
+    db.session.commit()
+
+
+def fix_breeders():
+    """ fixes breeders that have litters of multiple breeds. """
+    pass
+
+
 
 
 ###############################################################################
