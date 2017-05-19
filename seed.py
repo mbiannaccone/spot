@@ -495,14 +495,18 @@ def load_pup_photo():
 
     print "Pup Photos"
 
+    captions = []
+
     for row in open("seed_data/photo_data.txt"):
         row = row.rstrip().split('\t')
         p, caption = row
-        pup_id = choice([i[0] for i in db.session.query(Pup.pup_id).all()])
+        captions.append(caption)
+        # pup_id = choice([i[0] for i in db.session.query(Pup.pup_id).all()])
         photo = 'http://www.randomdoggiegenerator.com/randomdoggie.php'
 
-        p_photo = PupPhoto(pup_id=pup_id, photo=photo, caption=caption)
-        db.session.add(p_photo)
+    for pup in Pup.query.all():
+            p_photo = PupPhoto(pup_id=pup.pup_id, photo='http://www.randomdoggiegenerator.com/randomdoggie.php', caption=choice(captions))
+            db.session.add(p_photo)
 
     db.session.commit()
 
