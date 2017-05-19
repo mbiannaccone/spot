@@ -52,14 +52,16 @@
 
     <div>location: <input type="text" name="location"></div>
 
-    <div>breed: <select required name="breed">
+    <div>breed: <select name="breed">
         <option disabled selected value>choose a breed</option>
         {% for breed in breeds %}
         <option value="{{ breed.breed_id }}">{{ breed.name }}</option>
         {% endfor %}
     </div>
 
-    <input type="submit", value="search">
+    <input type="submit", name="search" value="search by breed">
+    <span> ~ or ~ </span>
+    <input type="submit" name="search all" value="search all breeders">
 </form>
 
 

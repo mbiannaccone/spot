@@ -14,9 +14,13 @@
 
 {% block content %}
 
-<h4><a href='/breeds/{{ breed.breed_id}}'>{{ breed.name }}</a></h4>
-<div>{{ breed.description }}</div>
-<img src='{{ breed.photo }}'>
+{% if breed %}
+    <h4><a href='/breeds/{{ breed.breed_id}}'>{{ breed.name }}</a></h4>
+    <div>{{ breed.description }}</div>
+    <img src='{{ breed.photo }}'>
+{% else %}
+    <h4>all</h4>
+{% endif %}
 
 <h4>breeder results near 
     <span id="zipcode">

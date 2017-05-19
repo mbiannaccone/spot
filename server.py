@@ -239,15 +239,23 @@ def breeder_search():
         user = None
 
     location = request.args.get("location")
-    breed = int(request.args.get('breed'))
 
-    breeders = db.session.query(Breeder).join(Litter, Breed).filter(Breed.breed_id == breed)
+    if "search all" in request.args:
+        breeders = Breeder.query.all()
+        return render_template('breeder-search.html',
+                               breeders=breeders,
+                               breed=None,
+                               user=user,
+                               location=location)
 
-    return render_template('breeder-search.html',
-                           breeders=breeders,
-                           breed=Breed.query.get(breed),
-                           user=user,
-                           location=location)
+    else:
+        breed = int(request.args.get('breed'))
+        breeders = db.session.query(Breeder).join(Litter, Breed).filter(Breed.breed_id == breed)
+        return render_template('breeder-search.html',
+                               breeders=breeders,
+                               breed=Breed.query.get(breed),
+                               user=user,
+                               location=location)
 
 
 @app.route('/breeders/<breeder_id>')

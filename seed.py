@@ -133,14 +133,32 @@ def load_breeders():
         phs.append(ph)
         ems.append(em)
 
-    for i in range(0, 20):
+    for i in range(0, 100):
         all_users = set(user.user_id for user in User.query.all())
         all_breeders = set(breeder.breeder_id for breeder in Breeder.query.all())
         breeder_choices = list(all_users - all_breeders)
         breeder = Breeder(breeder_id=choice(breeder_choices), bio=choice(bios), name=choice(names), address=choice(addys), phone=choice(phs)[-13:], email=choice(ems))
         db.session.add(breeder)
         db.session.commit()
-        print breeder.breeder_id
+
+
+def load_new_litters():
+
+    for breeder, breed in new_breeders_breeds.items():
+        dam = Dog(name=choice(names_f), date_born=choice(date_borns_f), gender_id='f', description="I'm a cute dam!")
+        sire = Dog(name=choice(names_m), date_born=choice(date_borns_m), gender_id='m', description="I'm a cute sire!")
+        db.session.add(dam)
+        db.session.add(sire)
+        db.session.commit()
+        date_born = choice(litter_dates)
+        date_avail = date_born + timedelta(days=56)
+        litter = Litter(breeder_id=breeder.breeder_id, breed_id=breed.breed_id, date_born=date_born, date_available=date_avail, description="A cute litter of puppies!", num_pups=choice(range(1, 16)), sire_id=sire.dog_id, dam_id=dam.dog_id)
+        db.session.add(litter)
+        db.session.commit()
+        for i in range(0, litter.num_pups):
+            pup = Pup(litter_id=litter.litter_id, name=choice(pup_names), available=choice([True, False]), gender_id=choice(['m', 'f']), description="I'm an adorable puppy!", price=choice(pup_prices))
+            db.session.add(pup)
+        db.session.commit()
 
 
 def load_dogs():
@@ -148,16 +166,28 @@ def load_dogs():
 
     print "Dogs"
 
+    names_f = []
+    date_borns_f = []
+
+    litter_dates = []
+
+    names_m = []
+    date_borns_m = []
+
     for row in open("seed_data/dog_f_data.txt"):
             row = row.rstrip().split('\t')
             name, date, gender = row
             date_born = datetime.strptime(date, "%m/%d/%Y")
+            names_f.append(name)
+            date_borns_f.append(date_born)
             dog = Dog(name=name, date_born=date_born, gender_id='f', description="I'm a cute dam!")
             db.session.add(dog)
     for row in open("seed_data/dog_m_data.txt"):
             row = row.rstrip().split('\t')
             name, date, gender = row
             date_born = datetime.strptime(date, "%m/%d/%Y")
+            names_m.append(name)
+            date_borns_m.append(date_born)
             dog = Dog(name=name, date_born=date_born, gender_id='m', description="I'm a cute sire!")
             db.session.add(dog)
 
@@ -203,7 +233,7 @@ def load_litters():
                     if sire and dam:
                         date_born = choice(litter_dates)
                         date_available = date_born + timedelta(days=56)
-                        litter = Litter(breeder_id=breeder.breeder_id, breed_id=breed.breed_id, date_born=date_born, date_available=date_available, description="A cute litter of puppies!", num_pups = choice(range(1, 16)), sire_id=sire.dog_id, dam_id=dam.dog_id)
+                        litter = Litter(breeder_id=breeder.breeder_id, breed_id=breed.breed_id, date_born=date_born, date_available=date_available, description="A cute litter of puppies!", num_pups=choice(range(1, 16)), sire_id=sire.dog_id, dam_id=dam.dog_id)
                         db.session.add(litter)
     db.session.commit()
 
@@ -218,14 +248,14 @@ def load_pups():
 
     print "Pups"
 
-    names = []
-    prices = []
+    pup_names = []
+    pup_prices = []
 
     for row in open("seed_data/pup_data.txt"):
         row = row.rstrip().split('\t')
         name, avail, gender, price = row
-        names.append(name)
-        prices.append(price)
+        pup_names.append(name)
+        pup_prices.append(price)
 
     for litter in Litter.query.all():
         num = litter.num_pups
