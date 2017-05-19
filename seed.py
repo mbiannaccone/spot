@@ -88,30 +88,10 @@ def load_users():
         row = row.rstrip().split('\t')
         auto, first, last, email, pwd, zipc, ph = row
 
-        user = User(email=email, password=pwd, fname=first, lname=last,
+        user = User(email='e'+email, password=pwd, fname=first, lname=last,
                     zipcode=zipc, phone=ph[-13:])
 
         db.session.add(user)
-
-    db.session.commit()
-
-
-def load_breeders():
-    """ Loads in breeders from breeder_data.txt. """
-
-    print "Breeders"
-
-    all_users = [i[0] for i in db.session.query(User.user_id).all()]
-
-    for row in open("seed_data/breeder_data.txt"):
-        row = row.rstrip().split('\t')
-        bio, name, addy, ph, em = row
-        breeder_id = all_users.pop(randint(0, len(all_users) - 1))
-
-        breeder = Breeder(bio=bio, name=name, address=addy, phone=ph[-13:],
-                          email=em, breeder_id=breeder_id)
-
-        db.session.add(breeder)
 
     db.session.commit()
 
@@ -131,6 +111,158 @@ def load_breeds():
         db.session.add(breed)
 
     db.session.commit()
+
+
+def load_breeders():
+    """ Loads in breeders from breeder_data.txt. """
+
+    print "Breeders"
+
+    bios = []
+    names = []
+    addys = []
+    phs = []
+    ems = []
+
+    for row in open("seed_data/breeder_data.txt"):
+        row = row.rstrip().split('\t')
+        bio, name, addy, ph, em = row
+        bios.append(bio)
+        names.append(name)
+        addys.append(addy)
+        phs.append(ph)
+        ems.append(em)
+
+    for i in range(0, 20):
+        all_users = set(user.user_id for user in User.query.all())
+        all_breeders = set(breeder.breeder_id for breeder in Breeder.query.all())
+        breeder_choices = list(all_users - all_breeders)
+        breeder = Breeder(breeder_id=choice(breeder_choices), bio=choice(bios), name=choice(names), address=choice(addys), phone=choice(phs)[-13:], email=choice(ems))
+        db.session.add(breeder)
+        db.session.commit()
+        print breeder.breeder_id
+
+
+def load_dogs():
+    """ Loads in dogs from dog_data.txt. """
+
+    print "Dogs"
+
+    for row in open("seed_data/dog_f_data.txt"):
+            row = row.rstrip().split('\t')
+            name, date, gender = row
+            date_born = datetime.strptime(date, "%m/%d/%Y")
+            dog = Dog(name=name, date_born=date_born, gender_id='f', description="I'm a cute dam!")
+            db.session.add(dog)
+    for row in open("seed_data/dog_m_data.txt"):
+            row = row.rstrip().split('\t')
+            name, date, gender = row
+            date_born = datetime.strptime(date, "%m/%d/%Y")
+            dog = Dog(name=name, date_born=date_born, gender_id='m', description="I'm a cute sire!")
+            db.session.add(dog)
+
+    db.session.commit()
+
+
+def load_litters():
+    """ Loads in litters from litter_data.txt. """
+
+    print "Litters"
+
+    litter_dates = []
+
+    breeds = Breed.query.all()
+    # breeder_breeds = {breeder: choice(breeds) for breeder in Breeder.query.all()}
+    # dog_breeds = {dog: choice(breeds) for dog in Dog.query.all()}
+
+    breed_dogs = {breed: [] for breed in Breed.query.all()}
+    for dog, breed in dog_breeds.items():
+        breed_dogs[breed].append(dog)
+
+    breed_breeders = {breed: [] for breed in Breed.query.all()}
+    for breeder, breed in breeder_breeds.items():
+        breed_breeders[breed].append(breeder)
+
+    breeder_sires = {breeder: [] for breeder in breeder_breeds.keys()}
+    breeder_dams = {breeder: [] for breeder in breeder_breeds.keys()}
+
+    for dog, breed in dog_breeds.items():
+        breeder = choice(breed_breeders[breed])
+        if dog.gender_id == 'f':
+            breeder_dams[breeder].append(dog)
+        if dog.gender_id == 'm':
+            breeder_sires[breeder].append(dog)
+
+    for breed in breeds:
+        if breed_breeders[breed]:
+            breeder = choice(breed_breeders[breed])
+            if breeder_sires[breeder]:
+                sire = choice(breeder_sires[breeder])
+                if breeder_dams[breeder]:
+                    dam = choice(breeder_dams[breeder])
+                    if sire and dam:
+                        date_born = choice(litter_dates)
+                        date_available = date_born + timedelta(days=56)
+                        litter = Litter(breeder_id=breeder.breeder_id, breed_id=breed.breed_id, date_born=date_born, date_available=date_available, description="A cute litter of puppies!", num_pups = choice(range(1, 16)), sire_id=sire.dog_id, dam_id=dam.dog_id)
+                        db.session.add(litter)
+    db.session.commit()
+
+    for row in open("seed_data/litter_data.txt"):
+        row = row.rstrip().split('\t')
+        date_born = datetime.strptime(row[0], "%m/%d/%Y")
+        litter_dates.append(date_born)
+
+
+def load_pups():
+    """ Loads in puppies from pup_data.txt. """
+
+    print "Pups"
+
+    names = []
+    prices = []
+
+    for row in open("seed_data/pup_data.txt"):
+        row = row.rstrip().split('\t')
+        name, avail, gender, price = row
+        names.append(name)
+        prices.append(price)
+
+    for litter in Litter.query.all():
+        num = litter.num_pups
+        for i in range(0, num):
+            pup = Pup(litter_id=litter.litter_id, name=choice(names), available=choice([True, False]), gender_id=choice(['m', 'f']), description="I'm an adorable puppy!", price=choice(prices))
+            db.session.add(pup)
+    db.session.commit()
+
+
+def load_awards():
+    """ Loads in awards from award_data.txt. """
+
+    print "Awards"
+
+    names = []
+    descrs = []
+    dates = []
+
+    for row in open("seed_data/award_data.txt"):
+        row = row.rstrip().split('\t')
+        name, descr, date_str = row
+        date = datetime.strptime(date_str, "%m/%d/%Y")
+        names.append(name)
+        dates.append(date)
+        descrs.append(descr)
+
+    for breeder, sires in breeder_sires.items():
+        if sires:
+            for sire in sires:
+                award = Award(breeder_id=breeder.breeder_id, dog_id=sire.dog_id, name=choice(names), description=choice(descrs), date=choice(dates))
+                db.session.add(award)
+
+    for breeder, dams in breeder_dams.items():
+        if dams:
+            for dam in dams:
+                award = Award(breeder_id=breeder.breeder_id, dog_id=dam.dog_id, name=choice(names), description=choice(descrs), date=choice(dates))
+                db.session.add(award)
 
 
 def load_breeder_spots():
@@ -171,7 +303,7 @@ def load_breed_spots():
     db.session.commit()
 
 
-def load_dogs():
+def load_dogs_old():
     """ Loads in dogs from dog_f_data.txt and dog_m_data.txt. """
 
     print "Dogs"
@@ -192,7 +324,7 @@ def load_dogs():
     load_dog_file("seed_data/dog_m_data.txt", 'm')
 
 
-def load_litters():
+def load_litters_old():
     """ Loads in litters from litter_data.txt. """
 
     print "Litters"
@@ -215,29 +347,6 @@ def load_litters():
                         num_pups=num_pups, sire_id=sire_id, dam_id=dam_id)
 
         db.session.add(litter)
-
-    db.session.commit()
-
-
-def load_pups():
-    """ Loads in puppies from pup_data.txt. """
-
-    print "Pups"
-
-    for row in open("seed_data/pup_data.txt"):
-        row = row.rstrip().split('\t')
-        name, avail, gender, price = row
-        gender_id = gender.lower()
-        litter_id = choice([i[0] for i in db.session.query(Litter.litter_id).all()])
-
-        if avail == 'false':
-            available = False
-        else:
-            available = True
-
-        pup = Pup(litter_id=litter_id, name=name, available=available,
-                  gender_id=gender_id, description="I'm adorable!", price=price)
-        db.session.add(pup)
 
     db.session.commit()
 
@@ -277,7 +386,7 @@ def load_events():
     db.session.commit()
 
 
-def load_awards():
+def load_awards_old():
     """ Loads in awards from award_data.txt. """
 
     print "Awards"
@@ -398,7 +507,7 @@ def load_pup_photo():
     db.session.commit()
 
 
-def more_pups():
+def more_pups_old():
     """ adds pups to litters where num_pups does not correspond. """
 
     print "more pups"
@@ -436,7 +545,7 @@ def fix_addresses():
     db.session.commit()
 
 
-def fix_dogs():
+def fix_dogs_old():
     """ fixes dogs that are in multiple litters. """
 
     print "fixing dogs"
@@ -468,29 +577,6 @@ def fix_dogs():
     db.session.commit()
 
 
-def fix_litters():
-    """ fixes litters have that dam/sire of different breeds. """
-
-    litters = Litter.query.all()
-
-    breed_dogs = [breed: [] for breed in Breed.query.all()]
-
-    for litter in litters:
-        if dam_breeds[litter.dam] != litter.breed:
-            new_dams = [dam for dam in dam_breeds if dam_breeds[dam] == litter.breed]
-            if not new_dams:
-                new_dams = [Dog.query.get(i) for i in range(1001, 1071)]
-            litter.dam_id = choice(new_dams).dog_id
-    db.session.commit()
-
-
-def fix_breeders():
-    """ fixes breeders that have litters of multiple breeds. """
-    pass
-
-
-
-
 ###############################################################################
 
 if __name__ == "__main__":
@@ -508,9 +594,13 @@ if __name__ == "__main__":
     # load_users()
     # load_breeders()
     # load_breeds()
+    # load_dogs()
+    # load_dogs()
+
+
     # load_breeder_spots()
     # load_breed_spots()
-    # load_dogs()
+
     # load_litters()
     # load_pups()
     # load_pups()

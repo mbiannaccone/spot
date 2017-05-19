@@ -1,6 +1,7 @@
 """Models and database functions for project."""
 
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
 db = SQLAlchemy()
 
@@ -388,19 +389,185 @@ class BreedSpot(db.Model):
 # Helper functions
 
 
-def connect_to_db(app):
+def connect_to_db(app, db_uri='postgresql:///dogs'):
     """Connect the database to our Flask app."""
 
     # Configure to use our PstgreSQL database
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///dogs'
+    app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
     db.app = app
     db.init_app(app)
 
 
+def example_data():
+    """Create some sample data for testing."""
+
+    # empty out existing data (in case run more than once)
+    for class_name in [User,
+                       Breeder,
+                       BreederPhoto,
+                       Event,
+                       EventPhoto,
+                       Litter,
+                       LitterPhoto,
+                       Blog,
+                       Group,
+                       Size,
+                       Energy,
+                       Breed,
+                       Char,
+                       BreedChar,
+                       Dog,
+                       DogPhoto,
+                       Pup,
+                       PupPhoto,
+                       Gender,
+                       Award,
+                       BreederSpot,
+                       BreedSpot]:
+        class_name.query.delete()
+
+    # add sample data to each table
+    gender1 = Gender(gender_id='m', gender="male")
+    gender2 = Gender(gender_id='f', gender="female")
+    group = Group(group_id=1, name="Sporting Group", description="We hunt.")
+    size = Size(size_id='m', size="Medium")
+    energy = Energy(energy_id='h', energy="High")
+    breed = Breed(breed_id=1,
+                  name="German Shorthaired Pointer",
+                  akc_url="http://www.akc.org/dog-breeds/german-shorthaired-pointer/",
+                  group_id=1,
+                  size_id='m',
+                  energy_id='h',
+                  photo='http://cdn.akc.org/akcdoglovers/German-Shorthaired-Pointer_163X140.jpg',
+                  description='Friendly, smart, willing to please.')
+    user1 = User(user_id=1,
+                 email="breeder@gmail.com",
+                 password="pwd",
+                 fname="Bob",
+                 lname="Smith",
+                 zipcode="94123",
+                 phone="(415)441-4441")
+    user2 = User(user_id=2,
+                 email="normaluser@gmail.com",
+                 password="pword",
+                 fname="Shelly",
+                 lname="Dog-Lover",
+                 zipcode="94123",
+                 phone="(415)551-5151")
+    breeder = Breeder(breeder_id=1,
+                      bio="Hi, I'm a breeder",
+                      name="Dog Breeder & Co.",
+                      address="4101 Las Posas Rd, Camarillo, CA 93010",
+                      phone="(415)555-5551",
+                      email="dogs@breeder.com")
+    breederphoto = BreederPhoto(breeder_id=1,
+                                photo="http://www.tucsonadventuredogranch.com/morning_ruckus_at_Tucson_Adventure__Dog_Ranch.JPG",
+                                caption="This is my ranch.")
+    litter = Litter(litter_id=1,
+                    breeder_id=1,
+                    breed_id=1,
+                    date_born=datetime.strptime("3/1/2017", "%m/%d/%Y"),
+                    date_available=datetime.strptime("4/15/2017", "%m/%d/%Y"),
+                    description="We had some cute puppies!",
+                    num_pups=4,
+                    sire_id=1,
+                    dam_id=1)
+    litterphoto = LitterPhoto(litter_id=1,
+                              photo="http://www.cutestpaw.com/wp-content/uploads/2011/11/Puppies.jpg",
+                              caption="Look at these cute puppies!")
+    event = Event(event_id=1,
+                  breeder_id=1,
+                  name="Doggy Day Care",
+                  description="Bring your dogs for a fun day of playtime!",
+                  date=datetime.strptime("6/1/2017", "%m/%d/%Y"))
+    eventphoto = EventPhoto(event_id=1,
+                            photo="http://815678169699-bfas-files.s3.amazonaws.com/s3fs-public/pages/Strut-Your-Mutt-dog-walk-fundraiser-152.jpg",
+                            caption="Look at us having fun!")
+    blog = Blog(breeder_id=1,
+                date=datetime.strptime("3/15/2017", "%m/%d/%Y"),
+                category="Puppies",
+                post="The puppies were born 2 weeks ago. They're getting so big!")
+    char = Char(char_id=1, char='Health')
+    breedchar = BreedChar(breed_id=1,
+                          description="GSP's are generally healthy",
+                          char_id=1)
+    dog1 = Dog(dog_id=1,
+               name="George",
+               date_born=datetime.strptime("4/15/2015", "%m/%d/%Y"),
+               gender_id='m',
+               description='George is the best!')
+    dog2 = Dog(dog_id=2,
+               name="Georgina",
+               date_born=datetime.strptime("8/15/2015", "%m/%d/%Y"),
+               gender_id='f',
+               description="Georgina is a beautiful dam.")
+    dogphoto1 = DogPhoto(dog_id=1,
+                         photo="https://upload.wikimedia.org/wikipedia/commons/3/38/Duitse_staande_korthaar_10-10-2.jpg",
+                         caption="Look it's George")
+
+    dogphoto2 = DogPhoto(dog_id=2,
+                         photo="https://www.gundogbreeders.com/images/pedigrees/1134.jpg",
+                         caption="Look it's Georgina!")
+    pup = Pup(litter_id=1,
+              name="Lila",
+              available=True,
+              gender_id='f',
+              description="perfect little puppy",
+              price=5000)
+    pupphoto = PupPhoto(pup_id=1,
+                        photo="http://imglf2.ph.126.net/8Cv0GXgUprkT3RLckqTOOg==/6619212831327919772.jpg",
+                        caption="Look I'm a cute puppy")
+    award1 = Award(breeder_id=1,
+                   dog_id=1,
+                   name="Cutest Dog in Town",
+                   description="Crowned to the cutest dog in town.",
+                   date=datetime.strptime("8/15/2016", "%m/%d/%Y"))
+    award2 = Award(breeder_id=1,
+                   dog_id=2,
+                   name="Prettiest Dog in Town",
+                   description="Crowned to the prettiest dog in town.",
+                   date=datetime.strptime("12/15/2016", "%m/%d/%Y"))
+    breederspot = BreederSpot(user_id=2,
+                              breeder_id=1)
+    breedspot = BreedSpot(user_id=2,
+                          breed_id=1)
+
+    db.session.add_all([gender1,
+                        gender2,
+                        group,
+                        size,
+                        energy,
+                        breed,
+                        user1,
+                        user2,
+                        breeder,
+                        breederphoto,
+                        litter,
+                        litterphoto,
+                        event,
+                        eventphoto,
+                        blog,
+                        char,
+                        breedchar,
+                        dog1,
+                        dog2,
+                        dogphoto1,
+                        dogphoto2,
+                        pup,
+                        pupphoto,
+                        award1,
+                        award2,
+                        breederspot,
+                        breedspot])
+    db.session.commit()
+
+
 if __name__ == "__main__":
 
     from server import app
     connect_to_db(app)
+    db.create_all()
+    example_data()
     print "Connected to DB."

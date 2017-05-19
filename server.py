@@ -46,6 +46,8 @@ def register():
 
     if 'user_id' in session:
         user = User.query.get(session['user_id'])
+        flash("You're already logged in as %s! If you'd like to register with a new email, please log out first." % user.email)
+        return redirect('/users/%s' % user.user_id)
     else:
         user = None
 
@@ -87,6 +89,8 @@ def login_page():
 
     if 'user_id' in session:
         user = User.query.get(session['user_id'])
+        flash("You're already logged in as %s!" % user.email)
+        return redirect('/users/%s' % user.user_id)
     else:
         user = None
 
