@@ -572,11 +572,22 @@ def fix_addresses():
 
     breeders = Breeder.query.all()
     counter = -1
-    for row in open("seed_data/newtest.txt"):
+    for row in open("seed_data/new_addy.txt"):
         row = row.rstrip()
+        addys.append(row)
         counter += 1
         breeders[counter].address = row
     db.session.commit()
+
+    for breed in Breed.query.all():
+        addys = []
+        for row in open("seed_data/new_addy.txt"):
+            row = row.rstrip()
+            addys.append(row)
+        breeders = list({litter.breeder for litter in breed.litters})
+        for breeder in breeders:
+            breeder.address = addys.pop(randint(0, len(addys) - 1))
+
 
 
 def fix_dogs_old():

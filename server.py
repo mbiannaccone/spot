@@ -241,7 +241,7 @@ def breeder_search():
     location = request.args.get("location")
 
     if "search all" in request.args:
-        breeders = Breeder.query.all()
+        breeders = Breeder.query.all()[:10]
         return render_template('breeder-search.html',
                                breeders=breeders,
                                breed=None,

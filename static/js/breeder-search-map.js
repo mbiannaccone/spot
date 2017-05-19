@@ -2,7 +2,7 @@
 
 function initMap() {
   var map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 4,
+    zoom: 6,
     center: {lat: 37.5100571, lng: -117.967836}
   });
   var geocoder = new google.maps.Geocoder();
@@ -30,6 +30,7 @@ function geocodeAddress(geocoder, resultsMap, address, num) {
         label: String(num),
         map: resultsMap
       });
+      console.log(results[0].formatted_address);
     } else {
       alert('Geocode was not successful for the following reason: ' + status);
     }
