@@ -44,15 +44,15 @@ class FlaskTestsDatabase(TestCase):
         self.assertIn('welcome', result.data)
         self.assertIn('Sporting Group', result.data)
 
-    # def test_breed_search(self):
-    #     """ Tests breed search results page. """
-    #     result = self.client.get('/breed-search')
-    #     self.assertIn('Results', result.data)
+    def test_breed_search(self):
+        """ Tests breed search results page. """
+        result = self.client.get('/breed-search')
+        self.assertIn('Results', result.data)
 
-    # def test_breeder_search(self):
-    #     """ Tests breeder search results page. """
-    #     result = self.client.get('/breeder-search')
-    #     self.assertIn('breeder results near', result.data)
+    def test_breeder_search(self):
+        """ Tests breeder search results page. """
+        result = self.client.get('/breeder-search', data={'breed': '1'})
+        self.assertIn('breeder results near', result.data)
 
 if __name__ == "__main__":
     import unittest

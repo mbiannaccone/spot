@@ -403,31 +403,6 @@ def connect_to_db(app, db_uri='postgresql:///dogs'):
 def example_data():
     """Create some sample data for testing."""
 
-    # empty out existing data (in case run more than once)
-    for class_name in [User,
-                       Breeder,
-                       BreederPhoto,
-                       Event,
-                       EventPhoto,
-                       Litter,
-                       LitterPhoto,
-                       Blog,
-                       Group,
-                       Size,
-                       Energy,
-                       Breed,
-                       Char,
-                       BreedChar,
-                       Dog,
-                       DogPhoto,
-                       Pup,
-                       PupPhoto,
-                       Gender,
-                       Award,
-                       BreederSpot,
-                       BreedSpot]:
-        class_name.query.delete()
-
     # add sample data to each table
     gender1 = Gender(gender_id='m', gender="male")
     gender2 = Gender(gender_id='f', gender="female")
@@ -569,5 +544,4 @@ if __name__ == "__main__":
     from server import app
     connect_to_db(app)
     db.create_all()
-    example_data()
     print "Connected to DB."

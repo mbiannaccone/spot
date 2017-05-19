@@ -52,7 +52,7 @@
 
     <div>location: <input type="text" name="location"></div>
 
-    <div>breed: <select name="breed">
+    <div>breed: <select name="breed" required>
         <option disabled selected value>choose a breed</option>
         {% for breed in breeds %}
         <option value="{{ breed.breed_id }}">{{ breed.name }}</option>
