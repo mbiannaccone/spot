@@ -6,22 +6,22 @@ from server import app
 from flask import session
 
 
-# class FlaskTestsBasic(TestCase):
-#     """ Flask tests for testing Spot's server. """
+class FlaskTestsBasic(TestCase):
+    """ Flask tests for testing Spot's server. """
 
-#     def setUp(self):
-#         self.client = app.test_client()
-#         app.config['TESTING'] = True
+    def setUp(self):
+        self.client = app.test_client()
+        app.config['TESTING'] = True
 
-#     def test_login(self):
-#         """ Tests login - assuming not logged in yet. """
-#         result = self.client.get('/login')
-#         self.assertIn('Please enter your email and password', result.data)
+    def test_login(self):
+        """ Tests login - assuming not logged in yet. """
+        result = self.client.get('/login')
+        self.assertIn('Please enter your email and password', result.data)
 
-#     def test_register(self):
-#         """ Tests register - assuming not logged in yet. """
-#         result = self.client.get('/register')
-#         self.assertIn('Please enter your information below', result.data)
+    def test_register(self):
+        """ Tests register - assuming not logged in yet. """
+        result = self.client.get('/register')
+        self.assertIn('Please enter your information below', result.data)
 
 
 class FlaskTestsDatabase(TestCase):
@@ -44,15 +44,89 @@ class FlaskTestsDatabase(TestCase):
         self.assertIn('welcome', result.data)
         self.assertIn('Sporting Group', result.data)
 
-    def test_breed_search(self):
-        """ Tests breed search results page. """
-        result = self.client.get('/breed-search')
-        self.assertIn('Results', result.data)
+    # def test_breed_search(self):
+    #     """ Tests breed search results page. """
+    #     result = self.client.get('/breed-search', data={'size': 'm'})
+    #     self.assertIn('German Shorthaired Pointer', result.data)
 
-    def test_breeder_search(self):
-        """ Tests breeder search results page. """
-        result = self.client.get('/breeder-search', data={'breed': '1'})
-        self.assertIn('breeder results near', result.data)
+    def test_breed_info(self):
+        """ Tests breed info page. """
+        result = self.client.get('/breeds/1')
+        self.assertIn('Friendly, smart, willing to please', result.data)
+
+    # def test_breeder_search(self):
+    #     """ Tests breeder search results page. """
+    #     result = self.client.get('/breeder-search', data={'breed': '1'})
+    #     self.assertIn('breeder results near', result.data)
+
+    def test_breeder_info(self):
+        """ Tests breeder info page. """
+        result = self.client.get('/breeders/1')
+        self.assertIn('Dog Breeder', result.data)
+
+    def test_litter_info(self):
+        """ Tests a breeder's litter info page. """
+        result = self.client.get('/breeders/1/litters/1')
+        self.assertIn('We had some cute puppies!', result.data)
+
+    def test_dog_info(self):
+        """ Tests a breeder's dog info page. """
+        result = self.client.get('/breeders/1/dogs/1')
+        self.assertIn('George is the best!', result.data)
+
+    def test_event_info(self):
+        """ Tests a breeder's event info page. """
+        result = self.client.get('/breeders/1/events/1')
+        self.assertIn('Doggy Day Care', result.data)
+
+
+class FlaskTestsLoggedOut(TestCase):
+    """ Flask tests with user logged out of session. """
+
+    def setUp(self):
+        app.config['TESTING'] = True
+        self.client = app.test_client()
+
+    def test_breeder_spot(self):
+        """ Tests that a breeder spot will redirect to login - assuming not logged in. """
+        result = self.client.post('/breeder-spot', follow_redirects=True)
+        self.assertIn('Please enter your email and password', result.data)
+
+    def test_breed_spot(self):
+        """ Tests that a breed spot will redirect to login - assuming not logged in. """
+        result = self.client.post('/breed-spot', follow_redirects=True)
+        self.assertIn('Please enter your email and password', result.data)
+
+    def test_user_info(self):
+        """ Tests that a user's page will redirect to login - assuming not logged in. """
+        result = self.client.get('/users/1', follow_redirects=True)
+        self.assertIn('Please enter your email and password', result.data)
+
+
+class FlaskTestsLoggedIn(TestCase):
+    """ Flask tests with user logged in to session. """
+
+    def setUp(self):
+        app.config['TESTING'] = True
+        app.config['SECRET_KEY'] = 'key'
+        self.client = app.test_client()
+        connect_to_db(app, "postgresql:///testdb")
+        db.create_all()
+        example_data()
+
+        with self.client as c:
+            with c.session_transaction() as sess:
+                sess['user_id'] = 1
+
+    def tearDown(self):
+        db.session.close()
+        db.drop_all()
+
+    def test_breeder_spot(self):
+        """ Tests that a breeder spot will work - assuming logged in. """
+        result = self.client.post('/breeder-spot', follow_redirects=True)
+        self.assertIn('spot this breeder', result.data)
+
 
 if __name__ == "__main__":
     import unittest

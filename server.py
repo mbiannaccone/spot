@@ -12,7 +12,7 @@ from model import connect_to_db, db
 
 app = Flask(__name__)
 
-app.secret_key = "ABC"
+app.secret_key = "key"
 app.jinja_env.undefined = StrictUndefined
 
 
@@ -133,7 +133,9 @@ def user_profile(user_id):
         flash("Please log in first!")
         return redirect('/login')
     else:
-        user = User.query.get(user_id)
+        if session['user_id'] != user_id:
+            flash("You can only view your own profile!")
+        user = User.query.get(session['user_id'])
         breed_spots = list({breed_spot.breed for breed_spot in user.breed_spots})
         breeder_spots = list({breeder_spot.breeder for breeder_spot in user.breeder_spots})
         return render_template('user-info.html',
