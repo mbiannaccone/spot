@@ -174,24 +174,71 @@ def load_dogs():
     names_m = []
     date_borns_m = []
 
-    for row in open("seed_data/dog_f_data.txt"):
-            row = row.rstrip().split('\t')
-            name, date, gender = row
-            date_born = datetime.strptime(date, "%m/%d/%Y")
-            names_f.append(name)
-            date_borns_f.append(date_born)
-            dog = Dog(name=name, date_born=date_born, gender_id='f', description="I'm a cute dam!")
-            db.session.add(dog)
-    for row in open("seed_data/dog_m_data.txt"):
-            row = row.rstrip().split('\t')
-            name, date, gender = row
-            date_born = datetime.strptime(date, "%m/%d/%Y")
-            names_m.append(name)
-            date_borns_m.append(date_born)
-            dog = Dog(name=name, date_born=date_born, gender_id='m', description="I'm a cute sire!")
-            db.session.add(dog)
+    litter_dates = []
 
-    db.session.commit()
+    for row in open("seed_data/dog_f_data.txt"):
+        row = row.rstrip().split('\t')
+        name, date, gender = row
+        date_born = datetime.strptime(date, "%m/%d/%Y")
+        names_f.append(name)
+        date_borns_f.append(date_born)
+    for row in open("seed_data/dog_m_data.txt"):
+        row = row.rstrip().split('\t')
+        name, date, gender = row
+        date_born = datetime.strptime(date, "%m/%d/%Y")
+        names_m.append(name)
+        date_borns_m.append(date_born)
+
+    for row in open("seed_data/litter_data.txt"):
+        row = row.rstrip().split('\t')
+        date_born = datetime.strptime(row[0], "%m/%d/%Y")
+        litter_dates.append(date_born)
+
+    for breeder in Breeder.query.all():
+        dogs_f = []
+        dogs_m = []
+        for litter in breeder.litters:
+            dogs_f.append(litter.dam.dog_id)
+            dogs_m.append(litter.sire.dog_id)
+        if not dogs_f:
+            dam1 = Dog(name=choice(names_f), date_born=choice(date_borns_f), gender_id='f', description="I'm a cute dam!")
+            dam2 = Dog(name=choice(names_f), date_born=choice(date_borns_f), gender_id='f', description="I'm a cute dam!")
+            db.session.add_all([dam1, dam2])
+        if not dogs_m:
+            sire1 = Dog(name=choice(names_m), date_born=choice(date_borns_m), gender_id='m', description="I'm a cute sire!")
+            sire2 = Dog(name=choice(names_m), date_born=choice(date_borns_m), gender_id='m', description="I'm a cute sire!")
+            db.session.add_all([sire1, sire2])
+
+    breeders = [breeder.breeder_id for breeder in Breeder.query.all() if not breeder.litters]
+    breeds = [breed.breed_id for breed in Breed.query.all()]
+
+    free_sires = []
+    free_dams = []
+
+    for dog in Dog.query.all():
+        if dog.gender_id == 'f':
+            litters = [litter for litter in Litter.query.filter(Litter.dam_id == dog.dog_id)]
+            if not litters:
+                free_dams.append(dog)
+        if dog.gender_id == 'm':
+            litters = [litter for litter in Litter.query.filter(Litter.sire_id == dog.dog_id)]
+            if not litters:
+                free_sires.append(dog)
+
+    for breeder in Breeder.query.all():
+        if not breeder.litters:
+            breed = choice(breeds)
+            date_born1 = choice(litter_dates)
+            date_available1 = date_born + timedelta(days=56)
+            sire1 = free_sires.pop()
+            dam1 = free_dams.pop()
+            litter1 = Litter(breeder_id=breeder.breeder_id, breed_id=breed, date_born=date_born1, date_available=date_available1, description="A cute litter of puppies!", num_pups=choice(range(1, 16)), sire_id=sire1.dog_id, dam_id=dam1.dog_id)
+            date_born2 = choice(litter_dates)
+            date_available2 = date_born + timedelta(days=56)
+            sire2 = free_sires.pop()
+            dam2 = free_dams.pop()
+            litter2 = Litter(breeder_id=breeder.breeder_id, breed_id=breed, date_born=date_born2, date_available=date_available2, description="A cute litter of puppies!", num_pups=choice(range(1, 16)), sire_id=sire2.dog_id, dam_id=dam2.dog_id)
+            db.session.add_all([litter1, litter2])
 
 
 def load_litters():
@@ -404,33 +451,55 @@ def load_events():
 
     print "Events"
 
+    names = []
+    descrs = []
+    dates = []
+
     for row in open("seed_data/event_data.txt"):
         row = row.rstrip().split('\t')
         name, descr, date_str = row
-        breeder_id = choice([i[0] for i in db.session.query(Breeder.breeder_id).all()])
         date = datetime.strptime(date_str, "%m/%d/%Y")
+        names.append(name)
+        descrs.append(descr)
+        dates.append(date)
 
-        event = Event(breeder_id=breeder_id, name=name, description=descr, date=date)
-        db.session.add(event)
+    for breeder in Breeder.query.all():
+        if not breeder.events:
+            event1 = Event(breeder_id=breeder.breeder_id, name=choice(names), description=choice(descrs), date=choice(dates))
+            event2 = Event(breeder_id=breeder.breeder_id, name=choice(names), description=choice(descrs), date=choice(dates))
+            db.session.add_all([event1, event2])
 
     db.session.commit()
 
 
-def load_awards_old():
+def load_awards_new():
     """ Loads in awards from award_data.txt. """
 
     print "Awards"
+
+    names = []
+    ds = []
+    dates = []
 
     for row in open("seed_data/award_data.txt"):
         row = row.rstrip().split('\t')
         name, descr, date_str = row
         date = datetime.strptime(date_str, "%m/%d/%Y")
-        breeder_id = choice([i[0] for i in db.session.query(Breeder.breeder_id).all()])
-        dog_id = choice([i[0] for i in db.session.query(Dog.dog_id).all()])
+        names.append(name)
+        ds.append(descr)
+        dates.append(date)
 
-        award = Award(breeder_id=breeder_id, dog_id=dog_id, name=name,
-                      description=descr, date=date)
-        db.session.add(award)
+    for breeder in Breeder.query.all():
+        dogs = []
+        for litter in breeder.litters:
+            dogs.append(litter.dam.dog_id)
+            dogs.append(litter.sire.dog_id)
+        if dogs:
+            if not breeder.awards:
+                award1 = Award(breeder_id=breeder.breeder_id, dog_id=choice(dogs), name=choice(names), description=choice(ds), date=choice(dates))
+                award2 = Award(breeder_id=breeder.breeder_id, dog_id=choice(dogs), name=choice(names), description=choice(ds), date=choice(dates))
+                award3 = Award(breeder_id=breeder.breeder_id, dog_id=choice(dogs), name=choice(names), description=choice(ds), date=choice(dates))
+                db.session.add_all([award1, award2, award3])
 
     db.session.commit()
 
@@ -457,14 +526,19 @@ def load_breeder_photo():
 
     print "Breeder Photos"
 
+    captions = []
+
     for row in open("seed_data/photo_data.txt"):
         row = row.rstrip().split('\t')
         p, caption = row
-        breeder_id = choice([i[0] for i in db.session.query(Breeder.breeder_id).all()])
-        photo = 'http://www.randomdoggiegenerator.com/randomdoggie.php'
+        captions.append(caption)
 
-        b_photo = BreederPhoto(breeder_id=breeder_id, photo=photo, caption=caption)
-        db.session.add(b_photo)
+    for breeder in Breeder.query.all():
+        if not breeder.photos:
+                photo1 = BreederPhoto(breeder_id=breeder.breeder_id, photo='https://unsplash.it/400/400/?random', caption=choice(captions))
+                photo2 = BreederPhoto(breeder_id=breeder.breeder_id, photo='https://unsplash.it/400/400/?random', caption=choice(captions))
+                photo3 = BreederPhoto(breeder_id=breeder.breeder_id, photo='https://unsplash.it/400/400/?random', caption=choice(captions))
+                db.session.add_all([photo1, photo2, photo3])
 
     db.session.commit()
 
@@ -474,14 +548,18 @@ def load_dog_photo():
 
     print "Dog Photos"
 
+    captions = []
+
     for row in open("seed_data/photo_data.txt"):
         row = row.rstrip().split('\t')
         p, caption = row
-        dog_id = choice([i[0] for i in db.session.query(Dog.dog_id).all()])
-        photo = 'http://www.randomdoggiegenerator.com/randomdoggie.php'
+        captions.append(caption)
 
-        d_photo = DogPhoto(dog_id=dog_id, photo=photo, caption=caption)
-        db.session.add(d_photo)
+    for dog in Dog.query.all():
+        if len(dog.photos) == 1:
+            photo1 = DogPhoto(dog_id=dog.dog_id, photo='http://www.randomdoggiegenerator.com/randomdoggie.php', caption=choice(captions))
+            photo2 = DogPhoto(dog_id=dog.dog_id, photo='http://www.randomdoggiegenerator.com/randomdoggie.php', caption=choice(captions))
+            db.session.add_all([photo1, photo2])
 
     db.session.commit()
 
@@ -491,14 +569,19 @@ def load_event_photo():
 
     print "Event Photos"
 
+    captions = []
+
     for row in open("seed_data/photo_data.txt"):
         row = row.rstrip().split('\t')
         p, caption = row
-        event_id = choice([i[0] for i in db.session.query(Event.event_id).all()])
-        photo = 'https://unsplash.it/400/400/?random'
+        captions.append(caption)
 
-        e_photo = EventPhoto(event_id=event_id, photo=photo, caption=caption)
-        db.session.add(e_photo)
+    for event in Event.query.all():
+        if not event.photos:
+            photo1 = EventPhoto(event_id=event.event_id, photo='https://unsplash.it/400/400/?random', caption=choice(captions))
+            photo2 = EventPhoto(event_id=event.event_id, photo='https://unsplash.it/400/400/?random', caption=choice(captions))
+            photo3 = EventPhoto(event_id=event.event_id, photo='https://unsplash.it/400/400/?random', caption=choice(captions))
+            db.session.add_all([photo1, photo2, photo3])
 
     db.session.commit()
 
@@ -531,12 +614,12 @@ def load_pup_photo():
         row = row.rstrip().split('\t')
         p, caption = row
         captions.append(caption)
-        # pup_id = choice([i[0] for i in db.session.query(Pup.pup_id).all()])
-        photo = 'http://www.randomdoggiegenerator.com/randomdoggie.php'
 
     for pup in Pup.query.all():
-            p_photo = PupPhoto(pup_id=pup.pup_id, photo='http://www.randomdoggiegenerator.com/randomdoggie.php', caption=choice(captions))
-            db.session.add(p_photo)
+        if not pup.photos:
+            photo1 = PupPhoto(pup_id=pup.pup_id, photo='http://www.randomdoggiegenerator.com/randomdoggie.php', caption=choice(captions))
+            photo2 = PupPhoto(pup_id=pup.pup_id, photo='http://www.randomdoggiegenerator.com/randomdoggie.php', caption=choice(captions))        
+            db.session.add_all([photo1, photo2])
 
     db.session.commit()
 

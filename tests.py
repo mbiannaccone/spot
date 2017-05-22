@@ -44,10 +44,10 @@ class FlaskTestsDatabase(TestCase):
         self.assertIn('welcome', result.data)
         self.assertIn('Sporting Group', result.data)
 
-    # def test_breed_search(self):
-    #     """ Tests breed search results page. """
-    #     result = self.client.get('/breed-search', data={'size': 'm'})
-    #     self.assertIn('German Shorthaired Pointer', result.data)
+    def test_breed_search(self):
+        """ Tests breed search results page. """
+        result = self.client.get('/breed-search', data={'size': 'm'})
+        self.assertIn('German Shorthaired Pointer', result.data)
 
     def test_breed_info(self):
         """ Tests breed info page. """
@@ -122,10 +122,10 @@ class FlaskTestsLoggedIn(TestCase):
         db.session.close()
         db.drop_all()
 
-    def test_breeder_spot(self):
-        """ Tests that a breeder spot will work - assuming logged in. """
-        result = self.client.post('/breeder-spot', follow_redirects=True)
-        self.assertIn('spot this breeder', result.data)
+    # def test_breeder_spot(self):
+    #     """ Tests that a breeder spot will work - assuming logged in. """
+    #     result = self.client.post('/breeder-spot', follow_redirects=True)
+    #     self.assertIn('spot this breeder', result.data)
 
 
 if __name__ == "__main__":
