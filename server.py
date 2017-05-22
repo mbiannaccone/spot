@@ -16,6 +16,15 @@ app.secret_key = "key"
 app.jinja_env.undefined = StrictUndefined
 
 
+def check_user():
+    """ Checks if a user is logged in. """
+
+    if 'user_id' in session:
+        return User.query.get(session['user_id'])
+    else:
+        return None
+
+
 @app.route('/')
 def index():
     """ Homepage. """
@@ -26,10 +35,7 @@ def index():
     chars = Char.query.filter(Char.char_id > 12).all()
     breeds = Breed.query.all()
 
-    if 'user_id' in session:
-        user = User.query.get(session['user_id'])
-    else:
-        user = None
+    user = check_user()
 
     return render_template("homepage.html",
                            groups=groups,
@@ -133,8 +139,6 @@ def user_profile(user_id):
         flash("Please log in first!")
         return redirect('/login')
     else:
-        if session['user_id'] != user_id:
-            flash("You can only view your own profile!")
         user = User.query.get(session['user_id'])
         breed_spots = list({breed_spot.breed for breed_spot in user.breed_spots})
         breeder_spots = list({breeder_spot.breeder for breeder_spot in user.breeder_spots})
@@ -144,14 +148,50 @@ def user_profile(user_id):
                                breeder_spots=breeder_spots)
 
 
+def breed_search_rank(size_id, group_id, energy_id, keyword, chars):
+    """ Takes in search filters and ranks the search results. """
+
+    search = {breed: 0 for breed in Breed.query.all()}
+
+    if size_id:
+        for breed in Size.query.get(size_id).breeds:
+            search[breed] += 25
+
+    if group_id:
+        for breed in Group.query.get(group_id).breeds:
+            search[breed] += 25
+
+    if energy_id:
+        for breed in Energy.query.get(energy_id).breeds:
+            search[breed] += 25
+
+    if chars:
+        for char_id in chars:
+            for breed_char in Char.query.get(char_id).breed_chars:
+                search[breed_char.breed] += 25
+
+    if keyword:
+        for breed_char in BreedChar.query.all():
+            if keyword.lower() in breed_char.description.lower():
+                search[breed_char.breed] += 1
+        for breed in Breed.query.all():
+            if keyword.lower() in breed.description.lower():
+                search[breed] += 1
+        for breed in Breed.query.all():
+            if keyword.lower() in breed.name.lower():
+                search[breed] += 25
+
+    search_results = [(result, breed) for breed, result in search.items() if result != 0]
+    search_results.sort(reverse=True)
+
+    return search_results
+
+
 @app.route('/breed-search')
 def breed_search():
     """ Breed search results. """
 
-    if 'user_id' in session:
-        user = User.query.get(session['user_id'])
-    else:
-        user = None
+    user = check_user()
 
     if "search all" in request.args:
         search_results = [(1, breed) for breed in Breed.query.all()]
@@ -168,38 +208,7 @@ def breed_search():
             if value:
                 chars.append(int(value))
 
-        search = {breed: 0 for breed in Breed.query.all()}
-
-        if size_id:
-            for breed in Size.query.get(size_id).breeds:
-                search[breed] += 25
-
-        if group_id:
-            for breed in Group.query.get(group_id).breeds:
-                search[breed] += 25
-
-        if energy_id:
-            for breed in Energy.query.get(energy_id).breeds:
-                search[breed] += 25
-
-        if chars:
-            for char_id in chars:
-                for breed_char in Char.query.get(char_id).breed_chars:
-                    search[breed_char.breed] += 25
-
-        if keyword:
-            for breed_char in BreedChar.query.all():
-                if keyword.lower() in breed_char.description.lower():
-                    search[breed_char.breed] += 1
-            for breed in Breed.query.all():
-                if keyword.lower() in breed.description.lower():
-                    search[breed] += 1
-            for breed in Breed.query.all():
-                if keyword.lower() in breed.name.lower():
-                    search[breed] += 25
-
-        search_results = [(result, breed) for breed, result in search.items() if result != 0]
-        search_results.sort(reverse=True)
+        search_results = breed_search_rank(size_id, group_id, energy_id, keyword, chars)
 
     return render_template('breed-search.html', search_results=search_results, user=user)
 
@@ -208,10 +217,7 @@ def breed_search():
 def breed_info(breed_id):
     """ Renders a breed's info page. """
 
-    if 'user_id' in session:
-        user = User.query.get(session['user_id'])
-    else:
-        user = None
+    user = check_user()
 
     breed = Breed.query.get(breed_id)
     group = breed.group
@@ -231,14 +237,11 @@ def breed_info(breed_id):
                            user=user)
 
 
-@app.route('/breeder-search')
+@app.route('/breeder-search', methods=['GET'])
 def breeder_search():
     """ Breeder search results. """
 
-    if 'user_id' in session:
-        user = User.query.get(session['user_id'])
-    else:
-        user = None
+    user = check_user()
 
     location = request.args.get("location")
 
@@ -264,10 +267,7 @@ def breeder_search():
 def breeder_info(breeder_id):
     """ Renders a breeder's info page. """
 
-    if 'user_id' in session:
-        user = User.query.get(session['user_id'])
-    else:
-        user = None
+    user = check_user()
 
     breeder = Breeder.query.get(breeder_id)
     photos = breeder.photos
@@ -288,10 +288,7 @@ def breeder_info(breeder_id):
 def litter_info(breeder_id, litter_id):
     """ Renders a litter's info page. """
 
-    if 'user_id' in session:
-        user = User.query.get(session['user_id'])
-    else:
-        user = None
+    user = check_user()
 
     breeder = Breeder.query.get(breeder_id)
     litter = Litter.query.get(litter_id)
@@ -318,10 +315,7 @@ def litter_info(breeder_id, litter_id):
 def dog_info(breeder_id, dog_id):
     """ Renders a dog's info page. """
 
-    if 'user_id' in session:
-        user = User.query.get(session['user_id'])
-    else:
-        user = None
+    user = check_user()
 
     breeder = Breeder.query.get(breeder_id)
     dog = Dog.query.get(dog_id)
@@ -345,10 +339,7 @@ def dog_info(breeder_id, dog_id):
 def event_info(breeder_id, event_id):
     """ Render's a breeder event's info page. """
 
-    if 'user_id' in session:
-        user = User.query.get(session['user_id'])
-    else:
-        user = None
+    user = check_user()
 
     breeder = Breeder.query.get(breeder_id)
     event = Event.query.get(event_id)
@@ -389,7 +380,7 @@ def spot_breeder():
         return redirect('/login')
     else:
         user = User.query.get(session['user_id'])
-        breeder_id = request.form.get("breeder")
+        breeder_id = int(request.form.get('breeder'))
         breeder = Breeder.query.get(breeder_id)
 
         breederspot = BreederSpot(user_id=user.user_id, breeder_id=breeder_id)

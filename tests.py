@@ -46,18 +46,19 @@ class FlaskTestsDatabase(TestCase):
 
     def test_breed_search(self):
         """ Tests breed search results page. """
-        result = self.client.get('/breed-search', data={'size': 'm'})
-        self.assertIn('German Shorthaired Pointer', result.data)
+        result = self.client.get('/breed-search')
+        self.assertIn('Results', result.data)
 
     def test_breed_info(self):
         """ Tests breed info page. """
         result = self.client.get('/breeds/1')
         self.assertIn('Friendly, smart, willing to please', result.data)
 
-    # def test_breeder_search(self):
-    #     """ Tests breeder search results page. """
-    #     result = self.client.get('/breeder-search', data={'breed': '1'})
-    #     self.assertIn('breeder results near', result.data)
+    def test_breeder_search(self):
+        """ Tests breeder search results page. """
+        data = {'breed': '1'}
+        result = self.client.get('/breeder-search', query_string=data, follow_redirects=True)
+        self.assertIn('breeder results near', result.data)
 
     def test_breeder_info(self):
         """ Tests breeder info page. """
@@ -122,11 +123,25 @@ class FlaskTestsLoggedIn(TestCase):
         db.session.close()
         db.drop_all()
 
-    # def test_breeder_spot(self):
-    #     """ Tests that a breeder spot will work - assuming logged in. """
-    #     result = self.client.post('/breeder-spot', follow_redirects=True)
-    #     self.assertIn('spot this breeder', result.data)
+    def test_register(self):
+        """ Tests that doesn't let you try register if already logged in. """
+        result = self.client.get('/register', follow_redirects=True)
+        self.assertIn('Spotted the following breeds', result.data)
 
+    def test_login(self):
+        """ Tests that doesn't let you log in if already logged in. """
+        result = self.client.get('/login', follow_redirects=True)
+        self.assertIn('Spotted the following breeds', result.data)
+
+    def test_breeder_spot(self):
+        """ Tests that a breeder spot will work - assuming logged in. """
+        result = self.client.post('/breeder-spot', data={'breeder': '1'}, follow_redirects=True)
+        self.assertIn('spot this breeder', result.data)
+
+    def test_breed_spot(self):
+        """ Tests that a breed spot will work - assuming logged in. """
+        result = self.client.post('/breed-spot', data={'breed': '1'}, follow_redirects=True)
+        self.assertIn('spot this breed', result.data)
 
 if __name__ == "__main__":
     import unittest
