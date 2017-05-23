@@ -18,8 +18,6 @@ function initMap() {
   if (zipcode) {
     geocodeZip(map, zipcode);
   }
-
-
 }
 
 function geocodeAddress(geocoder, resultsMap, address, num) {
@@ -30,7 +28,10 @@ function geocodeAddress(geocoder, resultsMap, address, num) {
         label: String(num),
         map: resultsMap
       });
-      console.log(results[0].formatted_address);
+
+      var markerBounds = new google.maps.LatLngBounds();
+      markerBounds.extend(results[0].geometry.location);
+
     } else {
       alert('Geocode was not successful for the following reason: ' + status);
     }
@@ -42,6 +43,11 @@ function geocodeZip(resultsMap, zipcode) {
   geocoder_zip.geocode({'address': zipcode}, function(results, status) {
     if (status === 'OK') {
       resultsMap.setCenter(results[0].geometry.location);
+      var marker = new google.maps.Marker({
+        position: results[0].geometry.location,
+        map: resultsMap,
+        icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png',
+      });
     }
   });
 }

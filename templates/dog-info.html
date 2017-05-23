@@ -14,7 +14,7 @@
     {% endif %}
 </div>
 
-<div>Born: {{ dog.date_born }}</div>
+<div>Born: {{ dog.date_born.strftime('%m/%d/%y') }}</div>
 
 <div>Breeder: <a href='/breeders/{{ breeder.breeder_id }}'>{{ breeder.name }}</a>
 
@@ -22,7 +22,7 @@
 
 <div>Awards:
     <ul> {% for award in awards %}
-        <li>{{ award.name }} - {{ award.date }}</li>
+        <li>{{ award.name }} - {{ award.date.strftime('%m/%d/%y') }}</li>
         <ul>
             <li>{{ award.description }}</li>
         </ul>
@@ -34,11 +34,11 @@
     <ul>
     {% for litter in litters %}
         <li>
-            <a href='/breeders/{{ breeder.breeder_id }}/litters/{{ litter.litter_id }}'>litter #{{ loop.revindex }}</a><br>
-            date born: {{ litter.date_born }}<br>
-            date available: {{ litter.date_available }}<br>
-            # puppies: {{ litter.num_pups }}<br>
-            description: {{ litter.description}}<br>
+            <a href='/breeders/{{ breeder.breeder_id }}/litters/{{ litter.litter_id }}'>Litter #{{ loop.revindex }}</a><br>
+            Born: {{ litter.date_born.strftime('%m/%d/%y') }}<br>
+            Available: {{ litter.date_available.strftime('%m/%d/%y') }}<br>
+            # Puppies: {{ litter.num_pups }}<br>
+            {{ litter.description}}<br>
         </li>
     {% endfor %}
     </ul>

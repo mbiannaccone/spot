@@ -18,10 +18,10 @@
 </div>
 <div>{{ litter.description }}</div>
 <div>
-    Born: {{ litter.date_born }}
+    Born: {{ litter.date_born.strftime('%m/%d/%y') }}
 </div>
 <div>
-    Available: {{ litter.date_available }}
+    Available: {{ litter.date_available.strftime('%m/%d/%y') }}
 </div>
 <div>
     Photos:<br>

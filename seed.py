@@ -226,6 +226,13 @@ def load_dogs():
                 free_sires.append(dog)
 
     for breeder in Breeder.query.all():
+        for litter in breeder.litters:
+            dam = Dog.query.get(litter.dam_id)
+            if dam.gender_id == 'm':
+                new_dam = free_dams.pop()
+                litter.dam_id = new_dam.dog_id
+
+    for breeder in Breeder.query.all():
         if not breeder.litters:
             breed = choice(breeds)
             date_born1 = choice(litter_dates)

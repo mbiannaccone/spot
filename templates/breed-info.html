@@ -23,22 +23,22 @@
     <input type="hidden" name="breed" value=" {{ breed.breed_id }}">
 </form>
 
-<div>Size: {{ size.size }}</div>
+<p>Size: {{ size.size }}</p>
 
-<div>Energy: {{ energy.energy }}</div>
+<p>Energy: {{ energy.energy }}</p>
 
-<div>
+<p>
     Group: {{ breed.group.name }}<br>
     Group Description: {{ group.description }}
-</div>
+</p>
 
-<div>
+<p>
     Standard Characteristics:
     <ul>
         {% for char_id, char, breed_char in breed_chars %}
         <li>{{ char.char }}: {{ breed_char.description }}</li>
         {% endfor %}
     </ul>
-</div>
+</p>
 
 {% endblock %}

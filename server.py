@@ -52,7 +52,8 @@ def register():
 
     if 'user_id' in session:
         user = User.query.get(session['user_id'])
-        flash("You're already logged in as %s! If you'd like to register with a new email, please log out first." % user.email)
+        flash("You're already logged in as %s!")
+        flash("If you'd like to register with a new email, please log out first." % user.email)
         return redirect('/users/%s' % user.user_id)
     else:
         user = None
@@ -153,17 +154,14 @@ def breed_search_rank(size_id, group_id, energy_id, keyword, chars):
 
     search = {breed: 0 for breed in Breed.query.all()}
 
-    if size_id:
-        for breed in Size.query.get(size_id).breeds:
-            search[breed] += 25
+    def add_char_value(class_id, class_name):
+        if class_id:
+            for breed in class_name.query.get(class_id).breeds:
+                search[breed] += 25
 
-    if group_id:
-        for breed in Group.query.get(group_id).breeds:
-            search[breed] += 25
-
-    if energy_id:
-        for breed in Energy.query.get(energy_id).breeds:
-            search[breed] += 25
+    add_char_value(size_id, Size)
+    add_char_value(group_id, Group)
+    add_char_value(energy_id, Energy)
 
     if chars:
         for char_id in chars:
@@ -208,9 +206,15 @@ def breed_search():
             if value:
                 chars.append(int(value))
 
-        search_results = breed_search_rank(size_id, group_id, energy_id, keyword, chars)
+        search_results = breed_search_rank(size_id,
+                                           group_id,
+                                           energy_id,
+                                           keyword,
+                                           chars)
 
-    return render_template('breed-search.html', search_results=search_results, user=user)
+    return render_template('breed-search.html',
+                           search_results=search_results,
+                           user=user)
 
 
 @app.route('/breeds/<breed_id>')
@@ -246,7 +250,7 @@ def breeder_search():
     location = request.args.get("location")
 
     if "search all" in request.args:
-        breeders = Breeder.query.all()[:10]
+        breeders = Breeder.query.all()
         return render_template('breeder-search.html',
                                breeders=breeders,
                                breed=None,
@@ -255,7 +259,9 @@ def breeder_search():
 
     else:
         breed = int(request.args.get('breed'))
-        breeders = db.session.query(Breeder).join(Litter, Breed).filter(Breed.breed_id == breed)
+        breeders = db.session.query(Breeder
+                                    ).join(Litter, Breed
+                                           ).filter(Breed.breed_id == breed)
         return render_template('breeder-search.html',
                                breeders=breeders,
                                breed=Breed.query.get(breed),
@@ -271,17 +277,26 @@ def breeder_info(breeder_id):
 
     breeder = Breeder.query.get(breeder_id)
     photos = breeder.photos
-    litters = [(litter, litter.breed) for litter in breeder.litters]
-    breeds = list({breed for litter, breed in litters})
+    litters = [(litter.date_born, litter, litter.breed) for litter in breeder.litters]
+    litters.sort(reverse=True)
+    breeds = list({breed for date, litter, breed in litters})
     events = breeder.events
     sires = list({Dog.query.get(litter.sire_id) for litter in breeder.litters})
     dams = list({Dog.query.get(litter.dam_id) for litter in breeder.litters})
     awards = [(award, award.dog) for award in breeder.awards]
     blogs = breeder.blogs
 
-    return render_template('breeder-info.html', breeder=breeder, photos=photos,
-                           litters=litters, events=events, sires=sires, dams=dams,
-                           awards=awards, blogs=blogs, user=user, breeds=breeds)
+    return render_template('breeder-info.html',
+                           breeder=breeder,
+                           photos=photos,
+                           litters=litters,
+                           events=events,
+                           sires=sires,
+                           dams=dams,
+                           awards=awards,
+                           blogs=blogs,
+                           user=user,
+                           breeds=breeds)
 
 
 @app.route('/breeders/<breeder_id>/litters/<litter_id>')
@@ -322,7 +337,8 @@ def dog_info(breeder_id, dog_id):
     awards = dog.awards
     photos = dog.photos
     litters = Litter.query.filter((Litter.dam_id == dog.dog_id) |
-                                  (Litter.sire_id == dog.dog_id)).all()
+                                  (Litter.sire_id == dog.dog_id)
+                                  ).order_by(Litter.date_born.desc()).all()
     breed = litters[0].breed
 
     return render_template('dog-info.html',

@@ -1,0 +1,9 @@
+<h4>Blog:</h4>
+<ul>
+{% for blog in blogs %}
+    <li>
+        {{ blog.date }}: {{ blog.category }}<br>
+        {{ blog.post }}<br>
+    </li>
+{% endfor %}
+</ul>

@@ -7,11 +7,11 @@
 <h4>Results</h4>
     {% for result, breed in search_results %}
     <div>
-        {{ loop.index }}. <a href="/breeds/{{ breed.breed_id }}">{{ breed.name }}</a> - {{ breed.description }}<br>
-        <img src='{{ breed.photo }}'><br>
-        Size: {{ breed.size.size }}<br>
-        Energy: {{ breed.energy.energy }}<br>
-        Group: {{ breed.group.name }}<br><br>
+        <div>{{ loop.index }}. <a href="/breeds/{{ breed.breed_id }}">{{ breed.name }}</a> - {{ breed.description }}</div>
+        <img src='{{ breed.photo }}'>
+        <div>Size: {{ breed.size.size }}</div>
+        <div>Energy: {{ breed.energy.energy }}</div>
+        <div>Group: {{ breed.group.name }}</div><br>
     </div>
     {% endfor %}
 

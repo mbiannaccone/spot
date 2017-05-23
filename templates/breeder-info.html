@@ -14,16 +14,13 @@
 {% block content %}
 
 <h2>{{ breeder.name }}</h2>
-{{ breeder.bio }}<br>
-<span id="address">{{ breeder.address }}</span><br>
-{{ breeder.phone }}<br>
-{{ breeder.email }}
-
-<div>Breeder of the following breeds:
+<div>Breeds:
     {% for breed in breeds %}
-    <ul>
-        <li><a href='/breeds/{{ breed.breed_id }}'>{{ breed.name }}</a></li>
-    </ul>
+        {% if loop.last %}
+            <a href='/breeds/{{ breed.breed_id }}'>{{ breed.name }}</a>
+        {% else %}
+            <a href='/breeds/{{ breed.breed_id }}'>{{ breed.name }}, </a>
+        {% endif %}
     {% endfor %}
 </div>
 
@@ -33,81 +30,116 @@
     <input type="hidden" name="breeder" value=" {{ breeder.breeder_id }}">
 </form>
 
-<h4>Photos:</h4>
-{% for photo in photos %}
-<img src="{{ photo.photo }}"><br>
-{{ photo.caption }}<br>
-{% endfor %}
-
-<h4>Litters:</h4>
-<ul>
-{% for litter, breed in litters %}
-    <li>
-        <a href='/breeders/{{ breeder.breeder_id }}/litters/{{ litter.litter_id }}'>litter #{{ loop.revindex }}</a> - <a href='/breeds/{{ breed.breed_id }}'>{{ breed.name }}</a><br>
-        date born: {{ litter.date_born }}<br>
-        date available: {{ litter.date_available }}<br>
-        # puppies: {{ litter.num_pups }}<br>
-        description: {{ litter.description}}<br>
-    </li>
-{% endfor %}
+<ul class="nav nav-tabs">
+    <li class="active"><a data-toggle="tab" href="#info">Info</a></li>
+    <li><a data-toggle="tab" href="#photos">Photos</a><li>
+    <li><a data-toggle="tab" href="#litters">Litters</a><li>
+    <li><a data-toggle="tab" href="#dogs">Dogs</a><li>
+    <li><a data-toggle="tab" href="#awards">Awards</a><li>
+    <li><a data-toggle="tab" href="#events">Events</a><li>
+    <li><a data-toggle="tab" href="#blog">Blog</a><li>
 </ul>
 
-<h4>Dogs:</h4>
-Sires<ul>
-{% for sire in sires %}
-    <li><a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ sire.dog_id }}'>{{ sire.name }}</a><br>
-        date born: {{ sire.date_born }}<br>
-        description: {{ sire.description}}<br>
-    </li>
-{% endfor %}
-</ul>
-Dams<ul>
-{% for dam in dams %}
-    <li><a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ dam.dog_id }}'>{{ dam.name }}</a><br>
-        date born: {{ dam.date_born }}<br>
-        description: {{ dam.description}}<br>
-    </li>
-{% endfor %}
-</ul>
+<div class="tab-content">
+    <div id="info" class="tab-pane fade in active">
+        <p>{{ breeder.bio }}</p>
+        <div id="address">{{ breeder.address }}</div>
+        <div>{{ breeder.phone }}</div>
+        <div>{{ breeder.email }}</div>
 
-<h4>Awards:</h4>
-<ul>
-{% for award, dog in awards %}
-    <li>
-        {{ award.name }}</a> - {{ award.date }}<br>
-        Winner: <a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ award.dog_id }}'>{{ dog.name }}</a><br>
-        {{ award.description }}<br>
-    </li>
-{% endfor %}
-</ul>
+        <div id="map"></div>
+        <script src="https://code.jquery.com/jquery.js"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFObsWCCQqa4NCpJrZ4JGUze4rncKmZTw&callback=initMap"
+        async defer></script>
+        <script type="text/javascript" src="/static/js/breeder-info-map.js"></script>
 
-<h4>Events:</h4>
-<ul>
-{% for event in events %}
-    <li>
-        <a href='/breeders/{{ breeder.breeder_id }}/events/{{ event.event_id }}'>{{ event.name }}</a> - {{ event.date }}<br>
-        {{ event.description }}<br>
-    </li>
-{% endfor %}
-</ul>
-
-<h4>Blog:</h4>
-<ul>
-{% for blog in blogs %}
-    <li>
-        {{ blog.date }}: {{ blog.category }}<br>
-        {{ blog.post }}<br>
-    </li>
-{% endfor %}
-</ul>
-
-<div id="map"></div>
-
-    <script src="https://code.jquery.com/jquery.js"></script>
-
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFObsWCCQqa4NCpJrZ4JGUze4rncKmZTw&callback=initMap"
-    async defer></script>
-
-    <script type="text/javascript" src="/static/js/breeder-info-map.js"></script>
+    </div>
+    <div id="photos" class="tab-pane fade">
+        <h4>Photos:</h4>
+        {% for photo in photos %}
+        <img src="{{ photo.photo }}"><br>
+        <p>{{ photo.caption }}</p>
+        {% endfor %}
+    </div>
+    <div id="litters" class="tab-pane fade">
+        <h4>Litters:</h4>
+        <ul>
+        {% for date, litter, breed in litters %}
+            <li>
+                <a href='/breeders/{{ breeder.breeder_id }}/litters/{{ litter.litter_id }}'>Litter #{{ loop.revindex }}</a> - <a href='/breeds/{{ breed.breed_id }}'>{{ breed.name }}</a><br>
+                Born: {{ litter.date_born.strftime('%m/%d/%y') }}<br>
+                Available: {{ litter.date_available.strftime('%m/%d/%y') }}<br>
+                # Puppies: {{ litter.num_pups }}<br>
+                Sire: 
+                    {% for sire in sires %}
+                        {% if sire.dog_id == litter.sire_id %}
+                            <a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ sire.dog_id }}'>{{ sire.name }}</a><br>
+                        {% endif %}
+                    {% endfor %}
+                Dam: 
+                    {% for dam in dams %}
+                        {% if dam.dog_id == litter.dam_id %}
+                            <a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ dam.dog_id }}'>{{ dam.name }}</a><br>
+                        {% endif %}
+                    {% endfor %}
+                description: {{ litter.description}}<br>
+            </li>
+        {% endfor %}
+        </ul>
+    </div>
+    <div id="dogs" class="tab-pane fade">
+        <h4>Dogs:</h4>
+        Sires<ul>
+        {% for sire in sires %}
+            <li><a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ sire.dog_id }}'>{{ sire.name }}</a><br>
+                date born: {{ sire.date_born }}<br>
+                description: {{ sire.description}}<br>
+            </li>
+        {% endfor %}
+        </ul>
+        Dams<ul>
+        {% for dam in dams %}
+            <li><a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ dam.dog_id }}'>{{ dam.name }}</a><br>
+                date born: {{ dam.date_born }}<br>
+                description: {{ dam.description}}<br>
+            </li>
+        {% endfor %}
+        </ul>
+    </div>
+    <div id="awards" class="tab-pane fade">
+        <h4>Awards:</h4>
+        <ul>
+        {% for award, dog in awards %}
+            <li>
+                {{ award.name }}</a> - {{ award.date }}<br>
+                Winner: <a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ award.dog_id }}'>{{ dog.name }}</a><br>
+                {{ award.description }}<br>
+            </li>
+        {% endfor %}
+        </ul>
+    </div>
+    <div id="events" class="tab-pane fade">
+        <h4>Events:</h4>
+        <ul>
+        {% for event in events %}
+            <li>
+                <a href='/breeders/{{ breeder.breeder_id }}/events/{{ event.event_id }}'>{{ event.name }}</a> - {{ event.date }}<br>
+                {{ event.description }}<br>
+            </li>
+        {% endfor %}
+        </ul>
+    </div>
+    <div id="blog" class="tab-pane fade">
+        <h4>Blog:</h4>
+        <ul>
+        {% for blog in blogs %}
+            <li>
+                {{ blog.date }}: {{ blog.category }}<br>
+                {{ blog.post }}<br>
+            </li>
+        {% endfor %}
+        </ul>
+    </div>
+</div>
 
 {% endblock %}
