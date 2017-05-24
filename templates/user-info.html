@@ -65,14 +65,48 @@
     </div>
 
     <div id="info" class="tab-pan fade">
-        <div>First Name: {{ user.fname }}</div>
-        <div>Last Name: {{ user.lname }}</div>
-        <div>Email: {{ user.email }}</div>
-        <div>Password: {{ user.password }}</div>
-        <div>Zipcode: {{ user.zipcode }}</div>
-        <div>Phone: {{ user.phone }}</div>
+        <form id="user-updates" action='/user-updates' method="POST">
+            <div>First Name: <input type="text" name="fname" value="{{ user.fname }}" default="{{ user.fname }}"></div>
+            <div>Last Name: <input type="text" name="lname" value="{{ user.lname }}" default="{{ user.lname }}"></div>
+            <div>Email: <input type="text" name="email" value="{{ user.email }}" default="{{ user.email }}"></div>
+            <div>Password: <input type="password" name="password" value="{{ user.password }}" default="{{ user.password }}"></div>
+            <div>Zipcode: <input type="text" name="zipcode" value="{{ user.zipcode }}" default="{{ user.zipcode }}"></div>
+            <div>Phone: <input type="text" name="phone" value="{{ user.phone }}" default="{{ user.phone }}"></div>
+            <input type="hidden" name="user_id" value="{{ user.user_id }}">
+            <input type="submit" name="update" value="Submit Changes">
+        </form>
     </div>
 
 </div>
 
+<script>
+
+    function alertSuccess (results) {
+        alert(results);
+    }
+
+    function updateUserInfo(evt) {
+        evt.preventDefault();
+        console.log('in the callback function');
+
+        var formInputs = {'fname': '{{ user.fname }}',
+                          'lname': '{{ user.lname }}',
+                          'email': '{{ user.email }}',
+                          'password': '{{ user.password }}',
+                          'zipcode': '{{ user.zipcode }}',
+                          'phone': '{{ user.phone }}',
+                          'user_id': '{{ user.user_id }}'};
+
+        $.post('/user-updates', formInputs, alertSuccess);
+    }
+    
+    $("#user-updates").on('submit', updateUserInfo);
+    
+</script>
+
+
 {% endblock %}
+
+
+
+

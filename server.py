@@ -151,6 +151,43 @@ def user_profile(user_id):
                                date_filter=date_filter)
 
 
+@app.route('/user-updates', methods=['POST'])
+def update_user_info():
+    """ Updates user's profile information. """
+
+    fname = request.form.get("fname")
+    lname = request.form.get("lname")
+    email = request.form.get("email")
+    password = request.form.get("password")
+    zipcode = request.form.get("zipcode")
+    phone = request.form.get("phone")
+    user_id = request.form.get("user_id")
+
+    user = User.query.get(user_id)
+
+    print user
+
+    updated_info = []
+
+    for new_info, old_info, name in [(fname, user.fname, 'First Name'),
+                                     (lname, user.lname, 'Last Name'),
+                                     (email, user.email, 'Email'),
+                                     (password, user.password, 'Password'),
+                                     (zipcode, user.zipcode, 'Zipcode'),
+                                     (phone, user.phone, 'Phone')]:
+        if new_info != old_info:
+            old_info = new_info
+            updated_info.append(name)
+
+    db.session.commit()
+
+    print updated_info
+    print user
+    print user.lname
+
+    return 'Sucessfully updated ' + ', '.join(updated_info)
+
+
 def breed_search_rank(size_id, group_id, energy_id, keyword, chars):
     """ Takes in search filters and ranks the search results. """
 
