@@ -8,7 +8,7 @@
     {% for result, breed in search_results %}
     <div>
         <div>{{ loop.index }}. <a href="/breeds/{{ breed.breed_id }}">{{ breed.name }}</a> - {{ breed.description }}</div>
-        <img src='{{ breed.photo }}'>
+        <img src='{{ breed.photo }}' height="200" width="200">
         <div>Size: {{ breed.size.size }}</div>
         <div>Energy: {{ breed.energy.energy }}</div>
         <div>Group: {{ breed.group.name }}</div><br>
