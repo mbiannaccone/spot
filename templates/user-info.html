@@ -14,20 +14,6 @@
 
 <div class="tab-content">
     <div id="home" class="tab-pane fade in active">
-        <div>You've Spotted the following breeds:</div>
-            {% for breed in breed_spots %}
-            <ul>
-                <li>
-                    <a href='/breeds/{{ breed.breed_id }}'>{{ breed.name }}</a> - {{ breed.description }}
-                    <div><img src='{{ breed.photo }}' width="125" height="125"></div>
-                    <form action='/breeder-search'>
-                        <input type="submit" name="search" value="Search for Breeders">
-                        <input type="hidden" name="breed" value="{{ breed.breed_id }}">
-                        <input type="hidden" name="location" value="{{ user.zipcode }}">
-                    </form>
-                </li>
-            </ul>
-            {% endfor %}
         <div>You've Spotted the following breeders:</div>
             {% for breeder, litters in breeder_spots %}
             <ul>
@@ -42,6 +28,7 @@
                             {% endif %}
                         {% endfor %}
                     </div>
+                    <img src="{{ breeder.photos[0].photo }}" width="125" height="125">
                     <div>New Litters:</div>
                     <ul>
                     <div>{% for litter in litters %}
@@ -54,7 +41,7 @@
                     <ul>
                         <div>{% for event in breeder.events %}
                                 {% if event.date > date_filter %}
-                                    <li><a href='/breeders/{{ breeder.breeder_id }}/events/{{ event.event_id }}'>{{ event.name }}</a> {{ event.date.strftime('%m/%d/%y') }}
+                                    <li><a href='/breeders/{{ breeder.breeder_id }}/events/{{ event.event_id }}'>{{ event.name }}</a> {{ event.date.strftime('%m/%d/%y') }}</li>
                                 {% endif %}
                             {% endfor %}
                         </div>
@@ -62,48 +49,38 @@
                 </li>
             </ul>
             {% endfor %}
+        <div>You've Spotted the following breeds:</div>
+            {% for breed in breed_spots %}
+            <ul>
+                <li>
+                    <a href='/breeds/{{ breed.breed_id }}'>{{ breed.name }}</a> - {{ breed.description }}
+                    <div><img src='{{ breed.photo }}' width="125" height="125"></div>
+                    <form action='/breeder-search'>
+                        <input type="submit" name="search" value="Search for Breeders">
+                        <input type="hidden" name="breed" value="{{ breed.breed_id }}">
+                        <input type="hidden" name="location" value="{{ user.zipcode }}">
+                    </form>
+                </li>
+            </ul>
+            {% endfor %}
     </div>
 
     <div id="info" class="tab-pan fade">
         <form id="user-updates" action='/user-updates' method="POST">
-            <div>First Name: <input type="text" name="fname" value="{{ user.fname }}" default="{{ user.fname }}"></div>
-            <div>Last Name: <input type="text" name="lname" value="{{ user.lname }}" default="{{ user.lname }}"></div>
-            <div>Email: <input type="text" name="email" value="{{ user.email }}" default="{{ user.email }}"></div>
-            <div>Password: <input type="password" name="password" value="{{ user.password }}" default="{{ user.password }}"></div>
-            <div>Zipcode: <input type="text" name="zipcode" value="{{ user.zipcode }}" default="{{ user.zipcode }}"></div>
-            <div>Phone: <input type="text" name="phone" value="{{ user.phone }}" default="{{ user.phone }}"></div>
-            <input type="hidden" name="user_id" value="{{ user.user_id }}">
+            <div>First Name: <input type="text" name="fname" id="fname-field" placeholder="{{ user.fname }}"></div>
+            <div>Last Name: <input type="text" name="lname" id="lname-field" placeholder="{{ user.lname }}"></div>
+            <div>Email: <input type="text" name="email" id="email-field" placeholder="{{ user.email }}"></div>
+            <div>Password: <input type="password" name="password" id="pwd-field" placeholder="******"></div>
+            <div>Zipcode: <input type="text" name="zipcode" id="zipcode-field" placeholder="{{ user.zipcode }}"></div>
+            <div>Phone: <input type="text" name="phone" id="phone-field" placeholder="{{ user.phone }}"></div>
+            <input type="hidden" name="user" id="user-field" value="{{ user.user_id }}">
             <input type="submit" name="update" value="Submit Changes">
         </form>
     </div>
 
 </div>
 
-<script>
-
-    function alertSuccess (results) {
-        alert(results);
-    }
-
-    function updateUserInfo(evt) {
-        evt.preventDefault();
-        console.log('in the callback function');
-
-        var formInputs = {'fname': '{{ user.fname }}',
-                          'lname': '{{ user.lname }}',
-                          'email': '{{ user.email }}',
-                          'password': '{{ user.password }}',
-                          'zipcode': '{{ user.zipcode }}',
-                          'phone': '{{ user.phone }}',
-                          'user_id': '{{ user.user_id }}'};
-
-        $.post('/user-updates', formInputs, alertSuccess);
-    }
-    
-    $("#user-updates").on('submit', updateUserInfo);
-    
-</script>
-
+<script src="/static/js/user-updates.js"></script>
 
 {% endblock %}
 

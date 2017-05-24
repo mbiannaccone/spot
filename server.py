@@ -159,33 +159,40 @@ def update_user_info():
     lname = request.form.get("lname")
     email = request.form.get("email")
     password = request.form.get("password")
+    current_pwd = request.form.get("current_pwd")
     zipcode = request.form.get("zipcode")
     phone = request.form.get("phone")
-    user_id = request.form.get("user_id")
+    user_id = request.form.get("user")
 
     user = User.query.get(user_id)
 
-    print user
-
     updated_info = []
 
-    for new_info, old_info, name in [(fname, user.fname, 'First Name'),
-                                     (lname, user.lname, 'Last Name'),
-                                     (email, user.email, 'Email'),
-                                     (password, user.password, 'Password'),
-                                     (zipcode, user.zipcode, 'Zipcode'),
-                                     (phone, user.phone, 'Phone')]:
-        if new_info != old_info:
-            old_info = new_info
-            updated_info.append(name)
+    if fname and fname != user.fname:
+        user.fname = fname
+        updated_info.append('First Name')
+    if lname and lname != user.lname:
+        user.lname = lname
+        updated_info.append('Last Name')
+    if email and email != user.email:
+        user.email = email
+        updated_info.append('Email')
+    if zipcode and zipcode != user.zipcode:
+        user.zipcode = zipcode
+        updated_info.append('Zipcode')
+    if phone and phone != user.phone:
+        user.phone = phone
+        updated_info.append('Phone')
+    if password and password != user.password:
+        if current_pwd == user.password:
+            user.password = password
+            updated_info.append('Password')
+        else:
+            updated_info.append("Did NOT update password as entry does not match current password, please try again.")
 
     db.session.commit()
 
-    print updated_info
-    print user
-    print user.lname
-
-    return 'Sucessfully updated ' + ', '.join(updated_info)
+    return 'Sucessfully updated the following info:\n - ' + '\n - '.join(updated_info)
 
 
 def breed_search_rank(size_id, group_id, energy_id, keyword, chars):
