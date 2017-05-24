@@ -1,12 +1,29 @@
 // JavaScript for Google Maps API on breeder search results page. 
 
+function setBounds(resultsMap) {
+  var bounds = new google.maps.LatLngBounds();
+  for (var j = 0; j < allMarkers.length; j++) {
+    bounds.extend(allMarkers[j].getPosition());
+  }
+  resultsMap.fitBounds(bounds);
+}
+
+var allMarkers = [];
+
 function initMap() {
+
   var map = new google.maps.Map(document.getElementById('map'), {
     zoom: 6,
     center: {lat: 37.5100571, lng: -117.967836}
   });
+
   var geocoder = new google.maps.Geocoder();
 
+  var zipcode = $("#zipcode").text();
+  if (zipcode) {
+    geocodeZip(map, zipcode);
+  }
+  
   var addresses = $(".address").map(function () {
       return $(this).data("address");
   });
@@ -14,10 +31,6 @@ function initMap() {
       geocodeAddress(geocoder, map, addresses[i], i+1);
     }
 
-  var zipcode = $("#zipcode").text();
-  if (zipcode) {
-    geocodeZip(map, zipcode);
-  }
 }
 
 function geocodeAddress(geocoder, resultsMap, address, num) {
@@ -28,10 +41,8 @@ function geocodeAddress(geocoder, resultsMap, address, num) {
         label: String(num),
         map: resultsMap
       });
-
-      var markerBounds = new google.maps.LatLngBounds();
-      markerBounds.extend(results[0].geometry.location);
-
+      allMarkers.push(marker);
+      setBounds(resultsMap);
     } else {
       alert('Geocode was not successful for the following reason: ' + status);
     }
@@ -46,8 +57,11 @@ function geocodeZip(resultsMap, zipcode) {
       var marker = new google.maps.Marker({
         position: results[0].geometry.location,
         map: resultsMap,
-        icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png',
+        icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
       });
+      allMarkers.push(marker);
+      setBounds(resultsMap);
     }
   });
 }
+

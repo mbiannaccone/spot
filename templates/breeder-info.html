@@ -52,7 +52,6 @@
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFObsWCCQqa4NCpJrZ4JGUze4rncKmZTw&callback=initMap"
         async defer></script>
         <script type="text/javascript" src="/static/js/breeder-info-map.js"></script>
-
     </div>
     <div id="photos" class="tab-pane fade">
         <h4>Photos:</h4>
@@ -109,9 +108,9 @@
     <div id="awards" class="tab-pane fade">
         <h4>Awards:</h4>
         <ul>
-        {% for award, dog in awards %}
+        {% for date, award, dog in awards %}
             <li>
-                {{ award.name }}</a> - {{ award.date }}<br>
+                {{ award.name }}</a> - {{ award.date.strftime('%m/%d/%y') }}<br>
                 Winner: <a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ award.dog_id }}'>{{ dog.name }}</a><br>
                 {{ award.description }}<br>
             </li>
@@ -123,7 +122,7 @@
         <ul>
         {% for event in events %}
             <li>
-                <a href='/breeders/{{ breeder.breeder_id }}/events/{{ event.event_id }}'>{{ event.name }}</a> - {{ event.date }}<br>
+                <a href='/breeders/{{ breeder.breeder_id }}/events/{{ event.event_id }}'>{{ event.name }}</a> - {{ event.date.strftime('%m/%d/%y') }}<br>
                 {{ event.description }}<br>
             </li>
         {% endfor %}
@@ -131,10 +130,18 @@
     </div>
     <div id="blog" class="tab-pane fade">
         <h4>Blog:</h4>
+        <div>Categories:
+            {% for date, blog in blogs %}
+                {% if loop.last %}
+                <span>{{ blog.category }}</span>
+                {% else %}
+                <span>{{ blog.category }} | </span>
+                {% endif %}
+            {% endfor %}
         <ul>
-        {% for blog in blogs %}
+        {% for date, blog in blogs %}
             <li>
-                {{ blog.date }}: {{ blog.category }}<br>
+                {{ blog.date.strftime('%m/%d/%y') }}: {{ blog.category }}<br>
                 {{ blog.post }}<br>
             </li>
         {% endfor %}

@@ -34,7 +34,7 @@
     Puppies: {{ litter.num_pups }}
     <ul>
         <li>{{ f_pups|length }} female:</li>
-            {% for pup, pup_photos in f_pups %}
+            {% for avail, pup in f_pups %}
             <ul>
                 <li>{{ pup.name }}</li>
                 <ul>
@@ -47,7 +47,7 @@
                         {% endif %}
                     </li>
                     <li>{{ "${:,.2f}".format(pup.price) }}</li>
-                    <li>Photos: {% for pup_photo in pup_photos %}
+                    <li>Photos: {% for pup_photo in pup.photos %}
                         <ul>
                             <li>
                                 <img src='{{ pup_photo.photo }}'><br>{{ pup_photo.caption }}<br>
@@ -60,7 +60,7 @@
             {% endfor %}
 
         <li>{{ m_pups|length }} male:</li>
-            {% for pup, pup_photos in m_pups %}
+            {% for avail, pup in m_pups %}
                 <ul>
                     <li>{{ pup.name }}</li>
                     <ul>
@@ -73,7 +73,7 @@
                             {% endif %}
                         </li>
                         <li>{{ "${:,.2f}".format(pup.price) }}</li>
-                        <li>Photos: {% for pup_photo in pup_photos %}
+                        <li>Photos: {% for pup_photo in pup.photos %}
                             <ul>
                                 <li>
                                     <img src='{{ pup_photo.photo }}'><br>{{ pup_photo.caption }}<br>

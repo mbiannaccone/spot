@@ -4,31 +4,75 @@
 
 {% block content %}
 
-<div>First Name: {{ user.fname }}</div>
-<div>Last Name: {{ user.lname }}</div>
-<div>Email: {{ user.email }}</div>
-<div>Password: {{ user.password }}</div>
-<div>Zipcode: {{ user.zipcode }}</div>
-<div>Phone: {{ user.phone }}</div>
+<h3>{{ user.fname }} {{ user.lname }}</h3>
+<div>{{ user.email }}</div>
 
-<div>
-    you've Spotted the following breeds:
-        {% for breed_spot in breed_spots %}
+<ul class="nav nav-tabs">
+    <li class="active"><a data-toggle="tab" href="#home">Home</a></li>
+    <li><a data-toggle="tab" href="#info">Info</a><li>
+</ul>
+
+<div class="tab-content">
+    <div id="home" class="tab-pane fade in active">
+        <div>You've Spotted the following breeds:</div>
+            {% for breed in breed_spots %}
             <ul>
-                <li><a href='/breeds/{{ breed_spot.breed_id }}'>{{ breed_spot.name }}</a></li>
+                <li>
+                    <a href='/breeds/{{ breed.breed_id }}'>{{ breed.name }}</a> - {{ breed.description }}
+                    <div><img src='{{ breed.photo }}' width="125" height="125"></div>
+                    <form action='/breeder-search'>
+                        <input type="submit" name="search" value="Search for Breeders">
+                        <input type="hidden" name="breed" value="{{ breed.breed_id }}">
+                        <input type="hidden" name="location" value="{{ user.zipcode }}">
+                    </form>
+                </li>
             </ul>
-        {% endfor %}
-</div>
-
-<div>
-    you've Spotted the following breeders:
-        {% for breeder_spot in breeder_spots %}
+            {% endfor %}
+        <div>You've Spotted the following breeders:</div>
+            {% for breeder, litters in breeder_spots %}
             <ul>
-                <li><a href='/breeders/{{ breeder_spot.breeder_id }}'>{{ breeder_spot.name }}</a></li>
+                <li>
+                    <a href='/breeders/{{ breeder.breeder_id }}'>{{ breeder.name }}</a>
+                    <div>Breeds:
+                        {% for group in litters|groupby('breed') %}
+                            {% if loop.last %}
+                                <a href='/breeds/{{ group.grouper.breed_id }}'>{{ group.grouper.name }}</a>
+                            {% else %}
+                                <a href='/breeds/{{ group.grouper.breed_id }}'>{{ group.grouper.name }}, </a>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    <div>New Litters:</div>
+                    <ul>
+                    <div>{% for litter in litters %}
+                        {% if litter.date_available > date_filter %}
+                            <li><a href='/breeders/{{ breeder.breeder_id }}/litters/{{ litter.litter_id }}'>{{ litter.date_born.strftime('%m/%d/%y') }}</a> - {{ litter.num_pups }} puppies</li>
+                        {% endif %}
+                    {% endfor %}</div>
+                    </ul>
+                    <div>Events:</div>
+                    <ul>
+                        <div>{% for event in breeder.events %}
+                                {% if event.date > date_filter %}
+                                    <li><a href='/breeders/{{ breeder.breeder_id }}/events/{{ event.event_id }}'>{{ event.name }}</a> {{ event.date.strftime('%m/%d/%y') }}
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </ul>
+                </li>
             </ul>
-        {% endfor %}
+            {% endfor %}
+    </div>
+
+    <div id="info" class="tab-pan fade">
+        <div>First Name: {{ user.fname }}</div>
+        <div>Last Name: {{ user.lname }}</div>
+        <div>Email: {{ user.email }}</div>
+        <div>Password: {{ user.password }}</div>
+        <div>Zipcode: {{ user.zipcode }}</div>
+        <div>Phone: {{ user.phone }}</div>
+    </div>
+
 </div>
-
-
 
 {% endblock %}

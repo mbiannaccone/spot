@@ -4,7 +4,7 @@ from jinja2 import StrictUndefined
 from flask import (Flask, render_template, redirect, request, flash, session,
                    jsonify)
 from flask_debugtoolbar import DebugToolbarExtension
-from datetime import datetime
+from datetime import datetime, timedelta
 from model import (Award, Blog, Breed, BreedChar, Breeder, BreederPhoto, PupPhoto,
                    Dog, DogPhoto, Energy, Event, EventPhoto, Gender, Group, Pup,
                    Litter, LitterPhoto, Char, Size, User, BreedSpot, BreederSpot)
@@ -141,12 +141,14 @@ def user_profile(user_id):
         return redirect('/login')
     else:
         user = User.query.get(session['user_id'])
-        breed_spots = list({breed_spot.breed for breed_spot in user.breed_spots})
-        breeder_spots = list({breeder_spot.breeder for breeder_spot in user.breeder_spots})
+        breed_spots = [breed_spot.breed for breed_spot in user.breed_spots]
+        breeder_spots = [(breeder_spot.breeder, breeder_spot.breeder.litters) for breeder_spot in user.breeder_spots]
+        date_filter = datetime.now() - timedelta(days=120)
         return render_template('user-info.html',
                                user=user,
                                breed_spots=breed_spots,
-                               breeder_spots=breeder_spots)
+                               breeder_spots=breeder_spots,
+                               date_filter=date_filter)
 
 
 def breed_search_rank(size_id, group_id, energy_id, keyword, chars):
@@ -241,7 +243,7 @@ def breed_info(breed_id):
                            user=user)
 
 
-@app.route('/breeder-search', methods=['GET'])
+@app.route('/breeder-search')
 def breeder_search():
     """ Breeder search results. """
 
@@ -279,12 +281,14 @@ def breeder_info(breeder_id):
     photos = breeder.photos
     litters = [(litter.date_born, litter, litter.breed) for litter in breeder.litters]
     litters.sort(reverse=True)
-    breeds = list({breed for date, litter, breed in litters})
+    breeds = {breed for date, litter, breed in litters}
     events = breeder.events
-    sires = list({Dog.query.get(litter.sire_id) for litter in breeder.litters})
-    dams = list({Dog.query.get(litter.dam_id) for litter in breeder.litters})
-    awards = [(award, award.dog) for award in breeder.awards]
-    blogs = breeder.blogs
+    sires = {Dog.query.get(litter.sire_id) for litter in breeder.litters}
+    dams = {Dog.query.get(litter.dam_id) for litter in breeder.litters}
+    awards = [(award.date, award, award.dog) for award in breeder.awards]
+    awards.sort(reverse=True)
+    blogs = [(blog.date, blog) for blog in breeder.blogs]
+    blogs.sort(reverse=True)
 
     return render_template('breeder-info.html',
                            breeder=breeder,
@@ -310,8 +314,10 @@ def litter_info(breeder_id, litter_id):
     breed = litter.breed
     sire = litter.sire
     dam = litter.dam
-    f_pups = [(pup, pup.photos) for pup in litter.pups if pup.gender_id == 'f']
-    m_pups = [(pup, pup.photos) for pup in litter.pups if pup.gender_id == 'm']
+    f_pups = [(pup.available, pup) for pup in litter.pups if pup.gender_id == 'f']
+    m_pups = [(pup.available, pup) for pup in litter.pups if pup.gender_id == 'm']
+    f_pups.sort(reverse=True)
+    m_pups.sort(reverse=True)
     photos = litter.photos
 
     return render_template('litter-info.html',
