@@ -50,7 +50,11 @@
 <h5>find a breeder</h5>
 <form action="/breeder-search">
 
-    <div>location: <input type="text" name="location"></div>
+    {% if user %}
+        <div>location: <input type="text" name="location"></div>
+    {% else %}
+        <div>location: <input type="text" name="location" required></div>
+    {% endif %}
 
     <div>breed: <select name="breed" required>
         <option disabled selected value>choose a breed</option>
@@ -59,9 +63,8 @@
         {% endfor %}
     </div>
 
-    <input type="submit", name="search" value="search by breed"><br>
-    <span> ~ or ~ </span>
-    <input type="submit" name="search all" value="search all breeders">
+    <input type="submit", name="search" value="search"><br>
+
 </form>
 
 

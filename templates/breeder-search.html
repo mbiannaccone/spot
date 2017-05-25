@@ -23,16 +23,10 @@
 {% endif %}
 
 <h4>Breeder results near 
-    <span id="zipcode">
-        {% if location %}
-            {{ location }}
-        {% elif user %}
-            {{ user.zipcode }}
-        {% endif %}
-    </span>
+    <span id="zipcode">{{ location }}</span>
 :</h4> 
 
-{% for breeder in breeders %}
+{% for dist, breeder in breeders %}
 <div>{{ loop.index }}</b> - <a href='/breeders/{{ breeder.breeder_id }}'>{{ breeder.name }}</a></div>
 {{ breeder.email }}<br>
 <span class="address" data-address='{{ breeder.address }}'>{{ breeder.address }}</span><br>

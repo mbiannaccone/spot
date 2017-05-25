@@ -289,6 +289,25 @@ def breed_info(breed_id):
                            user=user)
 
 
+def breeder_search_rank(geo_location, breeders):
+    """ Ranks breeder search results according to distance to location. """
+
+    dist_breeders = []
+
+    for breeder in breeders:
+        geolocator = Nominatim()
+        geo_breeder = geolocator.geocode(breeder.address)
+        if not geo_breeder:
+            geo_breeder = geolocator.geocode(breeder.address[-5:])
+        dist = vincenty((geo_breeder.latitude, geo_breeder.longitude),
+                        (geo_location.latitude, geo_location.longitude)).miles
+        dist_breeders.append((dist, breeder))
+
+        dist_breeders.sort()
+
+    return dist_breeders
+
+
 @app.route('/breeder-search')
 def breeder_search():
     """ Breeder search results. """
@@ -296,38 +315,25 @@ def breeder_search():
     user = check_user()
 
     location = request.args.get("location")
+    if not location:
+        location = user.zipcode
+
     geolocator = Nominatim()
     geo_location = geolocator.geocode(location)
 
-    if "search all" in request.args:
-        breeders = Breeder.query.all()
-        return render_template('breeder-search.html',
-                               breeders=breeders,
-                               breed=None,
-                               user=user,
-                               location=location)
+    breed = int(request.args.get('breed'))
 
-    else:
-        breed = int(request.args.get('breed'))
-        breeders = db.session.query(Breeder
-                                    ).join(Litter, Breed
-                                           ).filter(Breed.breed_id == breed)
-        dist_breeders = []
+    breeders = db.session.query(Breeder
+                                ).join(Litter, Breed
+                                       ).filter(Breed.breed_id == breed)
 
-        for breeder in breeders:
-            geolocator = Nominatim()
-            geo_breeder = geolocator.geocode(breeder.address)
-            dist = vincenty((geo_breeder.latitude, geo_breeder.longitude),
-                            (geo_location.latitude, geo_location.longitude)).miles
-            dist_breeders.append((dist, breeder))
+    dist_breeders = breeder_search_rank(geo_location, breeders)
 
-        print dist_breeders
-
-        return render_template('breeder-search.html',
-                               breeders=breeders,
-                               breed=Breed.query.get(breed),
-                               user=user,
-                               location=location)
+    return render_template('breeder-search.html',
+                           breeders=dist_breeders,
+                           breed=Breed.query.get(breed),
+                           user=user,
+                           location=location)
 
 
 @app.route('/breeders/<breeder_id>')
@@ -348,6 +354,7 @@ def breeder_info(breeder_id):
     awards.sort(reverse=True)
     blogs = [(blog.date, blog) for blog in breeder.blogs]
     blogs.sort(reverse=True)
+    spots = breeder.breeder_spots
 
     return render_template('breeder-info.html',
                            breeder=breeder,
@@ -359,7 +366,8 @@ def breeder_info(breeder_id):
                            awards=awards,
                            blogs=blogs,
                            user=user,
-                           breeds=breeds)
+                           breeds=breeds,
+                           spots=spots)
 
 
 @app.route('/breeders/<breeder_id>/litters/<litter_id>')
