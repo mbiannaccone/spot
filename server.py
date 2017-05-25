@@ -9,6 +9,8 @@ from model import (Award, Blog, Breed, BreedChar, Breeder, BreederPhoto, PupPhot
                    Dog, DogPhoto, Energy, Event, EventPhoto, Gender, Group, Pup,
                    Litter, LitterPhoto, Char, Size, User, BreedSpot, BreederSpot)
 from model import connect_to_db, db
+from geopy.geocoders import Nominatim
+from geopy.distance import vincenty
 
 app = Flask(__name__)
 
@@ -294,6 +296,8 @@ def breeder_search():
     user = check_user()
 
     location = request.args.get("location")
+    geolocator = Nominatim()
+    geo_location = geolocator.geocode(location)
 
     if "search all" in request.args:
         breeders = Breeder.query.all()
@@ -308,6 +312,17 @@ def breeder_search():
         breeders = db.session.query(Breeder
                                     ).join(Litter, Breed
                                            ).filter(Breed.breed_id == breed)
+        dist_breeders = []
+
+        for breeder in breeders:
+            geolocator = Nominatim()
+            geo_breeder = geolocator.geocode(breeder.address)
+            dist = vincenty((geo_breeder.latitude, geo_breeder.longitude),
+                            (geo_location.latitude, geo_location.longitude)).miles
+            dist_breeders.append((dist, breeder))
+
+        print dist_breeders
+
         return render_template('breeder-search.html',
                                breeders=breeders,
                                breed=Breed.query.get(breed),
