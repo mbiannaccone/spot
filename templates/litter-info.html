@@ -4,66 +4,69 @@
 
 {% block content %}
 
-<div>
-    Breed: <a href='/breeds/{{ breed.breed_id }}'>{{ breed.name }}</a>
-</div>
-<div>
-    Breeder: <a href='/breeders/{{ breeder.breeder_id}}'>{{ breeder.name }}</a>
-</div>
-<div>
-    Sire: <a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ sire.dog_id }}'>{{ sire.name }}</a>
-</div>
-<div>
-    Dam: <a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ dam.dog_id }}'>{{ dam.name }}</a>
-</div>
-<div>{{ litter.description }}</div>
-<div>
-    Born: {{ litter.date_born.strftime('%m/%d/%y') }}
-</div>
-<div>
-    Available: {{ litter.date_available.strftime('%m/%d/%y') }}
-</div>
-<div>
-    Photos:<br>
-    {% for photo in photos %}
-        <img src="{{ photo.photo }}"><br>
-        {{ photo.caption }}<br>
-    {% endfor %}
-</div>
-<div>
-    Puppies: {{ litter.num_pups }}
-    <ul>
-        <li>{{ f_pups|length }} female:</li>
-            {% for avail, pup in f_pups %}
-            <ul>
-                <li>{{ pup.name }}</li>
-                <ul>
-                    <li>{{ pup.description }}</li>
-                    <li>
-                        {% if pup.available %}
-                        Available
-                        {% else %}
-                        Sold
-                        {% endif %}
-                    </li>
-                    <li>{{ "${:,.2f}".format(pup.price) }}</li>
-                    <li>Photos: {% for pup_photo in pup.photos %}
-                        <ul>
-                            <li>
-                                <img src='{{ pup_photo.photo }}'><br>{{ pup_photo.caption }}<br>
-                            </li>
-                        </ul>
-                        {% endfor %}
-                    </li>
-                </ul>
-            </ul>
-            {% endfor %}
 
-        <li>{{ m_pups|length }} male:</li>
-            {% for avail, pup in m_pups %}
+<h2><a href='/breeders/{{ breeder.breeder_id}}'>{{ breeder.name }}</a></h2>
+<div>Breeds: <a href='/breeds/{{ breed.breed_id }}'>{{ breed.name }}</a></div>
+
+<div>{{ breeder.breeder_spots|length }} spots</div>
+
+<div>
+    {% if user in users_spots %}
+        <h5>You've spotted this breeder!</h5>
+    {% else %}
+        <h5>spot this breeder</h5>
+        <form action="/breeder-spot", method="POST">
+            <button type="submit">spot</button>
+            <input type="hidden" name="breeder" value=" {{ breeder.breeder_id }}">
+        </form>
+    {% endif %}
+</div>
+
+<ul class="nav nav-tabs">
+    <li class="active"><a data-toggle="tab" href="#info">Info</a></li>
+    <li><a data-toggle="tab" href="#photos">Photos</a><li>
+    <li><a data-toggle="tab" href="#puppies">Puppies</a><li>
+</ul>
+
+<div class="tab-content">
+    <div id="info" class="tab-pane fade in active">
+        <div>
+            Sire: <a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ sire.dog_id }}'>{{ sire.name }}</a>
+        </div>
+        <div>
+            Dam: <a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ dam.dog_id }}'>{{ dam.name }}</a>
+        </div>
+        <div>{{ litter.description }}</div>
+        <div>
+            Born: {{ litter.date_born.strftime('%m/%d/%y') }}
+        </div>
+        <div>
+            Available: {{ litter.date_available.strftime('%m/%d/%y') }}
+        </div>
+        <div>
+            Puppies: {{ litter.num_pups }}
+        </div>
+    </div>
+
+    <div id="photos" class="tab-pane fade">
+        <div>
+            Photos:<br>
+            {% for photo in photos %}
+                <img src="{{ photo.photo }}"><br>
+                {{ photo.caption }}<br>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div id="puppies" class="tab-pane fade">
+        <div>
+            Puppies: {{ litter.num_pups }}
+            <ul>
+                <li>{{ f_pups|length }} female:</li>
+                {% for avail, pup in f_pups %}
                 <ul>
                     <li>{{ pup.name }}</li>
-                    <ul>
+                        <ul>
                         <li>{{ pup.description }}</li>
                         <li>
                             {% if pup.available %}
@@ -81,10 +84,39 @@
                             </ul>
                             {% endfor %}
                         </li>
-                    </ul>
+                        </ul>
                 </ul>
                 {% endfor %}
-    </ul>
+
+                <li>{{ m_pups|length }} male:</li>
+                    {% for avail, pup in m_pups %}
+                        <ul>
+                            <li>{{ pup.name }}</li>
+                            <ul>
+                                <li>{{ pup.description }}</li>
+                                <li>
+                                    {% if pup.available %}
+                                    Available
+                                    {% else %}
+                                    Sold
+                                    {% endif %}
+                                </li>
+                                <li>{{ "${:,.2f}".format(pup.price) }}</li>
+                                <li>Photos: {% for pup_photo in pup.photos %}
+                                    <ul>
+                                        <li>
+                                            <img src='{{ pup_photo.photo }}'><br>{{ pup_photo.caption }}<br>
+                                        </li>
+                                    </ul>
+                                    {% endfor %}
+                                </li>
+                            </ul>
+                        </ul>
+                        {% endfor %}
+            </ul>
+        </div>
+
+    </div>
 </div>
 
 {% endblock %}

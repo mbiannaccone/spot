@@ -24,13 +24,19 @@
     {% endfor %}
 </div>
 
-<div>{{ spots|length }} spots!</div>
+<div>{{ spots|length }} spots</div>
 
-<h5>spot this breeder</h5>
-<form action="/breeder-spot", method="POST">
-    <button type="submit">spot</button>
-    <input type="hidden" name="breeder" value=" {{ breeder.breeder_id }}">
-</form>
+<div>
+    {% if user in users_spots %}
+        <h5>You've spotted this breeder!</h5>
+    {% else %}
+        <h5>spot this breeder</h5>
+        <form action="/breeder-spot", method="POST">
+            <button type="submit">spot</button>
+            <input type="hidden" name="breeder" value=" {{ breeder.breeder_id }}">
+        </form>
+    {% endif %}
+</div>
 
 <ul class="nav nav-tabs">
     <li class="active"><a data-toggle="tab" href="#info">Info</a></li>

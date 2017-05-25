@@ -27,7 +27,7 @@
 :</h4> 
 
 {% for dist, breeder in breeders %}
-<div>{{ loop.index }}</b> - <a href='/breeders/{{ breeder.breeder_id }}'>{{ breeder.name }}</a></div>
+<div>{{ loop.index }}</b> - <a href='/breeders/{{ breeder.breeder_id }}'>{{ breeder.name }}</a> ~ {{ dist|round(1, 'floor') }} miles away</div>
 {{ breeder.email }}<br>
 <span class="address" data-address='{{ breeder.address }}'>{{ breeder.address }}</span><br>
 {{ breeder.phone }}<br><br>

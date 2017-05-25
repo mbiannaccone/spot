@@ -275,10 +275,23 @@ def breed_info(breed_id):
     group = breed.group
     size = breed.size
     energy = breed.energy
+
     breed_chars = [(breed_char.char_id,
                     Char.query.get(breed_char.char_id),
-                    breed_char,) for breed_char in breed.breed_chars]
+                    breed_char
+                    ) for breed_char in breed.breed_chars if (
+                   breed_char.char_id in [3, 4, 5, 6, 7, 9])]
     breed_chars.sort()
+
+    fun_chars = [(breed_char.char_id,
+                  Char.query.get(breed_char.char_id),
+                  breed_char
+                  ) for breed_char in breed.breed_chars if (
+                 breed_char.char_id not in [3, 4, 5, 6, 7, 9])]
+    fun_chars.sort()
+
+    spots = breed.breed_spots
+    users_spots = [spot.user for spot in spots]
 
     return render_template('breed-info.html',
                            breed=breed,
@@ -286,7 +299,10 @@ def breed_info(breed_id):
                            size=size,
                            energy=energy,
                            breed_chars=breed_chars,
-                           user=user)
+                           fun_chars=fun_chars,
+                           user=user,
+                           spots=spots,
+                           users_spots=users_spots)
 
 
 def breeder_search_rank(geo_location, breeders):
@@ -355,6 +371,7 @@ def breeder_info(breeder_id):
     blogs = [(blog.date, blog) for blog in breeder.blogs]
     blogs.sort(reverse=True)
     spots = breeder.breeder_spots
+    users_spots = [spot.user for spot in spots]
 
     return render_template('breeder-info.html',
                            breeder=breeder,
@@ -367,7 +384,8 @@ def breeder_info(breeder_id):
                            blogs=blogs,
                            user=user,
                            breeds=breeds,
-                           spots=spots)
+                           spots=spots,
+                           users_spots=users_spots)
 
 
 @app.route('/breeders/<breeder_id>/litters/<litter_id>')
@@ -386,6 +404,7 @@ def litter_info(breeder_id, litter_id):
     f_pups.sort(reverse=True)
     m_pups.sort(reverse=True)
     photos = litter.photos
+    users_spots = [spot.user for spot in breeder.breeder_spots]
 
     return render_template('litter-info.html',
                            breeder=breeder,
@@ -396,7 +415,8 @@ def litter_info(breeder_id, litter_id):
                            f_pups=f_pups,
                            m_pups=m_pups,
                            photos=photos,
-                           user=user)
+                           user=user,
+                           users_spots=users_spots)
 
 
 @app.route('/breeders/<breeder_id>/dogs/<dog_id>')
@@ -413,6 +433,7 @@ def dog_info(breeder_id, dog_id):
                                   (Litter.sire_id == dog.dog_id)
                                   ).order_by(Litter.date_born.desc()).all()
     breed = litters[0].breed
+    users_spots = [spot.user for spot in breeder.breeder_spots]
 
     return render_template('dog-info.html',
                            breeder=breeder,
@@ -421,7 +442,8 @@ def dog_info(breeder_id, dog_id):
                            photos=photos,
                            litters=litters,
                            breed=breed,
-                           user=user)
+                           user=user,
+                           users_spots=users_spots)
 
 
 @app.route('/breeders/<breeder_id>/events/<event_id>')
@@ -433,12 +455,16 @@ def event_info(breeder_id, event_id):
     breeder = Breeder.query.get(breeder_id)
     event = Event.query.get(event_id)
     photos = event.photos
+    users_spots = [spot.user for spot in breeder.breeder_spots]
+    breeds = {litter.breed for litter in event.breeder.litters}
 
     return render_template('event-info.html',
                            breeder=breeder,
                            event=event,
                            photos=photos,
-                           user=user)
+                           user=user,
+                           users_spots=users_spots,
+                           breeds=breeds)
 
 
 @app.route('/breed-spot', methods=["POST"])

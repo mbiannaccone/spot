@@ -10,6 +10,20 @@
 
 <div>{{ breed.description }}</div>
 
+<div>{{ spots|length }} spots</div>
+
+<div>
+    {% if user in users_spots %}
+        <h5>You've spotted this breed!</h5>
+    {% else %}
+        <h5>spot this breed</h5>
+        <form action="/breed-spot", method="POST">
+            <button type="submit">spot</button>
+            <input type="hidden" name="breed" value=" {{ breed.breed_id }}">
+        </form>
+    {% endif %}
+</div>
+
 <h5>find a {{ breed.name }} breeder in your area</h5>
 <form action="/breeder-search">
     <span>location: <input type="text" name="location"></span>
@@ -17,28 +31,35 @@
     <input type="submit" value="search">
 </form>
 
-<h5>spot this breed</h5>
-<form action="/breed-spot", method="POST">
-    <button type="submit">spot</button>
-    <input type="hidden" name="breed" value=" {{ breed.breed_id }}">
-</form>
+<ul class="nav nav-tabs">
+    <li class="active"><a data-toggle="tab" href="#info">Info</a></li>
+    <li><a data-toggle="tab" href="#chars">Standards</a><li>
+</ul>
 
-<p>Size: {{ size.size }}</p>
-
-<p>Energy: {{ energy.energy }}</p>
-
-<p>
-    Group: {{ breed.group.name }}<br>
-    Group Description: {{ group.description }}
-</p>
-
-<p>
-    Standard Characteristics:
-    <ul>
-        {% for char_id, char, breed_char in breed_chars %}
-        <li>{{ char.char }}: {{ breed_char.description }}</li>
+<div class="tab-content">
+    <div id="info" class="tab-pane fade in active">
+        <p>Size: {{ size.size }}</p>
+        <p>Energy: {{ energy.energy }}</p>
+        <p>
+            Group: {{ breed.group.name }}<br>
+        </p>
+        {% for char_id, char, breed_char in fun_chars %}
+            <p>{{ char.char }}: {{ breed_char.description }}</p>
         {% endfor %}
-    </ul>
-</p>
+    </div>
+
+    <div id="chars" class="tab-pane fade">
+        <p>
+            Standard Characteristics:
+            <ul>
+                {% for char_id, char, breed_char in breed_chars %}
+                <li>{{ char.char }}: {{ breed_char.description }}</li>
+                {% endfor %}
+                <li>{{ group.name }} Description: {{ group.description }}</li>
+            </ul>
+        </p>
+    </div>
+</div>
+
 
 {% endblock %}

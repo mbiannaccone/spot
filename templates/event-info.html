@@ -4,9 +4,32 @@
 
 {% block content %}
 
+<h2><a href='/breeders/{{ breeder.breeder_id}}'>{{ breeder.name }}</a></h2>
 <div>
-    <a href='/breeders/{{ breeder.breeder_id }}'>{{ breeder.name }}</a> Event:
+    Breeds: 
+        {% for breed in breeds %}
+            {% if loop.last %}
+                <a href='/breeds/{{ breed.breed_id }}'>{{ breed.name }}</a>
+            {% else %}
+                <a href='/breeds/{{ breed.breed_id }}'>{{ breed.name }}, </a>
+            {% endif %}
+        {% endfor %}
 </div>
+
+<div>{{ breeder.breeder_spots|length }} spots</div>
+
+<div>
+    {% if user in users_spots %}
+        <h5>You've spotted this breeder!</h5>
+    {% else %}
+        <h5>spot this breeder</h5>
+        <form action="/breeder-spot", method="POST">
+            <button type="submit">spot</button>
+            <input type="hidden" name="breeder" value=" {{ breeder.breeder_id }}">
+        </form>
+    {% endif %}
+</div>
+<hr>
 <div>
     <h4>{{ event.name }}</h4>
 </div>
