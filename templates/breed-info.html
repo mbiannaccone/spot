@@ -26,7 +26,11 @@
 
 <h5>find a {{ breed.name }} breeder in your area</h5>
 <form action="/breeder-search">
-    <span>location: <input type="text" name="location"></span>
+    {% if user %}
+        <div>location: <input type="text" name="location"></div>
+    {% else %}
+        <div>location: <input type="text" name="location" required></div>
+    {% endif %}
     <input type="hidden" name="breed" value="{{ breed.breed_id }}">
     <input type="submit" value="search">
 </form>

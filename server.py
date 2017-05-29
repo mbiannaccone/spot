@@ -337,11 +337,11 @@ def breeder_search():
     geolocator = Nominatim()
     geo_location = geolocator.geocode(location)
 
-    breed = int(request.args.get('breed'))
+    breed = request.args.get('breed')
 
     breeders = db.session.query(Breeder
                                 ).join(Litter, Breed
-                                       ).filter(Breed.breed_id == breed)
+                                       ).filter(Breed.breed_id == breed).all()
 
     dist_breeders = breeder_search_rank(geo_location, breeders)
 
@@ -350,6 +350,23 @@ def breeder_search():
                            breed=Breed.query.get(breed),
                            user=user,
                            location=location)
+
+
+# @app.route('/breeder-search.json')
+# def breeder_search_json():
+#     """ Returns breeder search results to AJAX call in order to sort by distance. """
+
+#     breed = request.args.get('breed')
+
+#     breeders = db.session.query(Breeder
+#                                 ).join(Litter, Breed
+#                                        ).filter(Breed.breed_id == breed).all()
+
+#     breeders_dict = {breeder.breeder_id: breeder.address for breeder in breeders}
+
+#     print breeders_dict
+
+#     return jsonify(breeders_dict)
 
 
 @app.route('/breeders/<breeder_id>')
