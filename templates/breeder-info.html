@@ -53,7 +53,7 @@
         <h4>Bio:</h4>
         <p>{{ breeder.bio }}</p>
 
-        <div>{{ breeder.name }}</div>
+        <div><b>{{ breeder.name }}</b></div>
         <div id="address">{{ breeder.address }}</div>
         <div>{{ breeder.phone }}</div>
         <div>{{ breeder.email }}</div>
@@ -65,11 +65,17 @@
         <script type="text/javascript" src="/static/js/breeder-info-map.js"></script>
     </div>
     <div id="photos" class="tab-pane fade">
-        <h4>Photos:</h4>
-        {% for photo in photos %}
-        <img src="{{ photo.photo }}"><br>
-        <p>{{ photo.caption }}</p>
-        {% endfor %}
+          <h4>Photos:</h4>
+        <div class="photoGallery" data-gallery="breeder">
+            {% for photo in photos %}
+            <div class="mySlides">
+                <img src="{{ photo.photo }}" width="400" length="400">
+                <div>{{ photo.caption }}</div>
+            </div>
+            {% endfor %}
+            <button onclick="plusDivs(-1)">❮</button>
+            <button onclick="plusDivs(1)">❯</button>
+        </div>
     </div>
     <div id="litters" class="tab-pane fade">
         <h4>Litters:</h4>
@@ -174,5 +180,6 @@
 
 </div>
 
+<script src="/static/js/photo-gallery.js"></script>
 
 {% endblock %}

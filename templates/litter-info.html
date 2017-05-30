@@ -50,12 +50,17 @@
 
     <div id="photos" class="tab-pane fade">
         <div>
-            Photos:<br>
             {% for photo in photos %}
-                <img src="{{ photo.photo }}"><br>
-                {{ photo.caption }}<br>
+            <div class="mySlides">
+            <img src="{{ photo.photo }}" width="400" length="400">
+            <div>{{ photo.caption }}</div>
+            </div>
             {% endfor %}
         </div>
+        <div>
+            <button onclick="plusDivs(-1)">❮</button>
+            <button onclick="plusDivs(1)">❯</button>
+          </div>
     </div>
 
     <div id="puppies" class="tab-pane fade">
@@ -76,13 +81,19 @@
                             {% endif %}
                         </li>
                         <li>{{ "${:,.2f}".format(pup.price) }}</li>
-                        <li>Photos: {% for pup_photo in pup.photos %}
-                            <ul>
-                                <li>
-                                    <img src='{{ pup_photo.photo }}'><br>{{ pup_photo.caption }}<br>
-                                </li>
-                            </ul>
-                            {% endfor %}
+                        <li>Photos: 
+                            <div class="photoGallery">
+                                {% for photo in photos %}
+                                <div class="mySlides">
+                                <img src="{{ photo.photo }}" width="200" length="200">
+                                <div>{{ photo.caption }}</div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <div>
+                                <button onclick="plusDivs(-1)">❮</button>
+                                <button onclick="plusDivs(1)">❯</button>
+                              </div>
                         </li>
                         </ul>
                 </ul>
@@ -118,5 +129,7 @@
 
     </div>
 </div>
+
+<script src="/static/js/photo-gallery.js"></script>
 
 {% endblock %}
