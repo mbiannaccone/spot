@@ -50,7 +50,10 @@
 
 <div class="tab-content">
     <div id="info" class="tab-pane fade in active">
+        <h4>Bio:</h4>
         <p>{{ breeder.bio }}</p>
+
+        <div>{{ breeder.name }}</div>
         <div id="address">{{ breeder.address }}</div>
         <div>{{ breeder.phone }}</div>
         <div>{{ breeder.email }}</div>
@@ -138,23 +141,38 @@
     </div>
     <div id="blog" class="tab-pane fade">
         <h4>Blog:</h4>
-        <div>Categories:
+        <ul class="nav nav-pills">
+            <li class="active"><a data-toggle="pill" href="#all">All</a></li>
             {% for date, blog in blogs %}
-                {% if loop.last %}
-                <span>{{ blog.category }}</span>
-                {% else %}
-                <span>{{ blog.category }} | </span>
-                {% endif %}
+            <li><a data-toggle="pill" href="#{{ blog.category }}">{{ blog.category }}</a></li>
             {% endfor %}
-        <ul>
-        {% for date, blog in blogs %}
-            <li>
-                {{ blog.date.strftime('%m/%d/%y') }}: {{ blog.category }}<br>
-                {{ blog.post }}<br>
-            </li>
-        {% endfor %}
         </ul>
+
+        <div class="tab-content">
+            <div id="all" class="tab-pane fade in active">
+                <ul>
+                {% for date, blog in blogs %}
+                    <li>
+                        {{ blog.date.strftime('%m/%d/%y') }}: {{ blog.category }}<br>
+                        {{ blog.post }}<br>
+                    </li>
+                {% endfor %}
+                </ul>
+            </div>
+            {% for date, blog in blogs %}
+            <div id="{{ blog.category }}" class="tab-pane fade">
+                <ul>
+                    <li>
+                        {{ blog.date.strftime('%m/%d/%y') }}: {{ blog.category }}<br>
+                        {{ blog.post }}<br>
+                    </li>
+                </ul>
+            </div>
+            {% endfor %}
+        </div>
     </div>
+
 </div>
+
 
 {% endblock %}

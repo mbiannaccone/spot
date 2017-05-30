@@ -358,6 +358,10 @@ def breeder_search():
 
 #     breed = request.args.get('breed')
 
+#     location = request.args.get("location")
+#     if not location:
+#         location = user.zipcode
+
 #     breeders = db.session.query(Breeder
 #                                 ).join(Litter, Breed
 #                                        ).filter(Breed.breed_id == breed).all()
