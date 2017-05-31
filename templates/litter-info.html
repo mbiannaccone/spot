@@ -49,18 +49,16 @@
     </div>
 
     <div id="photos" class="tab-pane fade">
-        <div>
+        <div class="photoGallery" data-gallery="litter">
             {% for photo in photos %}
-            <div class="mySlides">
-            <img src="{{ photo.photo }}" width="400" length="400">
-            <div>{{ photo.caption }}</div>
+            <div class="mySlides-litter">
+                <img src="{{ photo.photo }}" width="400" length="400">
+                <div>{{ photo.caption }}</div>
             </div>
             {% endfor %}
+            <button onclick="plusDivs(-1, 'litter')">❮</button>
+            <button onclick="plusDivs(1, 'litter')">❯</button>
         </div>
-        <div>
-            <button onclick="plusDivs(-1)">❮</button>
-            <button onclick="plusDivs(1)">❯</button>
-          </div>
     </div>
 
     <div id="puppies" class="tab-pane fade">
@@ -69,6 +67,7 @@
             <ul>
                 <li>{{ f_pups|length }} female:</li>
                 {% for avail, pup in f_pups %}
+                {% set outer_loop = loop %}
                 <ul>
                     <li>{{ pup.name }}</li>
                         <ul>
@@ -82,18 +81,16 @@
                         </li>
                         <li>{{ "${:,.2f}".format(pup.price) }}</li>
                         <li>Photos: 
-                            <div class="photoGallery">
+                            <div class="photoGallery" data-gallery="puppyf{{ outer_loop.index }}">
                                 {% for photo in photos %}
-                                <div class="mySlides">
-                                <img src="{{ photo.photo }}" width="200" length="200">
-                                <div>{{ photo.caption }}</div>
+                                <div class="mySlides-puppyf{{ outer_loop.index }}">
+                                    <img src="{{ photo.photo }}" width="200" length="200">
+                                    <div>{{ photo.caption }}</div>
                                 </div>
                                 {% endfor %}
+                                <button onclick="plusDivs(-1, 'puppyf{{ outer_loop.index }}')">❮</button>
+                                <button onclick="plusDivs(1, 'puppyf{{ outer_loop.index }}')">❯</button>
                             </div>
-                            <div>
-                                <button onclick="plusDivs(-1)">❮</button>
-                                <button onclick="plusDivs(1)">❯</button>
-                              </div>
                         </li>
                         </ul>
                 </ul>
@@ -101,6 +98,7 @@
 
                 <li>{{ m_pups|length }} male:</li>
                     {% for avail, pup in m_pups %}
+                    {% set outer_loop = loop %}
                         <ul>
                             <li>{{ pup.name }}</li>
                             <ul>
@@ -113,13 +111,17 @@
                                     {% endif %}
                                 </li>
                                 <li>{{ "${:,.2f}".format(pup.price) }}</li>
-                                <li>Photos: {% for pup_photo in pup.photos %}
-                                    <ul>
-                                        <li>
-                                            <img src='{{ pup_photo.photo }}'><br>{{ pup_photo.caption }}<br>
-                                        </li>
-                                    </ul>
-                                    {% endfor %}
+                                <li>Photos: 
+                                    <div class="photoGallery" data-gallery="puppym{{ outer_loop.index }}">
+                                        {% for photo in photos %}
+                                        <div class="mySlides-puppym{{ outer_loop.index }}">
+                                            <img src="{{ photo.photo }}" width="200" length="200">
+                                            <div>{{ photo.caption }}</div>
+                                        </div>
+                                        {% endfor %}
+                                        <button onclick="plusDivs(-1, 'puppym{{ outer_loop.index }}')">❮</button>
+                                        <button onclick="plusDivs(1, 'puppym{{ outer_loop.index }}')">❯</button>
+                                    </div>
                                 </li>
                             </ul>
                         </ul>

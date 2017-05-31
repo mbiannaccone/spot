@@ -67,14 +67,14 @@
     <div id="photos" class="tab-pane fade">
           <h4>Photos:</h4>
         <div class="photoGallery" data-gallery="breeder">
+            <button onclick="plusDivs(-1, 'breeder')">❮</button>
+            <button onclick="plusDivs(1, 'breeder')">❯</button>
             {% for photo in photos %}
-            <div class="mySlides">
-                <img src="{{ photo.photo }}" width="400" length="400">
+            <div class="mySlides-breeder">
                 <div>{{ photo.caption }}</div>
+                <img src="{{ photo.photo }}" width="400" length="400">
             </div>
             {% endfor %}
-            <button onclick="plusDivs(-1)">❮</button>
-            <button onclick="plusDivs(1)">❯</button>
         </div>
     </div>
     <div id="litters" class="tab-pane fade">
@@ -108,7 +108,7 @@
         Sires<ul>
         {% for sire in sires %}
             <li><a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ sire.dog_id }}'>{{ sire.name }}</a><br>
-                date born: {{ sire.date_born }}<br>
+                date born: {{ sire.date_born.strftime('%m/%d/%y') }}<br>
                 description: {{ sire.description}}<br>
             </li>
         {% endfor %}
@@ -116,7 +116,7 @@
         Dams<ul>
         {% for dam in dams %}
             <li><a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ dam.dog_id }}'>{{ dam.name }}</a><br>
-                date born: {{ dam.date_born }}<br>
+                date born: {{ dam.date_born.strftime('%m/%d/%y') }}<br>
                 description: {{ dam.description}}<br>
             </li>
         {% endfor %}
