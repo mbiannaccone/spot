@@ -4,7 +4,9 @@
 
 {% block content %}
 
-<h4>Results</h4>
+<h4><span class="glyphicon glyphicon-search" aria-hidden="true"></span> find a breed</h4>
+<form action="/breed-search">
+<h5>Results</h5>
     {% for result, breed in search_results %}
     <div>
         <div>{{ loop.index }}. <a href="/breeds/{{ breed.breed_id }}">{{ breed.name }}</a> - {{ breed.description }}</div>
@@ -14,6 +16,5 @@
         <div>Group: {{ breed.group.name }}</div><br>
     </div>
     {% endfor %}
-
 
 {% endblock %}

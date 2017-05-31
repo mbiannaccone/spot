@@ -14,7 +14,7 @@
 
 <div class="tab-content">
     <div id="home" class="tab-pane fade in active">
-        <div>You've Spotted the following breeders:</div>
+        <h4>You've Spotted the following breeders:</h4>
             {% for breeder, litters in breeder_spots %}
             <ul>
                 <li>
@@ -28,7 +28,7 @@
                             {% endif %}
                         {% endfor %}
                     </div>
-                    <img src="{{ breeder.photos[0].photo }}" width="125" height="125">
+                    <img src="{{ (breeder.photos|random).photo }}" width="150">
                     <div>New Litters:</div>
                     <ul>
                     <div>{% for litter in litters %}
@@ -49,12 +49,12 @@
                 </li>
             </ul>
             {% endfor %}
-        <div>You've Spotted the following breeds:</div>
+        <h4>You've Spotted the following breeds:</h4>
             {% for breed in breed_spots %}
             <ul>
                 <li>
                     <a href='/breeds/{{ breed.breed_id }}'>{{ breed.name }}</a> - {{ breed.description }}
-                    <div><img src='{{ breed.photo }}' width="125" height="125"></div>
+                    <div><img src='{{ breed.photo }}' width="150"></div>
                     <form action='/breeder-search'>
                         <input type="submit" name="search" value="Search for Breeders">
                         <input type="hidden" name="breed" value="{{ breed.breed_id }}">
@@ -66,6 +66,8 @@
     </div>
 
     <div id="info" class="tab-pan fade">
+        <h4>Your user information is below.</h4>
+        <h5>To make updates, enter new information in the fields and submit.</h5>
         <form id="user-updates" action='/user-updates' method="POST">
             <div>First Name: <input type="text" name="fname" id="fname-field" placeholder="{{ user.fname }}"></div>
             <div>Last Name: <input type="text" name="lname" id="lname-field" placeholder="{{ user.lname }}"></div>

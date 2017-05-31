@@ -4,14 +4,10 @@
 
 {% block content %}
 
-<h4>welcome to:</h4>
-<h1>Spot</h1><span>the best friend finder.</span>
+<img src='/static/img/spot.png' width="200">
+<span>the best friend finder</span>
 
-<div>new to Spot? <a href='/register'>please register</a></div>
-
-<div>already a member? <a href='/login'>please login</a></div>
-
-<h5>find a breed</h5>
+<h5><span class="glyphicon glyphicon-search" aria-hidden="true"></span> find a breed</h5>
 <form action="/breed-search">
 
     <select name="size">
@@ -39,7 +35,7 @@
     <br><input type="checkbox" name="{{ char.char_id }}" value="{{ char.char_id }}">{{ char.char.lower() }}
     {% endfor %}
 
-    <div>try a keyword: <input type="text" name="keyword"></div>
+    <div>try a keyword: <input type="text" name="keyword" placeholder="search"></div>
 
     <input type="submit" name="search" value="search by filters">
     <span> ~ or ~ </span>
@@ -47,13 +43,13 @@
 
 </form>
 
-<h5>find a breeder</h5>
+<h5><span class="glyphicon glyphicon-user" aria-hidden="true"></span> find a breeder</h5>
 <form id="breeder-search" action="/breeder-search">
 
     {% if user %}
-        <div>location: <input type="text" name="location"></div>
+        <div>location: <input type="text" name="location" placeholder='{{ user.zipcode }}'></div>
     {% else %}
-        <div>location: <input type="text" name="location" required></div>
+        <div>location: <input type="text" name="location" placeholder='enter zipcode' required></div>
     {% endif %}
 
     <div>breed: <select name="breed" id="breed_id" required>

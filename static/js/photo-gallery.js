@@ -19,8 +19,13 @@
 // }
 
 var slideIndex = 1;
-var gallery = $(".photoGallery").data("gallery");
-showDivs(slideIndex, gallery);
+
+var galleries = document.getElementsByClassName('photoGallery');
+
+for (var i=0; i < galleries.length; i++){
+    var gallery = $(galleries[i]).data("gallery");
+    showDivs(slideIndex, gallery);
+}
 
 function plusDivs(n, gallery) {
   showDivs(slideIndex += n, gallery);

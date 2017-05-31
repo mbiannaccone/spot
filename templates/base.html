@@ -20,24 +20,52 @@
 </head>
 
 <body>
-    <form action='/'>
-        <button type="submit">home</button>
-    </form>
-    <form action="/login">
-        <button type="submit">login</button>
-    </form>
-    <form action="/logout">
-        <button type="submit">logout</button>
-    </form>
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">Spot</a>
+    </div>
 
-    {% if user %}
-        <div>logged in as: {{ user.email }}</div>
-        <form action="/users/{{ user.user_id }}">
-            <button type="submit">profile</button>
-        </form>
-    {% else %}
-        <div>not logged in</div>
-    {% endif %}
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li><a><img src='/static/img/paw.png' width="20"> the best friend finder</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+            {% if user %}
+                <a href="/users/{{ user.user_id }}">{{ user.email }}</a>
+            {% else %}
+                <a>not logged in</a>
+            {% endif %}
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><img src="/static/img/home.png" height="23" width="25"><span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            {% if user %}
+                <li><a href="/users/{{ user.user_id }}">Profile</a></li>
+                <li><a href="/logout">Logout</a></li>
+            {% else %}
+                <li><a href="/login">Login</a></li>
+                <li><a href="/register">Register</a></li>
+            {% endif %}
+            <li role="separator" class="divider"></li>
+
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
 
     {% block content %} put your content here {% endblock %}
 </body>

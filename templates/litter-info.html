@@ -12,7 +12,7 @@
 
 <div>
     {% if user in users_spots %}
-        <h5>You've spotted this breeder!</h5>
+        <div>You've spotted this breeder!</div>
     {% else %}
         <h5>spot this breeder</h5>
         <form action="/breeder-spot", method="POST">
@@ -22,9 +22,10 @@
     {% endif %}
 </div>
 
+<h4>Litter - Born {{ litter.date_born.strftime('%m/%d/%y') }}</h4>
+
 <ul class="nav nav-tabs">
     <li class="active"><a data-toggle="tab" href="#info">Info</a></li>
-    <li><a data-toggle="tab" href="#photos">Photos</a><li>
     <li><a data-toggle="tab" href="#puppies">Puppies</a><li>
 </ul>
 
@@ -38,17 +39,11 @@
         </div>
         <div>{{ litter.description }}</div>
         <div>
-            Born: {{ litter.date_born.strftime('%m/%d/%y') }}
-        </div>
-        <div>
             Available: {{ litter.date_available.strftime('%m/%d/%y') }}
         </div>
         <div>
             Puppies: {{ litter.num_pups }}
         </div>
-    </div>
-
-    <div id="photos" class="tab-pane fade">
         <div class="photoGallery" data-gallery="litter">
             {% for photo in photos %}
             <div class="mySlides-litter">
@@ -59,11 +54,16 @@
             <button onclick="plusDivs(-1, 'litter')">❮</button>
             <button onclick="plusDivs(1, 'litter')">❯</button>
         </div>
+        <h5>Email us at <a href='mailto:{{ litter.breeder.email }}'>{{ litter.breeder.email }}</a> to request a puppy from this litter </h5>
     </div>
 
     <div id="puppies" class="tab-pane fade">
         <div>
-            Puppies: {{ litter.num_pups }}
+            <ul class="nav nav-pills">
+                <li class="active"><a data-toggle="pill" href="#all">{{ litter.num_pups }} Total</a></li>
+                <li><a data-toggle="pill" href="#female">{{ f_pups|length }} Females</a></li>
+                <li><a data-toggle="pill" href="#male">{{ m_pups|length }} Males</a></li>
+            </ul>
             <ul>
                 <li>{{ f_pups|length }} female:</li>
                 {% for avail, pup in f_pups %}
@@ -82,7 +82,7 @@
                         <li>{{ "${:,.2f}".format(pup.price) }}</li>
                         <li>Photos: 
                             <div class="photoGallery" data-gallery="puppyf{{ outer_loop.index }}">
-                                {% for photo in photos %}
+                                {% for photo in pup.photos %}
                                 <div class="mySlides-puppyf{{ outer_loop.index }}">
                                     <img src="{{ photo.photo }}" width="200" length="200">
                                     <div>{{ photo.caption }}</div>
@@ -113,7 +113,7 @@
                                 <li>{{ "${:,.2f}".format(pup.price) }}</li>
                                 <li>Photos: 
                                     <div class="photoGallery" data-gallery="puppym{{ outer_loop.index }}">
-                                        {% for photo in photos %}
+                                        {% for photo in pup.photos %}
                                         <div class="mySlides-puppym{{ outer_loop.index }}">
                                             <img src="{{ photo.photo }}" width="200" length="200">
                                             <div>{{ photo.caption }}</div>
