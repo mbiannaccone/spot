@@ -14,11 +14,11 @@
 
 <div>
     {% if user in users_spots %}
-        <h5>You've spotted this breed!</h5>
+        <span>You've spotted this breed!</span>
     {% else %}
-        <h5>spot this breed</h5>
+        <span>spot this breed</span>
         <form action="/breed-spot", method="POST">
-            <button type="submit">spot</button>
+            <input type="image" src="/static/img/paw.png" width="35">
             <input type="hidden" name="breed" value=" {{ breed.breed_id }}">
         </form>
     {% endif %}
@@ -27,7 +27,7 @@
 <h5>find a {{ breed.name }} breeder in your area</h5>
 <form action="/breeder-search">
     {% if user %}
-        <div>location: <input type="text" name="location"></div>
+        <div>location: <input type="text" name="location" placeholder="{{ user.zipcode }}"></div>
     {% else %}
         <div>location: <input type="text" name="location" required></div>
     {% endif %}

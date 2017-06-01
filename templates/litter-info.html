@@ -67,61 +67,72 @@
         <div class="tab-content">
             <div id="all" class="tab-pane fade in active">
                 <div class="row">
-                  <div class="col-sm-5 col-md-4">
-                    {% for avail, pup in f_pups %}
-                    {% set outer_loop = loop %}
-                    <div class="thumbnail">
-                        <h4>{{ pup.name }} - female</h4>
-                        <div class="photoGallery" data-gallery="puppyf{{ outer_loop.index }}total">
-                            <button onclick="plusDivs(-1, 'puppyf{{ outer_loop.index }}total')">❮</button>
-                            <button onclick="plusDivs(1, 'puppyf{{ outer_loop.index }}total')">❯</button>
-                            {% for photo in pup.photos %}
-                            <div class="mySlides-puppyf{{ outer_loop.index }}total">
-                                <div>{{ photo.caption }}</div>
-                                <img src="{{ photo.photo }}" width="200" length="200">
+                    <div class="col-sm-5 col-md-4">
+                        <div class="panel panel-default">
+                            <div class="panel-heading"><h3 class="panel-title">Females</h3></div>
+                            <div class="panel-body">
+                            {% for avail, pup in f_pups %}
+                            {% set outer_loop = loop %}
+                            <div class="thumbnail">
+                                <h4>{{ pup.name }}</h4>
+                                <div class="photoGallery" data-gallery="puppyf{{ outer_loop.index }}total">
+                                    <button onclick="plusDivs(-1, 'puppyf{{ outer_loop.index }}total')">❮</button>
+                                    <button onclick="plusDivs(1, 'puppyf{{ outer_loop.index }}total')">❯</button>
+                                    {% for photo in pup.photos %}
+                                    <div class="mySlides-puppyf{{ outer_loop.index }}total">
+                                        <div>{{ photo.caption }}</div>
+                                        <img src="{{ photo.photo }}" width="200" length="200">
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                              <div class="caption">
+                                {% if pup.available %}
+                                <p>Available</p>
+                                {% else %}
+                                <p>Sold</p>
+                                {% endif %}
+                                <p>{{ "${:,.2f}".format(pup.price) }}</p>
+                                <p>{{ pup.description }}</p>
+                              </div>
                             </div>
                             {% endfor %}
+                            </div>
                         </div>
-                      <div class="caption">
-                        {% if pup.available %}
-                        <p>Available</p>
-                        {% else %}
-                        <p>Sold</p>
-                        {% endif %}
-                        <p>{{ "${:,.2f}".format(pup.price) }}</p>
-                        <p>{{ pup.description }}</p>
-                      </div>
-                    </div>
-                    {% endfor %}
 
-                    {% for avail, pup in m_pups %}
-                    {% set outer_loop = loop %}
-                    <div class="thumbnail">
-                        <h4>{{ pup.name }} - male</h4>
-                        <div class="photoGallery" data-gallery="puppym{{ outer_loop.index }}total">
-                            <button onclick="plusDivs(-1, 'puppym{{ outer_loop.index }}total')">❮</button>
-                            <button onclick="plusDivs(1, 'puppym{{ outer_loop.index }}total')">❯</button>
-                            {% for photo in pup.photos %}
-                            <div class="mySlides-puppym{{ outer_loop.index }}total">
-                                <div>{{ photo.caption }}</div>
-                                <img src="{{ photo.photo }}" width="200" length="200">
+                        <div class="panel panel-default">
+                            <div class="panel-heading"><h3 class="panel-title">Males</h3></div>
+                            <div class="panel-body">
+                            {% for avail, pup in m_pups %}
+                            {% set outer_loop = loop %}
+                            <div class="thumbnail">
+                                <h4>{{ pup.name }}</h4>
+                                <div class="photoGallery" data-gallery="puppym{{ outer_loop.index }}total">
+                                    <button onclick="plusDivs(-1, 'puppym{{ outer_loop.index }}total')">❮</button>
+                                    <button onclick="plusDivs(1, 'puppym{{ outer_loop.index }}total')">❯</button>
+                                    {% for photo in pup.photos %}
+                                    <div class="mySlides-puppym{{ outer_loop.index }}total">
+                                        <div>{{ photo.caption }}</div>
+                                        <img src="{{ photo.photo }}" width="200" length="200">
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                <div class="caption">
+                                    {% if pup.available %}
+                                    <p>Available</p>
+                                    {% else %}
+                                    <p>Sold</p>
+                                    {% endif %}
+                                    <p>{{ "${:,.2f}".format(pup.price) }}</p>
+                                    <p>{{ pup.description }}</p>
+                                </div>
                             </div>
                             {% endfor %}
+                            </div>
                         </div>
-                      <div class="caption">
-                        {% if pup.available %}
-                        <p>Available</p>
-                        {% else %}
-                        <p>Sold</p>
-                        {% endif %}
-                        <p>{{ "${:,.2f}".format(pup.price) }}</p>
-                        <p>{{ pup.description }}</p>
-                      </div>
-                    </div>
-                    {% endfor %}
                     </div>
                 </div>
             </div>
+            
 
             <div id="female" class="tab-pane fade">
                 <div class="row">
