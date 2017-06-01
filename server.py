@@ -11,6 +11,7 @@ from model import (Award, Blog, Breed, BreedChar, Breeder, BreederPhoto, PupPhot
 from model import connect_to_db, db
 from geopy.geocoders import Nominatim
 from geopy.distance import vincenty
+import bcrypt
 
 app = Flask(__name__)
 
@@ -68,11 +69,11 @@ def register_process():
     """ Checks if email already exists, and if not creates a new user. """
 
     email = request.form.get("email")
-    pwd = request.form.get("pwd")
     zipcode = request.form.get("zip")
     fname = request.form.get("fname")
     lname = request.form.get("lname")
     phone = request.form.get("phone")
+    pwd = request.form.get("pwd")
 
     if db.session.query(User).filter(User.email == email).first() is None:
         new_user = User(email=email, password=pwd, zipcode=zipcode)
@@ -518,13 +519,30 @@ def spot_breeder():
         return redirect('/login')
     else:
         user = User.query.get(session['user_id'])
-        breeder_id = int(request.form.get('breeder'))
+        breeder_id = request.form.get('breeder')
         breeder = Breeder.query.get(breeder_id)
 
         breederspot = BreederSpot(user_id=user.user_id, breeder_id=breeder_id)
         db.session.add(breederspot)
         db.session.commit()
         flash("You've spotted this breeder: %s" % breeder.name)
+    return redirect('/breeders/%s' % breeder_id)
+
+
+@app.route('/remove-breeder-spot', methods=["POST"])
+def remove_breeder_spot():
+    """ Removes breeder from user's list of spots. """
+
+    user_id = session['user_id']
+    breeder_id = request.form.get('breeder')
+    breeder = Breeder.query.get(breeder_id)
+
+    breeder_spot = BreederSpot.query.filter(BreederSpot.breeder_id == breeder_id,
+                                            BreederSpot.user_id == user_id
+                                            ).first()
+    db.session.delete(breeder_spot)
+    db.session.commit()
+    flash("You've unspotted this breeder: %s" % breeder.name)
     return redirect('/breeders/%s' % breeder_id)
 
 

@@ -29,11 +29,16 @@
 <div>
     {% if user in users_spots %}
         <span>You've spotted this breeder!</span>
+        <form action='/remove-breeder-spot' method="POST">
+            <input type="image" src="/static/img/unpaw.png" width="20">
+            <input type="hidden" name="breeder" value="{{ breeder.breeder_id }}">
+            <span>click to unspot</span>
+        </form>
     {% else %}
         <span>spot this breeder</span>
         <form action="/breeder-spot", method="POST">
             <input type="image" src="/static/img/paw.png" width="35">
-            <input type="hidden" name="breeder" value=" {{ breeder.breeder_id }}">
+            <input type="hidden" name="breeder" value="{{ breeder.breeder_id }}">
         </form>
     {% endif %}
 </div>
@@ -51,11 +56,10 @@
     <div id="info" class="tab-pane fade in active">
         <h4>Bio:</h4>
         <p>{{ breeder.bio }}</p>
-
         <div><b>{{ breeder.name }}</b></div>
         <div id="address">{{ breeder.address }}</div>
         <div>{{ breeder.phone }}</div>
-        <div>{{ breeder.email }}</div>
+        <a href='mailto:{{breeder.email}}'>{{ breeder.email }}</a>
 
         <div>
             <div class="photoGallery" data-gallery="breeder">
@@ -104,61 +108,11 @@
         </div>
     </div>
     <div id="dogs" class="tab-pane fade">
-        <ul class="nav nav-pills">
-            <li class="active"><a data-toggle="pill" href="#all">All</a></li>
-            <li><a data-toggle="pill" href="#sires">Sires</a></li>
-            <li><a data-toggle="pill" href="#dams">Dams</a></li>
-        </ul>
-        <div class="tab-content">
-            <div id="all" class="tab-pane fade in active">
-                <div class="row">
-                    <div class="col-sm-6 col-md-4">
-                        <div class="panel panel-default">
-                            <div class="panel-heading"><h3 class="panel-title">Sires</h3></div>
-                            <div class="panel-body">
-                                {% for sire in sires %}
-                                <div class="thumbnail">
-                                    <h4><a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ sire.dog_id }}'>{{ sire.name }}
-                                    {% if sire.photos %}
-                                    <img src="{{ (sire.photos|random).photo }}">
-                                    {% else %}
-                                    <img src="{{ breed.photo }}">
-                                    {% endif %}
-                                    </a></h4>
-                                    <div class="caption">
-                                        <p>Born: {{ sire.date_born.strftime('%m/%d/%y') }}</p>
-                                        <p>{{ sire.description }}</p>
-                                    </div>
-                                </div>
-                                {% endfor %}
-                            </div>
-                        </div>
-                        <div class="panel panel-default">
-                            <div class="panel-heading"><h3 class="panel-title">Dams</h3></div>
-                            <div class="panel-body">
-                                {% for dam in dams %}
-                                <div class="thumbnail">
-                                    <h4><a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ dam.dog_id }}'>{{ dam.name }}
-                                    {% if dam.photos %}
-                                    <img src="{{ (dam.photos|random).photo }}">
-                                    {% else %}
-                                    <img src="{{ breed.photo }}">
-                                    {% endif %}
-                                    </a></h4>
-                                    <div class="caption">
-                                        <p>Born: {{ dam.date_born.strftime('%m/%d/%y') }}</p>
-                                        <p>{{ dam.description }}</p>
-                                    </div>
-                                </div>
-                                {% endfor %}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div id="sires" class="tab-pane fade">
-                <div class="row">
-                    <div class="col-sm-6 col-md-4">
+        <div class="row">
+            <div class="col-sm-6 col-md-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading"><h3 class="panel-title">Sires</h3></div>
+                    <div class="panel-body">
                         {% for sire in sires %}
                         <div class="thumbnail">
                             <h4><a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ sire.dog_id }}'>{{ sire.name }}
@@ -176,10 +130,9 @@
                         {% endfor %}
                     </div>
                 </div>
-            </div>
-            <div id="dams" class="tab-pane fade">
-                <div class="row">
-                    <div class="col-sm-6 col-md-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading"><h3 class="panel-title">Dams</h3></div>
+                    <div class="panel-body">
                         {% for dam in dams %}
                         <div class="thumbnail">
                             <h4><a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ dam.dog_id }}'>{{ dam.name }}
@@ -196,7 +149,7 @@
                         </div>
                         {% endfor %}
                     </div>
-                </div>
+                </div>            
             </div>
         </div>
     </div>
