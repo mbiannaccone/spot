@@ -12,11 +12,11 @@
 
 <div>
     {% if user in users_spots %}
-        <h5>You've spotted this breeder!</h5>
+        <span>You've spotted this breeder!</span>
     {% else %}
-        <h5>spot this breeder</h5>
+        <span>spot this breeder</span>
         <form action="/breeder-spot", method="POST">
-            <button type="submit">spot</button>
+            <input type="image" src="/static/img/paw.png" width="35">
             <input type="hidden" name="breeder" value=" {{ breeder.breeder_id }}">
         </form>
     {% endif %}
@@ -79,17 +79,17 @@
         </div>
     </div>
     <div id="awards" class="tab-pane fade">
-        <div>Awards:
-            <ul> {% for award in awards %}
-                <li>{{ award.name }} - {{ award.date.strftime('%m/%d/%y') }}</li>
-                <ul>
-                    <li>{{ award.description }}</li>
-                </ul>
+         <div class="row">
+            <div class="col-sm-5 col-md-4">
+                {% for date, award in awards %}
+                <div class="thumbnail">
+                    <h4>{{ award.name }} - {{ date.strftime('%m/%d/%y') }}</h4>
+                    <p>{{ award.description }}</p>
+                </div>
                 {% endfor %}
-            </ul>
+            </div>
         </div>
     </div>
-
 </div>
 
 <script src="/static/js/photo-gallery.js"></script>

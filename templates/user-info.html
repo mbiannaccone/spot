@@ -14,55 +14,62 @@
 
 <div class="tab-content">
     <div id="home" class="tab-pane fade in active">
-        <h4>You've Spotted the following breeders:</h4>
-            {% for breeder, litters in breeder_spots %}
-            <ul>
-                <li>
-                    <a href='/breeders/{{ breeder.breeder_id }}'>{{ breeder.name }}</a>
-                    <div>Breeds:
-                        {% for group in litters|groupby('breed') %}
-                            {% if loop.last %}
-                                <a href='/breeds/{{ group.grouper.breed_id }}'>{{ group.grouper.name }}</a>
-                            {% else %}
-                                <a href='/breeds/{{ group.grouper.breed_id }}'>{{ group.grouper.name }}, </a>
-                            {% endif %}
+        <div class="row">
+            <div class="col-sm-6 col-md-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">You've Spotted the following breeders:</h4>
+                    </div>
+                    <div class="panel-body">
+                        {% for breeder, litters in breeder_spots %}
+                        <div class="thumbnail">
+                            <a href='/breeders/{{ breeder.breeder_id }}'><h5>{{ breeder.name }}</h5></a>
+                            <div>Breeds:
+                                {% for group in litters|groupby('breed') %}
+                                    {% if loop.last %}
+                                        <a href='/breeds/{{ group.grouper.breed_id }}'>{{ group.grouper.name }}</a>
+                                    {% else %}
+                                        <a href='/breeds/{{ group.grouper.breed_id }}'>{{ group.grouper.name }}, </a>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <img src="{{ (breeder.photos|random).photo }}" width="200">
+                            <div>New Litters:</div>
+                            <div>{% for litter in litters %}
+                                {% if litter.date_available > date_filter %}
+                                    <li><a href='/breeders/{{ breeder.breeder_id }}/litters/{{ litter.litter_id }}'>{{ litter.date_born.strftime('%m/%d/%y') }}</a> - {{ litter.num_pups }} puppies</li>
+                                {% endif %}
+                            {% endfor %}</div>
+                            <div>New Events:</div>
+                                <div>{% for event in breeder.events %}
+                                        {% if event.date > date_filter %}
+                                            <li><a href='/breeders/{{ breeder.breeder_id }}/events/{{ event.event_id }}'>{{ event.name }}</a> {{ event.date.strftime('%m/%d/%y') }}</li>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                        </div>
                         {% endfor %}
                     </div>
-                    <img src="{{ (breeder.photos|random).photo }}" width="150">
-                    <div>New Litters:</div>
-                    <ul>
-                    <div>{% for litter in litters %}
-                        {% if litter.date_available > date_filter %}
-                            <li><a href='/breeders/{{ breeder.breeder_id }}/litters/{{ litter.litter_id }}'>{{ litter.date_born.strftime('%m/%d/%y') }}</a> - {{ litter.num_pups }} puppies</li>
-                        {% endif %}
-                    {% endfor %}</div>
-                    </ul>
-                    <div>Events:</div>
-                    <ul>
-                        <div>{% for event in breeder.events %}
-                                {% if event.date > date_filter %}
-                                    <li><a href='/breeders/{{ breeder.breeder_id }}/events/{{ event.event_id }}'>{{ event.name }}</a> {{ event.date.strftime('%m/%d/%y') }}</li>
-                                {% endif %}
-                            {% endfor %}
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading"><h4 class="panel-title">You've Spotted the following breeds:</h4></div>
+                    <div class="panel-body">
+                        {% for breed in breed_spots %}
+                        <div class="thumbnail">
+                            <a href='/breeds/{{ breed.breed_id }}'><h5>{{ breed.name }}</h5></a>
+                            <div>{{ breed.description }}</div>
+                            <div><img src='{{ breed.photo }}' width="200"></div>
+                            <form action='/breeder-search'>
+                                <input type="submit" name="search" value="Search for Breeders">
+                                <input type="hidden" name="breed" value="{{ breed.breed_id }}">
+                                <input type="hidden" name="location" value="{{ user.zipcode }}">
+                            </form>
                         </div>
-                    </ul>
-                </li>
-            </ul>
-            {% endfor %}
-        <h4>You've Spotted the following breeds:</h4>
-            {% for breed in breed_spots %}
-            <ul>
-                <li>
-                    <a href='/breeds/{{ breed.breed_id }}'>{{ breed.name }}</a> - {{ breed.description }}
-                    <div><img src='{{ breed.photo }}' width="150"></div>
-                    <form action='/breeder-search'>
-                        <input type="submit" name="search" value="Search for Breeders">
-                        <input type="hidden" name="breed" value="{{ breed.breed_id }}">
-                        <input type="hidden" name="location" value="{{ user.zipcode }}">
-                    </form>
-                </li>
-            </ul>
-            {% endfor %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div id="info" class="tab-pan fade">

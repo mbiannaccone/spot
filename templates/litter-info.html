@@ -12,11 +12,11 @@
 
 <div>
     {% if user in users_spots %}
-        <div>You've spotted this breeder!</div>
+        <span>You've spotted this breeder!</span>
     {% else %}
-        <h5>spot this breeder</h5>
+        <span>spot this breeder</span>
         <form action="/breeder-spot", method="POST">
-            <button type="submit">spot</button>
+            <input type="image" src="/static/img/paw.png" width="35">
             <input type="hidden" name="breeder" value=" {{ breeder.breeder_id }}">
         </form>
     {% endif %}

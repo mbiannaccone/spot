@@ -449,7 +449,7 @@ def dog_info(breeder_id, dog_id):
 
     breeder = Breeder.query.get(breeder_id)
     dog = Dog.query.get(dog_id)
-    awards = dog.awards
+    awards = [(award.date, award) for award in dog.awards]
     photos = dog.photos
     litters = Litter.query.filter((Litter.dam_id == dog.dog_id) |
                                   (Litter.sire_id == dog.dog_id)
