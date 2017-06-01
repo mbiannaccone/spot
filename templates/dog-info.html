@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<h2><a href='/breeders/{{ breeder.breeder_id}}'>{{ breeder.name }}</a></h2>
+<h2><a href='/breeders/{{ breeder.breeder_id}}'>{{ breeder.name }}</a> Dogs</h2>
 <div>Breeds: <a href='/breeds/{{ breed.breed_id }}'>{{ breed.name }}</a>
 </div>
 
@@ -27,35 +27,57 @@
 
 <ul class="nav nav-tabs">
     <li class="active"><a data-toggle="tab" href="#info">Info</a></li>
-    <li><a data-toggle="tab" href="#photos">Photos</a><li>
     <li><a data-toggle="tab" href="#litters">Litters</a><li>
     <li><a data-toggle="tab" href="#awards">Awards</a><li>
 </ul>
 
 <div class="tab-content">
     <div id="info" class="tab-pane fade in active">
-        <div><a href='/breeds/{{ breed.breed_id }}'>{{ breed.name }}</a>
+        <p><a href='/breeds/{{ breed.breed_id }}'>{{ breed.name }}</a>
             {% if dog.gender_id in ['m'] %}
             Sire
             {% else %}
             Dam
             {% endif %}
+        </p>
+        <p>DOB: {{ dog.date_born.strftime('%m/%d/%y') }}</p>
+        <p>{{ dog.description }}</p>
+        <div class="photoGallery" data-gallery="dog">
+            <button onclick="plusDivs(-1, 'dog')">❮</button>
+            <button onclick="plusDivs(1, 'dog')">❯</button>
+            {% for photo in dog.photos %}
+            <div class="mySlides-dog">
+                <div>{{ photo.caption }}</div>
+                <img src="{{ photo.photo }}" width="400">
+            </div>
+            {% endfor %}
         </div>
-
-        <div>Born: {{ dog.date_born.strftime('%m/%d/%y') }}</div>
-
-        <div>{{ dog.description }}</div>
     </div>
-
-    <div id="photos" class="tab-pane fade">
-        <div>Photos:<br>
-        {% for photo in photos %}
-        <img src="{{ photo.photo }}"><br>
-        {{ photo.caption }}<br>
-        {% endfor %}
+    <div id="litters" class="tab-pane fade">
+        <div class="row">
+            <div class="col-sm-5 col-md-4">
+                {% for litter in litters %}
+                <div class="thumbnail">
+                    <h4><a href="/breeders/{{ breeder.breeder_id }}/litters/{{ litter.litter_id }}">Litter #{{ loop.revindex }} - {{ litter.date_born.strftime('%m/%d/%y') }}
+                    {% if litter.photos %}
+                        <img src="{{ (litter.photos|random).photo }}" width="175">
+                    {% else %}
+                        <img src="{{ breed.photo }}" width="175">
+                    {% endif %}
+                    </a></h4>
+                    <div class="caption">
+                        <p><a href='/breeds/{{ breed.breed_id }}'>{{ breed.name }}</a><br>
+                        Sire: <a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ litter.sire_id }}'>{{ litter.sire.name }}</a>
+                        | Dam: <a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ litter.dam_id }}'>{{ litter.dam.name }}</a><br>
+                        Available: {{ litter.date_available.strftime('%m/%d/%y') }}<br>
+                        {{ litter.num_pups }} puppies<br>
+                        {{ litter.description }}<br></p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
         </div>
     </div>
-
     <div id="awards" class="tab-pane fade">
         <div>Awards:
             <ul> {% for award in awards %}
@@ -68,22 +90,8 @@
         </div>
     </div>
 
-    <div id="litters" class="tab-pane fade">
-        <div>Litters:
-            <ul>
-            {% for litter in litters %}
-                <li>
-                    <a href='/breeders/{{ breeder.breeder_id }}/litters/{{ litter.litter_id }}'>Litter #{{ loop.revindex }}</a><br>
-                    Born: {{ litter.date_born.strftime('%m/%d/%y') }}<br>
-                    Available: {{ litter.date_available.strftime('%m/%d/%y') }}<br>
-                    # Puppies: {{ litter.num_pups }}<br>
-                    {{ litter.description}}<br>
-                </li>
-            {% endfor %}
-            </ul>
-        </div>
-    </div>
-
 </div>
+
+<script src="/static/js/photo-gallery.js"></script>
 
 {% endblock %}

@@ -81,12 +81,13 @@
           <div class="col-sm-5 col-md-4">
             {% for date, litter, breed in litters %}
             <div class="thumbnail">
-                <h4>Litter #{{ loop.revindex }}</a> - {{ litter.date_born.strftime('%m/%d/%y') }}</h4>
+                <h4><a href="/breeders/{{ breeder.breeder_id }}/litters/{{ litter.litter_id }}">Litter #{{ loop.revindex }} - {{ litter.date_born.strftime('%m/%d/%y') }}
                 {% if litter.photos %}
                     <img src="{{ (litter.photos|random).photo }}" width="175">
                 {% else %}
-                    <img src="{{ breed.photo }}" width="150">
+                    <img src="{{ breed.photo }}" width="175">
                 {% endif %}
+                </a></h4>
               <div class="caption">
                 <p>
                     <a href='/breeds/{{ breed.breed_id }}'>{{ breed.name }}</a><br>
@@ -96,7 +97,6 @@
                     {{ litter.num_pups }} puppies<br>
                     {{ litter.description }}<br>
                 </p>
-                <p><a href="/breeders/{{ breeder.breeder_id }}/litters/{{ litter.litter_id }}" class="btn btn-primary" role="button">Details</a></p>
               </div>
             </div>
             {% endfor %}
@@ -118,12 +118,13 @@
                             <div class="panel-body">
                                 {% for sire in sires %}
                                 <div class="thumbnail">
-                                    <h4><a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ sire.dog_id }}'>{{ sire.name }}</a></h4>
+                                    <h4><a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ sire.dog_id }}'>{{ sire.name }}
                                     {% if sire.photos %}
                                     <img src="{{ (sire.photos|random).photo }}">
                                     {% else %}
                                     <img src="{{ breed.photo }}">
                                     {% endif %}
+                                    </a></h4>
                                     <div class="caption">
                                         <p>Born: {{ sire.date_born.strftime('%m/%d/%y') }}</p>
                                         <p>{{ sire.description }}</p>
@@ -137,12 +138,13 @@
                             <div class="panel-body">
                                 {% for dam in dams %}
                                 <div class="thumbnail">
-                                    <h4><a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ dam.dog_id }}'>{{ dam.name }}</a></h4>
+                                    <h4><a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ dam.dog_id }}'>{{ dam.name }}
                                     {% if dam.photos %}
                                     <img src="{{ (dam.photos|random).photo }}">
                                     {% else %}
                                     <img src="{{ breed.photo }}">
                                     {% endif %}
+                                    </a></h4>
                                     <div class="caption">
                                         <p>Born: {{ dam.date_born.strftime('%m/%d/%y') }}</p>
                                         <p>{{ dam.description }}</p>
@@ -159,12 +161,13 @@
                     <div class="col-sm-6 col-md-4">
                         {% for sire in sires %}
                         <div class="thumbnail">
-                            <h4><a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ sire.dog_id }}'>{{ sire.name }}</a></h4>
+                            <h4><a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ sire.dog_id }}'>{{ sire.name }}
                             {% if sire.photos %}
                             <img src="{{ (sire.photos|random).photo }}">
                             {% else %}
                             <img src="{{ breed.photo }}">
                             {% endif %}
+                            </a></h4>
                             <div class="caption">
                                 <p>Born: {{ sire.date_born.strftime('%m/%d/%y') }}</p>
                                 <p>{{ sire.description }}</p>
@@ -179,12 +182,13 @@
                     <div class="col-sm-6 col-md-4">
                         {% for dam in dams %}
                         <div class="thumbnail">
-                            <h4><a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ dam.dog_id }}'>{{ dam.name }}</a></h4>
+                            <h4><a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ dam.dog_id }}'>{{ dam.name }}
                             {% if dam.photos %}
                             <img src="{{ (dam.photos|random).photo }}">
                             {% else %}
                             <img src="{{ breed.photo }}">
                             {% endif %}
+                            </a></h4>
                             <div class="caption">
                                 <p>Born: {{ dam.date_born.strftime('%m/%d/%y') }}</p>
                                 <p>{{ dam.description }}</p>
@@ -197,27 +201,49 @@
         </div>
     </div>
     <div id="awards" class="tab-pane fade">
-        <h4>Awards:</h4>
-        <ul>
-        {% for date, award, dog in awards %}
-            <li>
-                {{ award.name }}</a> - {{ award.date.strftime('%m/%d/%y') }}<br>
-                Winner: <a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ award.dog_id }}'>{{ dog.name }}</a><br>
-                {{ award.description }}<br>
-            </li>
-        {% endfor %}
-        </ul>
+        <div class="row">
+            <div class="col-sm-5 col-md-4">
+                {% for date, award, dog in awards %}
+                <div class="thumbnail">
+                    <h4>{{ award.name }} {{ award.date.strftime('%m/%d/%y') }} - <a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ award.dog_id }}'>{{ dog.name }}</h4>
+                    {% if dog.photos %}
+                    <img src="{{ (dog.photos|random).photo }}">
+                    {% else %}
+                    <img src="{{ breed.photo }}">
+                    {% endif %}
+                    </a>
+                    <div class="caption"><p>{{ award.description }}</p></div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
     </div>
     <div id="events" class="tab-pane fade">
-        <h4>Events:</h4>
-        <ul>
-        {% for event in events %}
-            <li>
-                <a href='/breeders/{{ breeder.breeder_id }}/events/{{ event.event_id }}'>{{ event.name }}</a> - {{ event.date.strftime('%m/%d/%y') }}<br>
-                {{ event.description }}<br>
-            </li>
-        {% endfor %}
-        </ul>
+        <div class="row">
+            <div class="col-sm-6 col-md-4">
+                {% for date, event in events %}
+                {% set outer_loop = loop %}
+                <div class="thumbnail">
+                    <h4>{{ event.name }} - {{ date.strftime('%m/%d/%y') }}</h4>
+                    {% if event.photos %}
+                    <div class="photoGallery" data-gallery="event{{ outer_loop.index }}">
+                        <button onclick="plusDivs(-1, 'event{{ outer_loop.index }}')">❮</button>
+                        <button onclick="plusDivs(1, 'event{{ outer_loop.index }}')">❯</button>
+                        {% for photo in event.photos %}
+                        <div class="mySlides-event{{ outer_loop.index }}">
+                            <div>{{ photo.caption }}</div>
+                            <img src="{{ photo.photo }}" width="400" length="400">
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <img src="{{ (breeder.photos|random).photo }}">
+                    {% endif %}
+                    <div class="caption"><p>{{ event.description }}</p></div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
     </div>
     <div id="blog" class="tab-pane fade">
         <h4>Blog:</h4>

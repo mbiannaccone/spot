@@ -383,10 +383,11 @@ def breeder_info(breeder_id):
     photos = breeder.photos
     litters = [(litter.date_born, litter, litter.breed) for litter in breeder.litters]
     litters.sort(reverse=True)
-    breeds = {breed for date, litter, breed in litters}
-    events = breeder.events
-    sires = {Dog.query.get(litter.sire_id) for litter in breeder.litters}
-    dams = {Dog.query.get(litter.dam_id) for litter in breeder.litters}
+    breeds = list({breed for date, litter, breed in litters})
+    events = [(event.date, event) for event in breeder.events]
+    events.sort(reverse=True)
+    sires = list({Dog.query.get(litter.sire_id) for litter in breeder.litters})
+    dams = list({Dog.query.get(litter.dam_id) for litter in breeder.litters})
     awards = [(award.date, award, award.dog) for award in breeder.awards]
     awards.sort(reverse=True)
     blogs = [(blog.date, blog) for blog in breeder.blogs]
@@ -467,25 +468,26 @@ def dog_info(breeder_id, dog_id):
                            users_spots=users_spots)
 
 
-@app.route('/breeders/<breeder_id>/events/<event_id>')
-def event_info(breeder_id, event_id):
-    """ Render's a breeder event's info page. """
+""" Got rid of separate event page. """
+# @app.route('/breeders/<breeder_id>/events/<event_id>')
+# def event_info(breeder_id, event_id):
+#     """ Render's a breeder event's info page. """
 
-    user = check_user()
+#     user = check_user()
 
-    breeder = Breeder.query.get(breeder_id)
-    event = Event.query.get(event_id)
-    photos = event.photos
-    users_spots = [spot.user for spot in breeder.breeder_spots]
-    breeds = {litter.breed for litter in event.breeder.litters}
+#     breeder = Breeder.query.get(breeder_id)
+#     event = Event.query.get(event_id)
+#     photos = event.photos
+#     users_spots = [spot.user for spot in breeder.breeder_spots]
+#     breeds = {litter.breed for litter in event.breeder.litters}
 
-    return render_template('event-info.html',
-                           breeder=breeder,
-                           event=event,
-                           photos=photos,
-                           user=user,
-                           users_spots=users_spots,
-                           breeds=breeds)
+#     return render_template('event-info.html',
+#                            breeder=breeder,
+#                            event=event,
+#                            photos=photos,
+#                            user=user,
+#                            users_spots=users_spots,
+#                            breeds=breeds)
 
 
 @app.route('/breed-spot', methods=["POST"])
