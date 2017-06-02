@@ -47,6 +47,12 @@
                                         {% endif %}
                                     {% endfor %}
                                 </div>
+                            <form action='/remove-breeder-spot' method="POST">
+                                <input type="image" src="/static/img/unpaw.png" width="20">
+                                <input type="hidden" name="breeder" value="{{ breeder.breeder_id }}">
+                                <input type="hidden" name="user-page" value="1">
+                                <span>click to unspot</span>
+                            </form>
                         </div>
                         {% endfor %}
                     </div>
@@ -63,6 +69,12 @@
                                 <input type="submit" name="search" value="Search for Breeders">
                                 <input type="hidden" name="breed" value="{{ breed.breed_id }}">
                                 <input type="hidden" name="location" value="{{ user.zipcode }}">
+                            </form>
+                            <form action='/remove-breed-spot' method="POST">
+                                <input type="image" src="/static/img/unpaw.png" width="20">
+                                <input type="hidden" name="breed" value="{{ breed.breed_id }}">
+                                <input type="hidden" name="user-page" value="1">
+                                <span>click to unspot</span>
                             </form>
                         </div>
                         {% endfor %}

@@ -471,28 +471,6 @@ def dog_info(breeder_id, dog_id):
                            users_spots=users_spots)
 
 
-""" Got rid of separate event page. """
-# @app.route('/breeders/<breeder_id>/events/<event_id>')
-# def event_info(breeder_id, event_id):
-#     """ Render's a breeder event's info page. """
-
-#     user = check_user()
-
-#     breeder = Breeder.query.get(breeder_id)
-#     event = Event.query.get(event_id)
-#     photos = event.photos
-#     users_spots = [spot.user for spot in breeder.breeder_spots]
-#     breeds = {litter.breed for litter in event.breeder.litters}
-
-#     return render_template('event-info.html',
-#                            breeder=breeder,
-#                            event=event,
-#                            photos=photos,
-#                            user=user,
-#                            users_spots=users_spots,
-#                            breeds=breeds)
-
-
 @app.route('/breed-spot', methods=["POST"])
 def spot_breed():
     """ Adds breed to the user's list of spots. """
@@ -525,6 +503,10 @@ def remove_breed_spot():
     db.session.delete(breed_spot)
     db.session.commit()
     flash("You've unspotted the %s breed." % breed.name)
+
+    if request.form.get('user-page'):
+        return redirect('/users/%s' % user_id)
+
     return redirect('/breeds/%s' % breed_id)
 
 
@@ -561,6 +543,10 @@ def remove_breeder_spot():
     db.session.delete(breeder_spot)
     db.session.commit()
     flash("You've unspotted this breeder: %s" % breeder.name)
+
+    if request.form.get('user-page'):
+        return redirect('/users/%s' % user_id)
+
     return redirect('/breeders/%s' % breeder_id)
 
 
