@@ -145,7 +145,9 @@ def user_profile(user_id):
     else:
         user = User.query.get(session['user_id'])
         breed_spots = [breed_spot.breed for breed_spot in user.breed_spots]
+        breed_spots.reverse()
         breeder_spots = [(breeder_spot.breeder, breeder_spot.breeder.litters) for breeder_spot in user.breeder_spots]
+        breeder_spots.reverse()
         date_filter = datetime.now() - timedelta(days=120)
         return render_template('user-info.html',
                                user=user,
@@ -507,6 +509,22 @@ def spot_breed():
         db.session.add(breedspot)
         db.session.commit()
         flash("You've spotted the %s breed!" % breed.name)
+    return redirect('/breeds/%s' % breed_id)
+
+
+@app.route('/remove-breed-spot', methods=["POST"])
+def remove_breed_spot():
+    """ Removes breed from user's list of spots. """
+
+    user_id = session['user_id']
+    breed_id = request.form.get('breed')
+    breed = Breed.query.get(breed_id)
+
+    breed_spot = BreedSpot.query.filter(BreedSpot.breed_id == breed_id,
+                                        BreedSpot.user_id == user_id).first()
+    db.session.delete(breed_spot)
+    db.session.commit()
+    flash("You've unspotted the %s breed." % breed.name)
     return redirect('/breeds/%s' % breed_id)
 
 

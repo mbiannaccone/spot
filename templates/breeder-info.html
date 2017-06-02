@@ -118,8 +118,6 @@
                             <h4><a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ sire.dog_id }}'>{{ sire.name }}
                             {% if sire.photos %}
                             <img src="{{ (sire.photos|random).photo }}">
-                            {% else %}
-                            <img src="{{ breed.photo }}">
                             {% endif %}
                             </a></h4>
                             <div class="caption">
@@ -138,8 +136,6 @@
                             <h4><a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ dam.dog_id }}'>{{ dam.name }}
                             {% if dam.photos %}
                             <img src="{{ (dam.photos|random).photo }}">
-                            {% else %}
-                            <img src="{{ breed.photo }}">
                             {% endif %}
                             </a></h4>
                             <div class="caption">
@@ -161,8 +157,6 @@
                     <h4>{{ award.name }} {{ award.date.strftime('%m/%d/%y') }} - <a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ award.dog_id }}'>{{ dog.name }}</h4>
                     {% if dog.photos %}
                     <img src="{{ (dog.photos|random).photo }}">
-                    {% else %}
-                    <img src="{{ breed.photo }}">
                     {% endif %}
                     </a>
                     <div class="caption"><p>{{ award.description }}</p></div>

@@ -13,6 +13,11 @@
 <div>
     {% if user in users_spots %}
         <span>You've spotted this breeder!</span>
+        <form action='/remove-breeder-spot' method="POST">
+            <input type="image" src="/static/img/unpaw.png" width="20">
+            <input type="hidden" name="breeder" value="{{ breeder.breeder_id }}">
+            <span>click to unspot</span>
+        </form>
     {% else %}
         <span>spot this breeder</span>
         <form action="/breeder-spot", method="POST">
@@ -80,7 +85,7 @@
     </div>
     <div id="awards" class="tab-pane fade">
          <div class="row">
-            <div class="col-sm-5 col-md-4">
+            <div class="col-sm-8 col-md-4">
                 {% for date, award in awards %}
                 <div class="thumbnail">
                     <h4>{{ award.name }} - {{ date.strftime('%m/%d/%y') }}</h4>

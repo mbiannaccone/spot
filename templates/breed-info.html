@@ -15,6 +15,11 @@
 <div>
     {% if user in users_spots %}
         <span>You've spotted this breed!</span>
+        <form action='/remove-breed-spot' method="POST">
+            <input type="image" src="/static/img/unpaw.png" width="20">
+            <input type="hidden" name="breed" value="{{ breed.breed_id }}">
+            <span>click to unspot</span>
+        </form>
     {% else %}
         <span>spot this breed</span>
         <form action="/breed-spot", method="POST">
