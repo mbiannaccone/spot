@@ -173,27 +173,27 @@ def update_user_info():
 
     updated_info = []
 
-    if fname and fname != user.fname:
-        user.fname = fname
-        updated_info.append('First Name')
-    if lname and lname != user.lname:
-        user.lname = lname
-        updated_info.append('Last Name')
-    if email and email != user.email:
-        user.email = email
-        updated_info.append('Email')
-    if zipcode and zipcode != user.zipcode:
-        user.zipcode = zipcode
-        updated_info.append('Zipcode')
-    if phone and phone != user.phone:
-        user.phone = phone
-        updated_info.append('Phone')
-    if password and password != user.password:
-        if current_pwd == user.password:
+    if current_pwd != user.password:
+        updated_info.append("Did NOT make any updates as password entry does not match current password, please try again.")
+    else:
+        if fname and fname != user.fname:
+            user.fname = fname
+            updated_info.append('First Name')
+        if lname and lname != user.lname:
+            user.lname = lname
+            updated_info.append('Last Name')
+        if email and email != user.email:
+            user.email = email
+            updated_info.append('Email')
+        if zipcode and zipcode != user.zipcode:
+            user.zipcode = zipcode
+            updated_info.append('Zipcode')
+        if phone and phone != user.phone:
+            user.phone = phone
+            updated_info.append('Phone')
+        if password and password != user.password:
             user.password = password
             updated_info.append('Password')
-        else:
-            updated_info.append("Did NOT update password as entry does not match current password, please try again.")
 
     db.session.commit()
 
