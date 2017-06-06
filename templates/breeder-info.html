@@ -41,7 +41,7 @@
                   </ol>
 
                   <!-- Wrapper for slides -->
-                  <div class="carousel-inner" role="listbox">
+                  <div class="carousel-inner" role="listbox" style=" width:100%; height: 450px !important;">
                     {% for photo in photos %}
                     {% if loop.first %}
                     <div class="item active">
@@ -279,7 +279,7 @@
                                             {% endfor %}
                                         </ol>
                                         <!-- Wrapper for slides -->
-                                        <div class="carousel-inner" role="listbox">
+                                        <div class="carousel-inner" role="listbox" style=" width:100%; height: 450px !important;">
                                             {% for photo in event.photos %}
                                             {% if loop.first %}
                                             <div class="item active">
@@ -350,6 +350,8 @@
         </div>
     </div>
 </div>
+
+<script>
 
 <script src="/static/js/photo-gallery.js"></script>
 
