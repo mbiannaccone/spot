@@ -13,218 +13,288 @@
 
 {% block content %}
 
-<h2>{{ breeder.name }}</h2>
-<div>Breeds:
-    {% for breed in breeds %}
-        {% if loop.last %}
-            <a href='/breeds/{{ breed.breed_id }}'>{{ breed.name }}</a>
-        {% else %}
-            <a href='/breeds/{{ breed.breed_id }}'>{{ breed.name }}, </a>
-        {% endif %}
-    {% endfor %}
-</div>
-
-<div>{{ spots|length }} spots</div>
-
-<div>
-    {% if user in users_spots %}
-        <span>You've spotted this breeder!</span>
-        <form action='/remove-breeder-spot' method="POST">
-            <input type="image" src="/static/img/unpaw.png" width="20">
-            <input type="hidden" name="breeder" value="{{ breeder.breeder_id }}">
-            <span>click to unspot</span>
-        </form>
-    {% else %}
-        <span>spot this breeder</span>
-        <form action="/breeder-spot", method="POST">
-            <input type="image" src="/static/img/paw.png" width="35">
-            <input type="hidden" name="breeder" value="{{ breeder.breeder_id }}">
-        </form>
-    {% endif %}
-</div>
-
-<ul class="nav nav-tabs">
-    <li class="active"><a data-toggle="tab" href="#info">Info</a></li>
-    <li><a data-toggle="tab" href="#litters">Litters</a><li>
-    <li><a data-toggle="tab" href="#dogs">Dogs</a><li>
-    <li><a data-toggle="tab" href="#awards">Awards</a><li>
-    <li><a data-toggle="tab" href="#events">Events</a><li>
-    <li><a data-toggle="tab" href="#blog">Blog</a><li>
-</ul>
-
-<div class="tab-content">
-    <div id="info" class="tab-pane fade in active">
-        <h4>Bio:</h4>
-        <p>{{ breeder.bio }}</p>
-        <div><b>{{ breeder.name }}</b></div>
-        <div id="address">{{ breeder.address }}</div>
-        <div>{{ breeder.phone }}</div>
-        <a href='mailto:{{breeder.email}}'>{{ breeder.email }}</a>
-
-        <div>
-            <div class="photoGallery" data-gallery="breeder">
-                <button onclick="plusDivs(-1, 'breeder')">❮</button>
-                <button onclick="plusDivs(1, 'breeder')">❯</button>
-                {% for photo in photos %}
-                <div class="mySlides-breeder">
-                    <div>{{ photo.caption }}</div>
-                    <img src="{{ photo.photo }}" width="400" length="400">
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-
-        <div id="map"></div>
-        <script src="https://code.jquery.com/jquery.js"></script>
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFObsWCCQqa4NCpJrZ4JGUze4rncKmZTw&callback=initMap"
-        async defer></script>
-        <script type="text/javascript" src="/static/js/breeder-info-map.js"></script>
-    </div>
-    <div id="litters" class="tab-pane fade">
-        <div class="row">
-          <div class="col-sm-5 col-md-4">
-            {% for date, litter, breed in litters %}
-            <div class="thumbnail">
-                <h4><a href="/breeders/{{ breeder.breeder_id }}/litters/{{ litter.litter_id }}">Litter #{{ loop.revindex }} - {{ litter.date_born.strftime('%m/%d/%y') }}
-                {% if litter.photos %}
-                    <img src="{{ (litter.photos|random).photo }}" width="175">
+<div class="container">
+    <div class="good-dog-header" style="font-size: 300%">{{ breeder.name }}</div>
+        <div class="good-dog">breeds:
+            {% for breed in breeds %}
+                {% if loop.last %}
+                    <a href='/breeds/{{ breed.breed_id }}'>{{ breed.name }}</a>
                 {% else %}
-                    <img src="{{ breed.photo }}" width="175">
+                    <a href='/breeds/{{ breed.breed_id }}'>{{ breed.name }}, </a>
                 {% endif %}
-                </a></h4>
-              <div class="caption">
-                <p>
-                    <a href='/breeds/{{ breed.breed_id }}'>{{ breed.name }}</a><br>
-                    Sire: <a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ litter.sire_id }}'>{{ litter.sire.name }}</a>
-                    | Dam: <a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ litter.dam_id }}'>{{ litter.dam.name }}</a><br>
-                    Available: {{ litter.date_available.strftime('%m/%d/%y') }}<br>
-                    {{ litter.num_pups }} puppies<br>
-                    {{ litter.description }}<br>
-                </p>
-              </div>
-            </div>
             {% endfor %}
-          </div>
         </div>
-    </div>
-    <div id="dogs" class="tab-pane fade">
-        <div class="row">
-            <div class="col-sm-6 col-md-4">
-                <div class="panel panel-default">
-                    <div class="panel-heading"><h3 class="panel-title">Sires</h3></div>
-                    <div class="panel-body">
-                        {% for sire in sires %}
-                        <div class="thumbnail">
-                            <h4><a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ sire.dog_id }}'>{{ sire.name }}
-                            {% if sire.photos %}
-                            <img src="{{ (sire.photos|random).photo }}">
-                            {% endif %}
-                            </a></h4>
-                            <div class="caption">
-                                <p>Born: {{ sire.date_born.strftime('%m/%d/%y') }}</p>
-                                <p>{{ sire.description }}</p>
-                            </div>
-                        </div>
-                        {% endfor %}
+    <div class="row">
+        <div class="col-md-5 fixed">
+            <div class="image">
+                <div class="photoGallery" data-gallery="breeder">
+                    <button onclick="plusDivs(-1, 'breeder')">❮</button>
+                    <button onclick="plusDivs(1, 'breeder')">❯</button>
+                    {% for photo in photos %}
+                    <div class="mySlides-breeder">
+                        <div>{{ photo.caption }}</div>
+                        <img src="{{ photo.photo }}" width="400" length="400">
                     </div>
+                    {% endfor %}
                 </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading"><h3 class="panel-title">Dams</h3></div>
-                    <div class="panel-body">
-                        {% for dam in dams %}
-                        <div class="thumbnail">
-                            <h4><a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ dam.dog_id }}'>{{ dam.name }}
-                            {% if dam.photos %}
-                            <img src="{{ (dam.photos|random).photo }}">
-                            {% endif %}
-                            </a></h4>
-                            <div class="caption">
-                                <p>Born: {{ dam.date_born.strftime('%m/%d/%y') }}</p>
-                                <p>{{ dam.description }}</p>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>            
-            </div>
-        </div>
-    </div>
-    <div id="awards" class="tab-pane fade">
-        <div class="row">
-            <div class="col-sm-5 col-md-4">
-                {% for date, award, dog in awards %}
-                <div class="thumbnail">
-                    <h4>{{ award.name }} {{ award.date.strftime('%m/%d/%y') }} - <a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ award.dog_id }}'>{{ dog.name }}</h4>
-                    {% if dog.photos %}
-                    <img src="{{ (dog.photos|random).photo }}">
-                    {% endif %}
-                    </a>
-                    <div class="caption"><p>{{ award.description }}</p></div>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-    </div>
-    <div id="events" class="tab-pane fade">
-        <div class="row">
-            <div class="col-sm-6 col-md-4">
-                {% for date, event in events %}
-                {% set outer_loop = loop %}
-                <div class="thumbnail">
-                    <h4>{{ event.name }} - {{ date.strftime('%m/%d/%y') }}</h4>
-                    {% if event.photos %}
-                    <div class="photoGallery" data-gallery="event{{ outer_loop.index }}">
-                        <button onclick="plusDivs(-1, 'event{{ outer_loop.index }}')">❮</button>
-                        <button onclick="plusDivs(1, 'event{{ outer_loop.index }}')">❯</button>
-                        {% for photo in event.photos %}
-                        <div class="mySlides-event{{ outer_loop.index }}">
-                            <div>{{ photo.caption }}</div>
-                            <img src="{{ photo.photo }}" width="400" length="400">
-                        </div>
-                        {% endfor %}
-                    </div>
+                <div class="image-text-left">
+                    {% if user in users_spots %}
+                        <form action='/remove-breeder-spot' method="POST">
+                            <button class="btn btn-default transparent"><img src="/static/img/unpaw.png" title="you've spotted this breeder" width="20"></button>
+                            <input type="hidden" name="breeder" value="{{ breeder.breeder_id }}">
+                        </form>
                     {% else %}
-                    <img src="{{ (breeder.photos|random).photo }}">
+                        <form action="/breeder-spot", method="POST">
+                            <button class="btn btn-default"><img src="/static/img/paw.png" title="spot this breeder!" width="35"></button>
+                            <input type="hidden" name="breeder" value="{{ breeder.breeder_id }}">
+                        </form>
                     {% endif %}
-                    <div class="caption"><p>{{ event.description }}</p></div>
                 </div>
-                {% endfor %}
+            </div>
+            <div><span class="good-dog-header">{{ spots|length }}</span><span class="good-dog"> spots!</span></div>
+        </div>
+        <div class="col-md-7 scrollit">
+            <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" href="#info"><span class="good-dog">Info</span></a></li>
+                <li><a data-toggle="tab" href="#litters"><span class="good-dog">Litters</span></a><li>
+                <li><a data-toggle="tab" href="#dogs"><span class="good-dog">Dogs</span></a><li>
+                <li><a data-toggle="tab" href="#awards"><span class="good-dog">Awards</span></a><li>
+                <li><a data-toggle="tab" href="#events"><span class="good-dog">Events</span></a><li>
+                <li><a data-toggle="tab" href="#blog"><span class="good-dog">Blog</span></a><li>
+            </ul>
+
+            <div class="tab-content">
+                <div id="info" class="tab-pane fade in active">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="thumbnail gray">
+                                <p>{{ breeder.bio }}</p>
+                            </div>
+                            <div>
+                                <div class="orange"><b>{{ breeder.name }}</b></div>
+                                <div id="address">{{ breeder.address }}</div>
+                                <div>{{ breeder.phone }}</div>
+                                <a href='mailto:{{breeder.email}}'>{{ breeder.email }}</a>
+                            </div>
+                            <div id="map"></div>
+                                <script src="https://code.jquery.com/jquery.js"></script>
+                                <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFObsWCCQqa4NCpJrZ4JGUze4rncKmZTw&callback=initMap"
+                                async defer></script>
+                                <script type="text/javascript" src="/static/js/breeder-info-map.js"></script>
+                        </div>
+                    </div>
+                </div>
+                <div id="litters" class="tab-pane fade">
+                    <div class="row">
+                        <div class="col-md-12">
+                        {% for date, litter, breed in litters %}
+                        <div class="thumbnail gray">
+                            <div class="good-dog" style="font-size: 200%"><a href="/breeders/{{ breeder.breeder_id }}/litters/{{ litter.litter_id }}">Litter #{{ loop.revindex }} - <span class="orange">{{ litter.date_born.strftime('%m/%d/%y') }}</span>
+                            {% if litter.photos %}
+                                <img src="{{ (litter.photos|random).photo }}" width="250">
+                            {% else %}
+                                <img src="{{ breed.photo }}" width="250">
+                            {% endif %}
+                            </a></div>
+                            <div class="caption">
+                                <div class="panel panel-default panel-horizontal">
+                                    <div class="panel-heading">
+                                        <span class="panel-title good-dog">breed</span>
+                                    </div>
+                                    <div class="panel-body">
+                                        <a href='/breeds/{{ breed.breed_id }}'>{{ breed.name }}</a>
+                                    </div>
+                                </div>
+                                <div class="panel panel-default panel-horizontal">
+                                    <div class="panel-heading">
+                                        <span class="panel-title good-dog">sire</span>
+                                    </div>
+                                    <div class="panel-body">
+                                        <a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ litter.sire_id }}'>{{ litter.sire.name }}</a>
+                                    </div>
+                                </div>
+                                <div class="panel panel-default panel-horizontal">
+                                    <div class="panel-heading">
+                                        <span class="panel-title good-dog">dam</span>
+                                    </div>
+                                    <div class="panel-body">
+                                        <a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ litter.dam_id }}'>{{ litter.dam.name }}</a>
+                                    </div>
+                                </div>  
+                                <div class="panel panel-default panel-horizontal">
+                                    <div class="panel-heading">
+                                        <span class="panel-title good-dog">date</span>
+                                    </div>
+                                    <div class="panel-body">
+                                        <span>{{ litter.date_available.strftime('%m/%d/%y') }}</span>
+                                    </div>
+                                </div>
+                                <div class="panel panel-default panel-horizontal">
+                                    <div class="panel-heading">
+                                        <span class="panel-title good-dog"># pups</span>
+                                    </div>
+                                    <div class="panel-body">
+                                        <span>{{ litter.num_pups }}</span>
+                                    </div>
+                                </div>                                   
+
+                                    {{ litter.description }}<br>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div id="dogs" class="tab-pane fade">
+                    <ul class="nav nav-pills">
+                        <li class="active good-dog"><a data-toggle="pill" href="#all">All</a></li>
+                        <li class="good-dog"><a data-toggle="pill" href="#sires">Sires</a></li>
+                        <li class="good-dog"><a data-toggle="pill" href="#dams">Dams</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div id="all" class="tab-pane fade in active">
+                        {% for sire in sires %}
+                            <div class="thumbnail gray">
+                                <a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ sire.dog_id }}'><span class="good-dog-header">{{ sire.name }}</span>
+                                {% if sire.photos %}
+                                <img src="{{ (sire.photos|random).photo }}">
+                                {% endif %}
+                                </a>
+                                <div class="caption">
+                                    <p>DOB: {{ sire.date_born.strftime('%m/%d/%y') }}</p>
+                                    <p>{{ sire.description }}</p>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        {% for dam in dams %}
+                            <div class="thumbnail gray">
+                                <a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ dam.dog_id }}'><span class="good-dog-header">{{ dam.name }}</span>
+                                {% if dam.photos %}
+                                <img src="{{ (dam.photos|random).photo }}">
+                                {% endif %}
+                                </a>
+                                <div class="caption">
+                                    <p>DOB: {{ dam.date_born.strftime('%m/%d/%y') }}</p>
+                                    <p>{{ dam.description }}</p>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        </div>
+
+                        <div id="sires" class="tab-pane fade">
+                            {% for sire in sires %}
+                            <div class="thumbnail gray">
+                                <a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ sire.dog_id }}'><span class="good-dog-header">{{ sire.name }}</span>
+                                {% if sire.photos %}
+                                <img src="{{ (sire.photos|random).photo }}">
+                                {% endif %}
+                                </a>
+                                <div class="caption">
+                                    <p>DOB: {{ sire.date_born.strftime('%m/%d/%y') }}</p>
+                                    <p>{{ sire.description }}</p>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        <div id="dams" class="tab-pane fade">
+                        {% for dam in dams %}
+                            <div class="thumbnail gray">
+                                <a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ dam.dog_id }}'><span class="good-dog-header">{{ dam.name }}</span>
+                                {% if dam.photos %}
+                                <img src="{{ (dam.photos|random).photo }}">
+                                {% endif %}
+                                </a>
+                                <div class="caption">
+                                    <p>DOB: {{ dam.date_born.strftime('%m/%d/%y') }}</p>
+                                    <p>{{ dam.description }}</p>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        </div>
+                    </div>        
+                </div>
+                <div id="awards" class="tab-pane fade">
+                    <div class="row">
+                        <div class="col-md-12">
+                            {% for date, award, dog in awards %}
+                            <div class="thumbnail gray">
+                                <span style="font-size: 150%">{{ award.name }} {{ award.date.strftime('%m/%d/%y') }} - </span><a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ award.dog_id }}'><span class="good-dog-header">{{ dog.name }}</span></a>
+                                {% if dog.photos %}
+                                <img src="{{ (dog.photos|random).photo }}">
+                                {% endif %}
+                                </a>
+                                <div class="caption"><p>{{ award.description }}</p></div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div id="events" class="tab-pane fade">
+                    <div class="row">
+                        <div class="col-md-12">
+                            {% for date, event in events %}
+                            {% set outer_loop = loop %}
+                            <div class="thumbnail gray">
+                                <span class="good-dog-header">{{ event.name }} </span>- <span style="font-size:150%">{{ date.strftime('%m/%d/%y') }}</span>
+                                {% if event.photos %}
+                                <div class="photoGallery center" data-gallery="event{{ outer_loop.index }}">
+                                    <button onclick="plusDivs(-1, 'event{{ outer_loop.index }}')">❮</button>
+                                    <button onclick="plusDivs(1, 'event{{ outer_loop.index }}')">❯</button>
+                                    {% for photo in event.photos %}
+                                    <div class="mySlides-event{{ outer_loop.index }}">
+                                        <div>{{ photo.caption }}</div>
+                                        <img src="{{ photo.photo }}" width="400" length="400">
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                {% else %}
+                                <img src="{{ (breeder.photos|random).photo }}">
+                                {% endif %}
+                                <div class="caption"><p>{{ event.description }}</p></div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>              
+                </div>
+                <div id="blog" class="tab-pane fade">
+                    <ul class="nav nav-pills">
+                        <li class="active good-dog"><a data-toggle="pill" href="#all">All</a></li>
+                        {% for date, blog in blogs %}
+                        <li class="good-dog"><a data-toggle="pill" href="#{{ blog.category }}">{{ blog.category }}</a></li>
+                        {% endfor %}
+                    </ul>
+
+                    <div class="tab-content">
+                        <div id="all" class="tab-pane fade in active">
+                        {% for date, blog in blogs %}
+                            <div class="panel panel-default" style="margin: 3px">
+                                <div class="panel-heading" style="padding: 1px 1px 1px 5px">
+                                    <span class="good-dog">{{ blog.date.strftime('%b %d, %Y') }}: {{ blog.category }}</span>
+                                </div>
+                                <div class="panel-body" style="padding: 1px 1px 1px 5px">
+                                    <span>{{ blog.post }}</span>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        </div>
+                        {% for date, blog in blogs %}
+                        <div id="{{ blog.category }}" class="tab-pane fade">
+                            <div class="panel panel-default" style="margin: 3px">
+                                <div class="panel-heading" style="padding: 1px 1px 1px 5px">
+                                    <span class="good-dog">{{ blog.date.strftime('%b %d, %Y') }}: {{ blog.category }}</span>
+                                </div>
+                                <div class="panel-body" style="padding: 1px 1px 1px 5px">
+                                    <span>{{ blog.post }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    <div id="blog" class="tab-pane fade">
-        <h4>Blog:</h4>
-        <ul class="nav nav-pills">
-            <li class="active"><a data-toggle="pill" href="#all">All</a></li>
-            {% for date, blog in blogs %}
-            <li><a data-toggle="pill" href="#{{ blog.category }}">{{ blog.category }}</a></li>
-            {% endfor %}
-        </ul>
-
-        <div class="tab-content">
-            <div id="all" class="tab-pane fade in active">
-                <ul>
-                {% for date, blog in blogs %}
-                    <li>
-                        {{ blog.date.strftime('%m/%d/%y') }}: {{ blog.category }}<br>
-                        {{ blog.post }}<br>
-                    </li>
-                {% endfor %}
-                </ul>
-            </div>
-            {% for date, blog in blogs %}
-            <div id="{{ blog.category }}" class="tab-pane fade">
-                <ul>
-                    <li>
-                        {{ blog.date.strftime('%m/%d/%y') }}: {{ blog.category }}<br>
-                        {{ blog.post }}<br>
-                    </li>
-                </ul>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-
 </div>
 
 <script src="/static/js/photo-gallery.js"></script>

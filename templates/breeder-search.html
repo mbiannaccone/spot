@@ -31,14 +31,14 @@
                 <span class="good-dog orange" id="zipcode">{{ location }}</span>
             :</div> 
 
+            {% for dist, breeder in breeders %}
             <div class="thumbnail gray">
-                {% for dist, breeder in breeders %}
                 <span class="good-dog-header" id="breeder{{ loop.index }}">{{ loop.index }}. <a href='/breeders/{{ breeder.breeder_id }}'>{{ breeder.name }}</a></span> <span>~ {{ dist|round(1, 'floor') }} miles</span>
                 <br><a href='mailto:{{ breeder.email }}'>{{ breeder.email }}</a>
                 <br><span class="address" data-address='{{ breeder.address }}'>{{ breeder.address }}</span><br>
                 {{ breeder.phone }}<br><br>
-                {% endfor %}
             </div>
+            {% endfor %}
         </div>
         <div class="col-md-8 fixed">
             <div id="map"></div>

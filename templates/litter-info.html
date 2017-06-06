@@ -4,126 +4,204 @@
 
 {% block content %}
 
-
-<h2><a href='/breeders/{{ breeder.breeder_id}}'>{{ breeder.name }}</a> Litters</h2>
-<div>Breeds: <a href='/breeds/{{ breed.breed_id }}'>{{ breed.name }}</a></div>
-
-<div>{{ breeder.breeder_spots|length }} spots</div>
-
-<div>
-    {% if user in users_spots %}
-        <span>You've spotted this breeder!</span>
-        <form action='/remove-breeder-spot' method="POST">
-            <input type="image" src="/static/img/unpaw.png" width="20">
-            <input type="hidden" name="breeder" value="{{ breeder.breeder_id }}">
-            <span>click to unspot</span>
-        </form>
-    {% else %}
-        <span>spot this breeder</span>
-        <form action="/breeder-spot", method="POST">
-            <input type="image" src="/static/img/paw.png" width="35">
-            <input type="hidden" name="breeder" value=" {{ breeder.breeder_id }}">
-        </form>
-    {% endif %}
-</div>
-
-<h4>Litter - Born {{ litter.date_born.strftime('%m/%d/%y') }}</h4>
-
-<ul class="nav nav-tabs">
-    <li class="active"><a data-toggle="tab" href="#info">Info</a></li>
-    <li><a data-toggle="tab" href="#puppies">Puppies</a><li>
-</ul>
-
-<div class="tab-content">
-    <div id="info" class="tab-pane fade in active">
-        <p>
-            Sire: <a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ sire.dog_id }}'>{{ sire.name }}</a>
-        </p>
-        <p>
-            Dam: <a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ dam.dog_id }}'>{{ dam.name }}</a>
-        </p>
-        <p>{{ litter.description }}</p>
-        <p>
-            Available: {{ litter.date_available.strftime('%m/%d/%y') }}
-        </p>
-        <p>
-            Puppies: {{ litter.num_pups }}
-        </p>
-        <div class="photoGallery" data-gallery="litter">
-            <button onclick="plusDivs(-1, 'litter')">❮</button>
-            <button onclick="plusDivs(1, 'litter')">❯</button>
-            {% for photo in photos %}
-            <div class="mySlides-litter">
-                <div>{{ photo.caption }}</div>
-                <img src="{{ photo.photo }}" width="400" length="400">
-            </div>
-            {% endfor %}
+<div class="container">
+    <div class="good-dog-header" style="font-size: 300%"><a href='/breeders/{{ breeder.breeder_id }}'>{{ breeder.name }}</a> - <span class="orange">Litter {{ litter.date_born.strftime('%m/%d/%y') }}</span></div>
+        <div class="good-dog">breeds:
+            <a href='/breeds/{{ breed.breed_id }}'>{{ breed.name }}</a>
         </div>
-        <h5>Email us at <a href='mailto:{{ litter.breeder.email }}'>{{ litter.breeder.email }}</a> to request a puppy from this litter </h5>
-    </div>
-
-    <div id="puppies" class="tab-pane fade">
-        <div class="row">
-            <div class="col-sm-5 col-md-4">
-                <div class="panel panel-default">
-                    <div class="panel-heading"><h3 class="panel-title">{{ f_pups|length }} Females</h3></div>
-                    <div class="panel-body">
-                    {% for avail, pup in f_pups %}
-                    {% set outer_loop = loop %}
-                    <div class="thumbnail">
-                        <h4>{{ pup.name }}</h4>
-                        <div class="photoGallery" data-gallery="puppyf{{ outer_loop.index }}total">
-                            <button onclick="plusDivs(-1, 'puppyf{{ outer_loop.index }}total')">❮</button>
-                            <button onclick="plusDivs(1, 'puppyf{{ outer_loop.index }}total')">❯</button>
-                            {% for photo in pup.photos %}
-                            <div class="mySlides-puppyf{{ outer_loop.index }}total">
-                                <div>{{ photo.caption }}</div>
-                                <img src="{{ photo.photo }}" width="200" length="200">
-                            </div>
-                            {% endfor %}
-                        </div>
-                      <div class="caption">
-                        {% if pup.available %}
-                        <p>Available</p>
-                        {% else %}
-                        <p>Sold</p>
-                        {% endif %}
-                        <p>{{ "${:,.2f}".format(pup.price) }}</p>
-                        <p>{{ pup.description }}</p>
-                      </div>
+    <div class="row">
+        <div class="col-md-5 fixed">
+            <div class="image">
+                <div class="photoGallery" data-gallery="litter">
+                    <button onclick="plusDivs(-1, 'litter')">❮</button>
+                    <button onclick="plusDivs(1, 'litter')">❯</button>
+                    {% for photo in photos %}
+                    <div class="mySlides-litter">
+                        <div>{{ photo.caption }}</div>
+                        <img src="{{ photo.photo }}" height="400">
                     </div>
                     {% endfor %}
+                </div>
+                <div class="image-text-left">
+                    {% if user in users_spots %}
+                        <form action='/remove-breeder-spot' method="POST">
+                            <button class="btn btn-default transparent"><img src="/static/img/unpaw.png" title="you've spotted this breeder" width="20"></button>
+                            <input type="hidden" name="breeder" value="{{ breeder.breeder_id }}">
+                        </form>
+                    {% else %}
+                        <form action="/breeder-spot", method="POST">
+                            <button class="btn btn-default"><img src="/static/img/paw.png" title="spot this breeder!" width="35"></button>
+                            <input type="hidden" name="breeder" value="{{ breeder.breeder_id }}">
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+            <div><span class="good-dog-header">{{ spots|length }}</span><span class="good-dog"> spots!</span></div>
+            <div class="thumbnail gray">
+                <h5><span class="glyphicon glyphicon-envelope"></span> email us at <a href='mailto:{{ litter.breeder.email }}'>{{ litter.breeder.email }}</a> to request a puppy from this litter </h5>
+            </div>
+        </div>
+        <div class="col-md-7 scrollit">
+            <ul class="nav nav-tabs">
+                <li class="active good-dog"><a data-toggle="tab" href="#info">Info</a></li>
+                <li class="good-dog"><a data-toggle="tab" href="#puppies">Puppies</a><li>
+            </ul>
+
+            <div class="tab-content">
+                <div id="info" class="tab-pane fade in active">
+                    <div>
+                        <p>{{ litter.description }}</p>
+                        <div class="panel panel-default panel-horizontal">
+                            <div class="panel-heading">
+                                <span class="panel-title good-dog">sire</span>
+                            </div>
+                            <div class="panel-body">
+                                <a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ sire.dog_id }}'>{{ sire.name }}</a>
+                            </div>
+                        </div>
+                        <div class="panel panel-default panel-horizontal">
+                            <div class="panel-heading">
+                                <span class="panel-title good-dog">dam</span>
+                            </div>
+                            <div class="panel-body">
+                                <a href='/breeders/{{ breeder.breeder_id }}/dogs/{{ dam.dog_id }}'>{{ dam.name }}</a>
+                            </div>
+                        </div>
+                        <div class="panel panel-default panel-horizontal">
+                            <div class="panel-heading">
+                                <span class="panel-title good-dog">date</span>
+                            </div>
+                            <div class="panel-body">
+                                <span>{{ litter.date_available.strftime('%m/%d/%y') }}</span>
+                            </div>
+                        </div>
+                        <div class="panel panel-default panel-horizontal">
+                            <div class="panel-heading">
+                                <span class="panel-title good-dog"># pups</span>
+                            </div>
+                            <div class="panel-body">
+                                <span>{{ litter.num_pups }}</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="panel panel-default">
-                    <div class="panel-heading"><h3 class="panel-title">{{ m_pups|length }} Males</h3></div>
-                    <div class="panel-body">
-                    {% for avail, pup in m_pups %}
-                    {% set outer_loop = loop %}
-                    <div class="thumbnail">
-                        <h4>{{ pup.name }}</h4>
-                        <div class="photoGallery" data-gallery="puppym{{ outer_loop.index }}total">
-                            <button onclick="plusDivs(-1, 'puppym{{ outer_loop.index }}total')">❮</button>
-                            <button onclick="plusDivs(1, 'puppym{{ outer_loop.index }}total')">❯</button>
-                            {% for photo in pup.photos %}
-                            <div class="mySlides-puppym{{ outer_loop.index }}total">
-                                <div>{{ photo.caption }}</div>
-                                <img src="{{ photo.photo }}" width="200" length="200">
+                <div id="puppies" class="tab-pane fade">
+                    <ul class="nav nav-pills">
+                        <li class="active good-dog"><a data-toggle="pill" href="#all">All ({{ litter.num_pups }})</a></li>
+                        <li class="good-dog"><a data-toggle="pill" href="#males">Males ({{ m_pups|length }})</a></li>
+                        <li class="good-dog"><a data-toggle="pill" href="#females">Females ({{ f_pups|length }})</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div id="all" class="tab-pane fade in active">
+                            {% for avail, pup in m_pups %}
+                            {% set outer_loop = loop %}
+                            <div class="thumbnail gray">
+                                <span class="good-dog-header">{{ pup.name }}</span>
+                                <div class="photoGallery center" data-gallery="puppym{{ outer_loop.index }}total">
+                                    <button onclick="plusDivs(-1, 'puppym{{ outer_loop.index }}total')">❮</button>
+                                    <button onclick="plusDivs(1, 'puppym{{ outer_loop.index }}total')">❯</button>
+                                    {% for photo in pup.photos %}
+                                    <div class="mySlides-puppym{{ outer_loop.index }}total">
+                                        <div>{{ photo.caption }}</div>
+                                        <img src="{{ photo.photo }}" width="300">
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                <div class="caption">
+                                    {% if pup.available %}
+                                    <p style="color: green">Available</p>
+                                    {% else %}
+                                    <p style="color: red">Sold</p>
+                                    {% endif %}
+                                    <p>{{ "${:,.2f}".format(pup.price) }}</p>
+                                    <p>{{ pup.description }}</p>
+                                </div>
+                            </div>
+                            {% endfor %}
+
+                            {% for avail, pup in f_pups %}
+                            {% set outer_loop = loop %}
+                            <div class="thumbnail gray">
+                                <span class="good-dog-header">{{ pup.name }}</span>
+                                <div class="photoGallery center" data-gallery="puppyf{{ outer_loop.index }}total">
+                                    <button onclick="plusDivs(-1, 'puppyf{{ outer_loop.index }}total')">❮</button>
+                                    <button onclick="plusDivs(1, 'puppyf{{ outer_loop.index }}total')">❯</button>
+                                    {% for photo in pup.photos %}
+                                    <div class="mySlides-puppyf{{ outer_loop.index }}total">
+                                        <div>{{ photo.caption }}</div>
+                                        <img src="{{ photo.photo }}" width="200" length="300">
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                <div class="caption">
+                                    {% if pup.available %}
+                                    <p style="color: green">Available</p>
+                                    {% else %}
+                                    <p style="color: red">Sold</p>
+                                    {% endif %}
+                                    <p>{{ "${:,.2f}".format(pup.price) }}</p>
+                                    <p>{{ pup.description }}</p>
+                                </div>
                             </div>
                             {% endfor %}
                         </div>
-                        <div class="caption">
-                            {% if pup.available %}
-                            <p>Available</p>
-                            {% else %}
-                            <p>Sold</p>
-                            {% endif %}
-                            <p>{{ "${:,.2f}".format(pup.price) }}</p>
-                            <p>{{ pup.description }}</p>
+
+                        <div id="males" class="tab-pane fade">
+                            {% for avail, pup in m_pups %}
+                            {% set outer_loop = loop %}
+                            <div class="thumbnail gray">
+                                <span class="good-dog-header">{{ pup.name }}</span>
+                                <div class="photoGallery center" data-gallery="puppym{{ outer_loop.index }}">
+                                    <button onclick="plusDivs(-1, 'puppym{{ outer_loop.index }}')">❮</button>
+                                    <button onclick="plusDivs(1, 'puppym{{ outer_loop.index }}')">❯</button>
+                                    {% for photo in pup.photos %}
+                                    <div class="mySlides-puppym{{ outer_loop.index }}">
+                                        <div>{{ photo.caption }}</div>
+                                        <img src="{{ photo.photo }}" width="300">
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                <div class="caption">
+                                    {% if pup.available %}
+                                    <p style="color: green">Available</p>
+                                    {% else %}
+                                    <p style="color: red">Sold</p>
+                                    {% endif %}
+                                    <p>{{ "${:,.2f}".format(pup.price) }}</p>
+                                    <p>{{ pup.description }}</p>
+                                </div>
+                            </div>
+                            {% endfor %}
                         </div>
-                    </div>
-                    {% endfor %}
+
+                        <div id="females" class="tab-pane fade">
+                            {% for avail, pup in f_pups %}
+                            {% set outer_loop = loop %}
+                            <div class="thumbnail gray">
+                                <span class="good-dog-header">{{ pup.name }}</span>
+                                <div class="photoGallery center" data-gallery="puppyf{{ outer_loop.index }}">
+                                    <button onclick="plusDivs(-1, 'puppyf{{ outer_loop.index }}')">❮</button>
+                                    <button onclick="plusDivs(1, 'puppyf{{ outer_loop.index }}')">❯</button>
+                                    {% for photo in pup.photos %}
+                                    <div class="mySlides-puppyf{{ outer_loop.index }}">
+                                        <div>{{ photo.caption }}</div>
+                                        <img src="{{ photo.photo }}" width="300">
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                <div class="caption">
+                                    {% if pup.available %}
+                                    <p style="color: green">Available</p>
+                                    {% else %}
+                                    <p style="color: red">Sold</p>
+                                    {% endif %}
+                                    <p>{{ "${:,.2f}".format(pup.price) }}</p>
+                                    <p>{{ pup.description }}</p>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
                     </div>
                 </div>
             </div>

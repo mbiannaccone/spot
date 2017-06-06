@@ -10,7 +10,7 @@
 
 .good-dog-header {
     font-family: good-dog;
-    font-size: 200%;
+    font-size: 250%;
 }
 
 .good-dog-small {
@@ -56,13 +56,6 @@
     width: 100%;
 }
 
-.image-text-right {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    width: 100%;
-}
-
 .tab-content {
     padding: 10px;
 }
@@ -96,13 +89,29 @@
 }
 
 .fixed { 
-    height: 600px;
+    height: 800px;
     overflow: hidden;
 }
 
 .scrollit { 
     height: 800px;
     overflow-y: scroll;
+}
+
+.nav-pills > .active > a,
+.nav-pills > .active > a:hover,.nav-pills > li > a:hover {
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 0px;
+    border-bottom-width: 4px;
+    border-bottom-style: solid;
+    border-bottom-color: #da9432;
+    color: gray !important;
+    background-color: transparent !important;
+}
+
+.nav-pills > li > a{
+    border-radius:0px;
 }
 
 li {

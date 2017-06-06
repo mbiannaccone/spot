@@ -358,27 +358,6 @@ def breeder_search():
                            location=location)
 
 
-# @app.route('/breeder-search.json')
-# def breeder_search_json():
-#     """ Returns breeder search results to AJAX call in order to sort by distance. """
-
-#     breed = request.args.get('breed')
-
-#     location = request.args.get("location")
-#     if not location:
-#         location = user.zipcode
-
-#     breeders = db.session.query(Breeder
-#                                 ).join(Litter, Breed
-#                                        ).filter(Breed.breed_id == breed).all()
-
-#     breeders_dict = {breeder.breeder_id: breeder.address for breeder in breeders}
-
-#     print breeders_dict
-
-#     return jsonify(breeders_dict)
-
-
 @app.route('/breeders/<breeder_id>')
 def breeder_info(breeder_id):
     """ Renders a breeder's info page. """
@@ -432,6 +411,7 @@ def litter_info(breeder_id, litter_id):
     f_pups.sort(reverse=True)
     m_pups.sort(reverse=True)
     photos = litter.photos
+    spots = breeder.breeder_spots
     users_spots = [spot.user for spot in breeder.breeder_spots]
 
     return render_template('litter-info.html',
@@ -444,6 +424,7 @@ def litter_info(breeder_id, litter_id):
                            m_pups=m_pups,
                            photos=photos,
                            user=user,
+                           spots=spots,
                            users_spots=users_spots)
 
 
