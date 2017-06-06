@@ -4,70 +4,91 @@
 
 {% block content %}
 
-<img src='{{ breed.photo }}'>
+<div class="container">
+    <div class="good-dog-header"><a href='{{ breed.akc_url }}'>{{ breed.name }}</a></div>
 
-<h4><a href='{{ breed.akc_url }}'>{{ breed.name }}</a></h4>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="image">
+                <img src='{{ breed.photo }}'>
+                <div class="image-text-left">
+                    {% if user in users_spots %}
+                        <form action='/remove-breed-spot' method="POST">
+                            <button class="btn btn-default transparent"><img src="/static/img/unpaw.png" title="you've spotted this breed" width="20"</button>
+                            <input type="hidden" name="breed" value="{{ breed.breed_id }}">
+                        </form>
+                    {% else %}
+                        <span class="good-dog"></span>
+                        <form action="/breed-spot", method="POST">
+                            <button class="btn btn-default"><img src="/static/img/paw.png" title="spot this breed!" width="35"></button>
+                            <input type="hidden" name="breed" value=" {{ breed.breed_id }}">
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+            <span class="good-dog"><span class="good-dog">{{ spots|length }}</span> spots!</span>
+        <br>
+            <div class="well well-sm">
+                <div class="good-dog orange">find a breeder</div>
+                <form action="/breeder-search">
+                    <div class="input-group">
+                        {% if user %}
+                        <input type="text" class="form-control" name="location" placeholder="{{ user.zipcode }}">
+                        {% else %}
+                        <input type="text" class="form=control" name="location" required>
+                        {% endif %}
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" name="search" type="submit">search </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
 
-<div>{{ breed.description }}</div>
-
-<div>{{ spots|length }} spots</div>
-
-<div>
-    {% if user in users_spots %}
-        <span>You've spotted this breed!</span>
-        <form action='/remove-breed-spot' method="POST">
-            <input type="image" src="/static/img/unpaw.png" width="20">
-            <input type="hidden" name="breed" value="{{ breed.breed_id }}">
-            <span>click to unspot</span>
-        </form>
-    {% else %}
-        <span>spot this breed</span>
-        <form action="/breed-spot", method="POST">
-            <input type="image" src="/static/img/paw.png" width="35">
-            <input type="hidden" name="breed" value=" {{ breed.breed_id }}">
-        </form>
-    {% endif %}
-</div>
-
-<h5>find a {{ breed.name }} breeder in your area</h5>
-<form action="/breeder-search">
-    {% if user %}
-        <div>location: <input type="text" name="location" placeholder="{{ user.zipcode }}"></div>
-    {% else %}
-        <div>location: <input type="text" name="location" required></div>
-    {% endif %}
-    <input type="hidden" name="breed" value="{{ breed.breed_id }}">
-    <input type="submit" value="search">
-</form>
-
-<ul class="nav nav-tabs">
-    <li class="active"><a data-toggle="tab" href="#info">Info</a></li>
-    <li><a data-toggle="tab" href="#chars">Standards</a><li>
-</ul>
-
-<div class="tab-content">
-    <div id="info" class="tab-pane fade in active">
-        <p>Size: {{ size.size }}</p>
-        <p>Energy: {{ energy.energy }}</p>
-        <p>
-            Group: {{ breed.group.name }}<br>
-        </p>
-        {% for char_id, char, breed_char in fun_chars %}
-            <p>{{ char.char }}: {{ breed_char.description }}</p>
-        {% endfor %}
-    </div>
-
-    <div id="chars" class="tab-pane fade">
-        <p>
-            Standard Characteristics:
-            <ul>
-                {% for char_id, char, breed_char in breed_chars %}
-                <li>{{ char.char }}: {{ breed_char.description }}</li>
-                {% endfor %}
-                <li>{{ group.name }} Description: {{ group.description }}</li>
+        <div class="col-md-9">
+            <p>{{ breed.description }}</p>
+            <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" href="#info"><span class="good-dog">Info</span></a></li>
+                <li><a data-toggle="tab" href="#chars"><span class="good-dog">Standards</span></a><li>
             </ul>
-        </p>
+            <div class="tab-content">
+                <div id="info" class="tab-pane fade in active">
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <span class="good-dog">size:</span>
+                        </span>
+                        <input type="text" class="form-control" value="{{ size.size|lower }}">
+                    </div>
+                    <div><span class="good-dog">energy:</span> {{ energy.energy|lower }}</div>
+                    <div><span class="good-dog">group:</span> {{ breed.group.name|lower }}</div>
+                    {% for char_id, char, breed_char in fun_chars %}
+                        <div><span class="good-dog">{{ char.char|lower }}:</span> {{ breed_char.description }}</div>
+                    {% endfor %}
+                </div>
+                <div id="chars" class="tab-pane fade">
+                    {% for char_id, char, breed_char in breed_chars %}
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <span class="good-dog">{{ char.char|lower }}</span>
+                        </div>
+                        <div class="panel-body">
+                            <span>{{ breed_char.description }}</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <span class="good-dog">{{ group.name|lower }} description</span>
+                        </div>
+                        <div class="panel-body">
+                            <span>{{ group.description }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+
 </div>
 
 

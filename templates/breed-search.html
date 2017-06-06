@@ -4,17 +4,27 @@
 
 {% block content %}
 
-<h4><span class="glyphicon glyphicon-search" aria-hidden="true"></span> find a breed</h4>
-<form action="/breed-search">
-<h5>Results</h5>
-    {% for result, breed in search_results %}
-    <div>
-        <div>{{ loop.index }}. <a href="/breeds/{{ breed.breed_id }}">{{ breed.name }}</a> - {{ breed.description }}</div>
-        <img src='{{ breed.photo }}' height="200" width="200">
-        <div>Size: {{ breed.size.size }}</div>
-        <div>Energy: {{ breed.energy.energy }}</div>
-        <div>Group: {{ breed.group.name }}</div><br>
+
+
+    <h4><span class="glyphicon glyphicon-search" aria-hidden="true"></span><span class="good-dog"> find a breed - results</span></h4>
+
+<div class="container">
+    <div class="row">
+        {% for result, breed in search_results %}
+            <div class="col-md-4">
+                <div class="thumbnail gray">
+                    <span class="good-dog-header">{{ loop.index }}. <a href="/breeds/{{ breed.breed_id }}">{{ breed.name }}</a></span>
+                    <div class="center">{{ breed.description|lower }}</div>
+                    <img src='{{ breed.photo }}' height="200" width="200">
+                    <div class="caption">
+                        <div class="center"><span class="good-dog">size: </span>{{ breed.size.size|lower }}</div>
+                        <div class="center"><span class="good-dog">energy: </span>{{ breed.energy.energy|lower }}</div>
+                        <div class="center"><span class="good-dog">group: </span>{{ breed.group.name|lower }}</div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
     </div>
-    {% endfor %}
+</div>
 
 {% endblock %}

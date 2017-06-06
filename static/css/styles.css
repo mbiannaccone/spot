@@ -1,0 +1,78 @@
+@font-face {
+    font-family: good-dog;
+    src: url(/static/good-dog.ttf);
+}
+
+.good-dog {
+    font-family: good-dog;
+    font-size: 150%;
+}
+
+.good-dog-header {
+    font-family: good-dog;
+    font-size: 200%;
+}
+
+.good-dog-small {
+    font-family: good-dog;
+    font-size: 100%;
+}
+
+.center {
+    text-align: center;
+}
+
+.gray {
+    background-color: #f0f0f0;
+}
+
+.bottom-align-text {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+  }
+
+.orange {
+    color: #da9432;
+}
+
+.brown {
+    color: #8c4511;
+}
+
+.transparent {
+    background: transparent;
+}
+
+.image {
+    position: relative;
+    width: 100%;
+}
+
+.image-text-left {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
+
+.image-text-right {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+}
+
+.tab-content {
+    padding: 10px;
+}
+
+
+li {
+    padding-left: 5px;
+}
+
+a {
+    color: green;
+}
+

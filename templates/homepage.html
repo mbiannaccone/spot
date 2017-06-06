@@ -5,77 +5,75 @@
 {% block content %}
 
 <img src='/static/img/spot.png' width="200">
-<span>the best friend finder</span>
+<span class="good-dog">the best friend finder</span>
 
-<h5><span class="glyphicon glyphicon-search" aria-hidden="true"></span> find a breed</h5>
-<form action="/breed-search">
+<div class="container">
+    <div class="row">
+        <div class="col-sm-6" style="border: 2px solid black">
+            <h5><span class="glyphicon glyphicon-search" aria-hidden="true"></span> <span class="good-dog">find a breed</span></h5>
+            <form action="/breed-search">
+                <select name="size" class="form-control">
+                    <option disabled selected value>size</option>
+                    {% for size in sizes %}
+                    <option value="{{ size.size_id }}">{{ size.size|lower }}</option>
+                    {% endfor %}
+                </select>
+                <select name="energy" class="form-control">
+                    <option disabled selected value>energy level</option>
+                    {% for energy in energies %}
+                    <option value="{{ energy.energy_id }}">{{ energy.energy|lower }}</option>
+                    {% endfor %}
+                </select>
+                <select name="group" class="form-control">
+                    <option disabled selected value>group</option>
+                    {% for group in groups %}
+                    <option value="{{ group.group_id }}">{{ group.name|lower }}</option>
+                    {% endfor %}
+                </select>
+                <div class="input-group">
+                    <div class="input-group-btn">
+                        <button data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button">
+                        traits <span class="caret"></span>
+                        </button>
+                        <ul role="menu" class="dropdown-menu">
+                            {% for char in chars %}
+                                <li><input type="checkbox" name="{{ char.char_id }}" value="{{ char.char_id }}"> {{ char.char.lower() }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <input type="text" class="form-control" name="keyword" placeholder="try a keyword">
+                    <div class="input-group-btn">
+                        <button class="btn btn-default" name="search" type="submit">search </button>
+                    </div>
+                </div>
+                <button class="btn btn-default" type="submit" name="search all" value="search all breeds">view all breeds </button>
+            </form>
+        </div>
+        <div class="col-sm-6" style="border: 2px solid black">
+            <h5><span class="glyphicon glyphicon-user" aria-hidden="true"></span><span class="good-dog"> find a breeder</span></h5>
+            <form id="breeder-search" action="/breeder-search">
+                <select class="form-control" name="breed" id="breed_id" required>
+                    <option disabled selected value> choose a breed</option>
+                    {% for breed in breeds %}
+                    <option value="{{ breed.breed_id }}">{{ breed.name }}</option>
+                    {% endfor %}
+                </select>
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">location</span>
+                    {% if user %}
+                        <input type="text" class="form-control" name="location" placeholder='{{ user.zipcode }}' aria-describedby="basic-addon1">
+                    {% else %}
+                        <input type="text" class="form-control" name="location" placeholder='enter location' aria-describedby="basic-addon1" required>
+                    {% endif %}
+                    <div class="input-group-btn">
+                        <button class="btn btn-default" name="search" value="search" type="submit">search</button>
+                    </div>
+                </div>
 
-    <select name="size">
-        <option disabled selected value>size</option>
-        {% for size in sizes %}
-        <option value="{{ size.size_id }}">{{ size.size }}</option>
-        {% endfor %}
-    </select>
-
-    <select name="energy">
-        <option disabled selected value>energy level</option>
-        {% for energy in energies %}
-        <option value="{{ energy.energy_id }}">{{ energy.energy }}</option>
-        {% endfor %}
-    </select>
-
-    <select name="group">
-        <option disabled selected value>group</option>
-        {% for group in groups %}
-        <option value="{{ group.group_id }}">{{ group.name }}</option>
-        {% endfor %}
-    </select>
-
-    {% for char in chars %}
-    <br><input type="checkbox" name="{{ char.char_id }}" value="{{ char.char_id }}">{{ char.char.lower() }}
-    {% endfor %}
-
-    <div>try a keyword: <input type="text" name="keyword" placeholder="search"></div>
-
-    <input type="submit" name="search" value="search by filters">
-    <span> ~ or ~ </span>
-    <input type="submit" name="search all" value="search all breeds">
-
-</form>
-
-<h5><span class="glyphicon glyphicon-user" aria-hidden="true"></span> find a breeder</h5>
-<form id="breeder-search" action="/breeder-search">
-
-    {% if user %}
-        <div>location: <input type="text" name="location" placeholder='{{ user.zipcode }}'></div>
-    {% else %}
-        <div>location: <input type="text" name="location" placeholder='enter zipcode' required></div>
-    {% endif %}
-
-    <div>breed: <select name="breed" id="breed_id" required>
-        <option disabled selected value>choose a breed</option>
-        {% for breed in breeds %}
-        <option value="{{ breed.breed_id }}">{{ breed.name }}</option>
-        {% endfor %}
+            </form>
+        </div>
     </div>
-
-    <input type="submit", name="search" value="search"><br>
-
-</form>
-
-<script>
-    // var breeders = {};
-
-    // function sortBreeders(results) {
-    //     breeders = results;
-    // }
-
-    // function getBreeders() {
-    //     $.get('/breeder-search.json', {'breed': $("#breed_id").val()}, sortBreeders);
-    // }
-
-    // $("#breeder-search").on('submit', getBreeders);
-</script>
+</div>
 
 
 {% endblock %}
