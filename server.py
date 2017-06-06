@@ -442,6 +442,7 @@ def dog_info(breeder_id, dog_id):
                                   (Litter.sire_id == dog.dog_id)
                                   ).order_by(Litter.date_born.desc()).all()
     breed = litters[0].breed
+    spots = breeder.breeder_spots
     users_spots = [spot.user for spot in breeder.breeder_spots]
 
     return render_template('dog-info.html',
@@ -452,6 +453,7 @@ def dog_info(breeder_id, dog_id):
                            litters=litters,
                            breed=breed,
                            user=user,
+                           spots=spots,
                            users_spots=users_spots)
 
 
