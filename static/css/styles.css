@@ -114,6 +114,14 @@
     border-radius:0px;
 }
 
+
+.nav-tabs > .active > a,
+.nav-tabs > .active > a:hover,.nav-tabs > li > a:hover {
+    border-bottom-color: #da9432 !important;
+    color: gray !important;
+}
+
+
 .carousel-caption {
     position: relative;
     left: auto;
@@ -135,4 +143,8 @@ li {
 a {
     color: green;
 }
+
+/*body {
+    background: url(/static/img/bones.png);
+}*/
 
