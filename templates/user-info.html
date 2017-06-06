@@ -26,8 +26,8 @@
                         <div class="panel-body">
                             {% for breeder, litters in breeder_spots %}
                             <div class="thumbnail gray">
-                                <a href='/breeders/{{ breeder.breeder_id }}'><h5>{{ breeder.name }}</h5></a>
-                                <div>Breeds:
+                                <a href='/breeders/{{ breeder.breeder_id }}'><div class="good-dog-header">{{ breeder.name }}</div></a>
+                                <div class="good-dog">Breeds:
                                     {% for group in litters|groupby('breed') %}
                                         {% if loop.last %}
                                             <a href='/breeds/{{ group.grouper.breed_id }}'>{{ group.grouper.name }}</a>
@@ -37,24 +37,35 @@
                                     {% endfor %}
                                 </div>
                                 <img src="{{ (breeder.photos|random).photo }}" width="200">
-                                <div>New Litters:</div>
-                                <div>{% for litter in litters %}
-                                    {% if litter.date_available > date_filter %}
-                                        <li><a href='/breeders/{{ breeder.breeder_id }}/litters/{{ litter.litter_id }}'>{{ litter.date_born.strftime('%m/%d/%y') }}</a> - {{ litter.num_pups }} puppies</li>
-                                    {% endif %}
-                                {% endfor %}</div>
-                                <div>New Events:</div>
-                                    <div>{% for event in breeder.events %}
+
+                                <div class="panel panel-default panel-horizontal">
+                                    <div class="panel-heading">
+                                        <span class="panel-title good-dog" style="font-size: 130%">litters</span>
+                                    </div>
+                                    <div class="panel-body">
+                                        {% for litter in litters %}
+                                        {% if litter.date_available > date_filter %}
+                                            <div><a href='/breeders/{{ breeder.breeder_id }}/litters/{{ litter.litter_id }}'>{{ litter.date_born.strftime('%m/%d/%y') }}</a> - {{ litter.num_pups }} puppies</div>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="panel panel-default panel-horizontal">
+                                    <div class="panel-heading">
+                                        <span class="panel-title good-dog" style="font-size: 130%">events</span>
+                                    </div>
+                                    <div class="panel-body">
+                                        {% for event in breeder.events %}
                                             {% if event.date > date_filter %}
-                                                <li><a href='/breeders/{{ breeder.breeder_id }}/events/{{ event.event_id }}'>{{ event.name }}</a> {{ event.date.strftime('%m/%d/%y') }}</li>
+                                                <div><a href='/breeders/{{ breeder.breeder_id }}/events/{{ event.event_id }}'>{{ event.name }}</a> {{ event.date.strftime('%m/%d/%y') }}</div>
                                             {% endif %}
                                         {% endfor %}
                                     </div>
+                                </div>
                                 <form action='/remove-breeder-spot' method="POST">
-                                    <input type="image" src="/static/img/unpaw.png" width="20">
+                                    <input type="image" src="/static/img/unpaw.png" title="click to unspot" width="20">
                                     <input type="hidden" name="breeder" value="{{ breeder.breeder_id }}">
                                     <input type="hidden" name="user-page" value="1">
-                                    <span>click to unspot</span>
                                 </form>
                             </div>
                             {% endfor %}
@@ -67,19 +78,21 @@
                         <div class="panel-body">
                             {% for breed in breed_spots %}
                             <div class="thumbnail gray">
-                                <a href='/breeds/{{ breed.breed_id }}'><h5>{{ breed.name }}</h5></a>
+                                <a href='/breeds/{{ breed.breed_id }}'><div class="good-dog-header">{{ breed.name }}</div></a>
                                 <div>{{ breed.description }}</div>
-                                <div><img src='{{ breed.photo }}' width="200"></div>
-                                <form action='/breeder-search'>
-                                    <input type="submit" name="search" value="Search for Breeders">
-                                    <input type="hidden" name="breed" value="{{ breed.breed_id }}">
-                                    <input type="hidden" name="location" value="{{ user.zipcode }}">
+                                <div class="image">
+                                    <div class="center"><img src='{{ breed.photo }}' width="200"></div>
+                                </div>
+                                <form action="/breeder-search">
+                                    <div class="input-group-btn center">
+                                        <button class="btn btn-default" name="search" type="submit"><span class="good-dog orange">search for breeders</span></button>
+                                    </div>
+                                    <input type="hidden" name="breed" value="{{ breed.breed_id}}">
                                 </form>
                                 <form action='/remove-breed-spot' method="POST">
-                                    <input type="image" src="/static/img/unpaw.png" width="20">
+                                    <input type="image" src="/static/img/unpaw.png" title="click to unspot" width="20">
                                     <input type="hidden" name="breed" value="{{ breed.breed_id }}">
                                     <input type="hidden" name="user-page" value="1">
-                                    <span>click to unspot</span>
                                 </form>
                             </div>
                             {% endfor %}
@@ -90,18 +103,40 @@
         </div>
 
         <div id="info" class="tab-pan fade">
-            <h4>Your user information is below.</h4>
-            <h5>To make updates, enter new information in the fields and submit.</h5>
-            <form id="user-updates" action='/user-updates' method="POST">
-                <div>First Name: <input type="text" name="fname" id="fname-field" placeholder="{{ user.fname }}"></div>
-                <div>Last Name: <input type="text" name="lname" id="lname-field" placeholder="{{ user.lname }}"></div>
-                <div>Email: <input type="text" name="email" id="email-field" placeholder="{{ user.email }}"></div>
-                <div>Password: <input type="password" name="password" id="pwd-field" placeholder="******"></div>
-                <div>Zipcode: <input type="text" name="zipcode" id="zipcode-field" placeholder="{{ user.zipcode }}"></div>
-                <div>Phone: <input type="text" name="phone" id="phone-field" placeholder="{{ user.phone }}"></div>
-                <input type="hidden" name="user" id="user-field" value="{{ user.user_id }}">
-                <input type="submit" name="update" value="Submit Changes">
-            </form>
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="good-dog" style="font-size: 190%">your user information is below.</div>
+                    <div>To make updates, enter new info in the fields and submit.</div><br>
+                    <form id="user-updates" action='/user-updates' method="POST">
+                        <div class="input-group">
+                            <span class="input-group-addon good-dog">first name</span>
+                            <input type="text" class="form-control" name="fname" id="fname-field" placeholder="{{ user.fname }}">
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-addon good-dog">last name</span>
+                            <input type="text" class="form-control" name="lname" id="lname-field" placeholder="{{ user.lname }}">
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-addon good-dog">email</span>
+                            <input type="text" class="form-control" name="email" id="email-field" placeholder="{{ user.email }}">
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-addon good-dog">password</span>
+                            <input type="password" class="form-control" name="password" id="pwd-field" placeholder="******">
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-addon good-dog">zipcode</span>
+                            <input type="text" class="form-control" name="zipcode" id="zipcode-field" placeholder="{{ user.zipcode }}">
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-addon good-dog">phone</span>
+                            <input type="text" class="form-control" name="phone" id="phone-field" placeholder="{{ user.phone }}">
+                        </div>
+                        <input type="hidden" name="user" id="user-field" value="{{ user.user_id }}">
+                        <button class="btn btn-default" name="update" type="submit"><span class="good-dog orange">submit changes</span></button>
+                    </form>
+                </div>
+            </div>
         </div>
 
     </div>
