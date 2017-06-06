@@ -67,6 +67,43 @@
     padding: 10px;
 }
 
+.panel.panel-horizontal {
+    display:table;
+    width:100%;
+    margin: 2px;
+}
+
+.panel.panel-horizontal > .panel-heading, .panel.panel-horizontal > .panel-body, .panel.panel-horizontal > .panel-footer {
+    display:table-cell;
+    vertical-align: middle;
+    padding: 0;
+    padding-left: 7px;
+}
+
+.panel.panel-horizontal > .panel-heading, .panel.panel-horizontal > .panel-footer {
+    width: 10%;
+    border:0;
+    vertical-align: middle;
+    text-align: center;
+    padding: 0;
+}
+
+.panel.panel-horizontal > .panel-heading {
+    border-right: 1px solid #ddd;
+    border-top-right-radius: 0;
+    border-bottom-left-radius: 4px;
+    padding: 0;
+}
+
+.fixed { 
+    height: 600px;
+    overflow: hidden;
+}
+
+.scrollit { 
+    height: 800px;
+    overflow-y: scroll;
+}
 
 li {
     padding-left: 5px;

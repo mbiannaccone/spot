@@ -16,26 +16,35 @@
 
 <h4><span class="glyphicon glyphicon-user" aria-hidden="true"></span><span class="good-dog"> find a breeder</span></h4>
 
-{% if breed %}
-    <h4><a href='/breeds/{{ breed.breed_id}}'>{{ breed.name }}</a></h4>
-    <div>{{ breed.description }}</div>
-    <img src='{{ breed.photo }}'>
-{% else %}
-    <h4>all</h4>
-{% endif %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-4 scrollit">
+            {% if breed %}
+                <div class="good-dog-header"><a href='/breeds/{{ breed.breed_id}}'>{{ breed.name }}</a></div>
+                <div>{{ breed.description }}</div>
+                <img src='{{ breed.photo }}'>
+            {% else %}
+                <h4>all</h4>
+            {% endif %}
 
-<h4>Breeder results near 
-    <span id="zipcode">{{ location }}</span>
-:</h4> 
+            <div class="good-dog-header">breeder results near 
+                <span class="good-dog orange" id="zipcode">{{ location }}</span>
+            :</div> 
 
-{% for dist, breeder in breeders %}
-<div id="breeder{{ loop.index }}">{{ loop.index }}</b> - <a href='/breeders/{{ breeder.breeder_id }}'>{{ breeder.name }}</a> ~ {{ dist|round(1, 'floor') }} miles away</div>
-{{ breeder.email }}<br>
-<span class="address" data-address='{{ breeder.address }}'>{{ breeder.address }}</span><br>
-{{ breeder.phone }}<br><br>
-{% endfor %}
-
-<div id="map"></div>
+            <div class="thumbnail gray">
+                {% for dist, breeder in breeders %}
+                <span class="good-dog-header" id="breeder{{ loop.index }}">{{ loop.index }}. <a href='/breeders/{{ breeder.breeder_id }}'>{{ breeder.name }}</a></span> <span>~ {{ dist|round(1, 'floor') }} miles</span>
+                <br><a href='mailto:{{ breeder.email }}'>{{ breeder.email }}</a>
+                <br><span class="address" data-address='{{ breeder.address }}'>{{ breeder.address }}</span><br>
+                {{ breeder.phone }}<br><br>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="col-md-8 fixed">
+            <div id="map"></div>
+        </div>
+    </div>
+</div>
 
 <script src="https://code.jquery.com/jquery.js"></script>
 

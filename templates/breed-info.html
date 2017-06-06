@@ -21,7 +21,7 @@
                         <span class="good-dog"></span>
                         <form action="/breed-spot", method="POST">
                             <button class="btn btn-default"><img src="/static/img/paw.png" title="spot this breed!" width="35"></button>
-                            <input type="hidden" name="breed" value=" {{ breed.breed_id }}">
+                            <input type="hidden" name="breed" value="{{ breed.breed_id }}">
                         </form>
                     {% endif %}
                 </div>
@@ -41,6 +41,7 @@
                             <button class="btn btn-default" name="search" type="submit">search </button>
                         </div>
                     </div>
+                    <input type="hidden" name="breed" value="{{ breed.breed_id}}">
                 </form>
             </div>
         </div>
@@ -53,21 +54,32 @@
             </ul>
             <div class="tab-content">
                 <div id="info" class="tab-pane fade in active">
-                    <div class="input-group">
-                        <span class="input-group-addon">
-                            <span class="good-dog">size:</span>
-                        </span>
-                        <input type="text" class="form-control" value="{{ size.size|lower }}">
+                    <div class="panel panel-default panel-horizontal">
+                        <div class="panel-heading">
+                            <span class="panel-title good-dog">size</span>
+                        </div>
+                        <div class="panel-body">
+                            <span>{{ size.size|lower }}</span>
+                        </div>
                     </div>
-                    <div><span class="good-dog">energy:</span> {{ energy.energy|lower }}</div>
-                    <div><span class="good-dog">group:</span> {{ breed.group.name|lower }}</div>
+                    <div class="panel panel-default panel-horizontal">
+                        <div class="panel-heading">
+                            <span class="panel-title good-dog">energy</span>
+                        </div>
+                        <div class="panel-body">
+                            <span>{{ energy.energy|lower }}</span>
+                        </div>
+                    </div>
+                    <div class="panel panel-default panel-horizontal">
+                        <div class="panel-heading">
+                            <span class="panel-title good-dog">group</span>
+                        </div>
+                        <div class="panel-body">
+                            <span>{{ breed.group.name|lower }}</span>
+                        </div>
+                    </div>
                     {% for char_id, char, breed_char in fun_chars %}
-                        <div><span class="good-dog">{{ char.char|lower }}:</span> {{ breed_char.description }}</div>
-                    {% endfor %}
-                </div>
-                <div id="chars" class="tab-pane fade">
-                    {% for char_id, char, breed_char in breed_chars %}
-                    <div class="panel panel-default">
+                    <div class="panel panel-default panel-horizontal">
                         <div class="panel-heading">
                             <span class="good-dog">{{ char.char|lower }}</span>
                         </div>
@@ -76,11 +88,23 @@
                         </div>
                     </div>
                     {% endfor %}
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
+                </div>
+                <div id="chars" class="tab-pane fade">
+                    {% for char_id, char, breed_char in breed_chars %}
+                    <div class="panel panel-default" style="margin: 3px">
+                        <div class="panel-heading" style="padding: 1px 1px 1px 5px">
+                            <span class="good-dog">{{ char.char|lower }}</span>
+                        </div>
+                        <div class="panel-body" style="padding: 1px 1px 1px 5px">
+                            <span>{{ breed_char.description }}</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    <div class="panel panel-default" style="margin: 3px">
+                        <div class="panel-heading" style="padding: 1px 1px 1px 5px">
                             <span class="good-dog">{{ group.name|lower }} description</span>
                         </div>
-                        <div class="panel-body">
+                        <div class="panel-body" style="padding: 1px 1px 1px 5px">
                             <span>{{ group.description }}</span>
                         </div>
                     </div>
