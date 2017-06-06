@@ -14,9 +14,9 @@
 
 {% block content %}
 
-<h4><span class="glyphicon glyphicon-user" aria-hidden="true"></span><span class="good-dog"> find a breeder</span></h4>
 
 <div class="container">
+    <h4><span class="glyphicon glyphicon-user" aria-hidden="true"></span><span class="good-dog"> find a breeder</span></h4>
     <div class="row">
         <div class="col-md-4 scrollit">
             {% if breed %}
@@ -27,13 +27,13 @@
                 <h4>all</h4>
             {% endif %}
 
-            <div class="good-dog-header">breeder results near 
+            <div class="good-dog" style="font-size: 150%">breeder results near 
                 <span class="good-dog orange" id="zipcode">{{ location }}</span>
             :</div> 
 
             {% for dist, breeder in breeders %}
             <div class="thumbnail gray">
-                <span class="good-dog-header" id="breeder{{ loop.index }}">{{ loop.index }}. <a href='/breeders/{{ breeder.breeder_id }}'>{{ breeder.name }}</a></span> <span>~ {{ dist|round(1, 'floor') }} miles</span>
+                <span class="good-dog" style="font-size: 170%" id="breeder{{ loop.index }}">{{ loop.index }}. <a href='/breeders/{{ breeder.breeder_id }}'>{{ breeder.name }}</a></span> <span>~ {{ dist|round(1, 'floor') }} miles</span>
                 <br><a href='mailto:{{ breeder.email }}'>{{ breeder.email }}</a>
                 <br><span class="address" data-address='{{ breeder.address }}'>{{ breeder.address }}</span><br>
                 {{ breeder.phone }}<br><br>

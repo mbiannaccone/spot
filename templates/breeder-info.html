@@ -26,6 +26,49 @@
         </div>
     <div class="row">
         <div class="col-md-5 fixed">
+
+            <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+              <!-- Indicators -->
+              <ol class="carousel-indicators">
+                {% for photo in photos %}
+                {% if loop.first %}
+                <li data-target="#breeder" data-slide-to="0" class="active"></li>
+                {% else %}
+                <li data-target="#carousel-example-generic" data-slide-to="{{ loop.index }}"></li>
+                {% endif %}
+                {% endfor %}
+              </ol>
+
+              <!-- Wrapper for slides -->
+              <div class="carousel-inner" role="listbox">
+                {% for photo in photos %}
+                {% if loop.first %}
+                <div class="item active">
+                  <img src="{{ photo.photo }}">
+                  <div class="carousel-caption">{{ photo.caption }}</div>
+                </div>
+                {% else %}
+                <div class="item">
+                  <img src="{{ photo.photo }}">
+                  <div class="carousel-caption">{{ photo.caption }}</div>
+                </div>
+                {% endif %}
+                {% endfor %}
+              </div>
+
+              <!-- Controls -->
+              <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                <span class="sr-only">prev</span>
+              </a>
+              <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+                <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                <span class="sr-only">next</span>
+              </a>
+            </div>
+
+
+
             <div class="image">
                 <div class="photoGallery" data-gallery="breeder">
                     <button onclick="plusDivs(-1, 'breeder')">❮</button>

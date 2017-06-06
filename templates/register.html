@@ -4,15 +4,40 @@
 
 {% block content %}
 
-<h5>Please enter your information below.</h5>
-<form action="/register" method="POST">
-    <span>email: <input required type="text" name="email"></span><br>
-    <span>password: <input required type="password" name="pwd"></span><br>
-    <span>first name: <input type="text" name="fname"></span><br>
-    <span>last name: <input type="text" name="lname"></span><br>
-    <span>zipcode: <input required type="text" name="zip" pattern="[0-9]{5}"></span><br>
-    <span>phone: <input type="text" name="phone"></span><br>
-    <input type="submit", value="register">
-</form>
+<div class="container">
+    <div class="row">
+        <div class="col-md-5">
+            <div class="good-dog-header" style="font-size: 190%">please enter your information below.</div>
+            <form action="/register" method="POST">
+                <div class="input-group">
+                    <span class="input-group-addon good-dog">email</span>
+                    <input required type="text" class="form-control" name="email">
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon good-dog">password</span>
+                    <input required type="password" class="form-control" name="pwd">
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon good-dog">first name</span>
+                    <input type="text" class="form-control" name="fname">
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon good-dog">last name</span>
+                    <input type="text" class="form-control" name="lname">
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon good-dog">zipcode</span>
+                    <input required type="text" class="form-control" name="zip" pattern="[0-9]{5}">
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon good-dog">phone</span>
+                    <input type="text" class="form-control" name="phone">
+                </div>
+                <button class="btn btn-default form-control" value="register" type="submit"><span class="good-dog orange" style="font-size: 150%">register</span></button>
+            </form>
+            <br><div class="good-dog"><a href="/login">click here to login!</a></div>
+        </div>
+    </div>
+</div>
 
 {% endblock %}

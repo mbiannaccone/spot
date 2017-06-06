@@ -5,15 +5,13 @@
 {% block content %}
 
 
-
-    <h4><span class="glyphicon glyphicon-search" aria-hidden="true"></span><span class="good-dog"> find a breed - results</span></h4>
-
 <div class="container">
+<h4><span class="glyphicon glyphicon-search" aria-hidden="true"></span><span class="good-dog"> find a breed - results</span></h4>
     <div class="row">
         {% for result, breed in search_results %}
             <div class="col-md-4">
                 <div class="thumbnail gray">
-                    <span class="good-dog-header">{{ loop.index }}. <a href="/breeds/{{ breed.breed_id }}">{{ breed.name }}</a></span>
+                    <span class="good-dog" style="font-size: 200%">{{ loop.index }}. <a href="/breeds/{{ breed.breed_id }}">{{ breed.name }}</a></span>
                     <div class="center">{{ breed.description|lower }}</div>
                     <img src='{{ breed.photo }}' height="200" width="200">
                     <div class="caption">

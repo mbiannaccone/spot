@@ -4,11 +4,25 @@
 
 {% block content %}
 
-<h5>Please enter your email and password.</h5>
-<form action="/login" method="POST">
-    <span>email: <input type="text" name="email"></span><br>
-    <span>password: <input type="password" name="pwd"></span>
-    <input type="submit", value="login">
-</form>
+<div class="container">
+    <div class="row">
+        <div class="col-md-5">
+            <div class="good-dog-header" style="font-size: 190%">please enter your email and password.</div>
+            <form action="/login" method="POST">
+                <div class="input-group">
+                    <span class="input-group-addon good-dog">email</span>
+                    <input type="text" class="form-control" name="email">
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon good-dog">password</span>
+                    <input type="password" class="form-control" name="pwd">
+                </div>
+                <button class="btn btn-default form-control" value="login" type="submit"><span class="good-dog orange" style="font-size: 150%">login</span></button>
+            </form>
+            <br><div class="good-dog"><a href="/register">click here to register!</a></div>
+
+        </div>
+    </div>
+</div>
 
 {% endblock %}

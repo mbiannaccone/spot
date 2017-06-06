@@ -8,11 +8,11 @@
     <link rel="stylesheet" href="/static/css/styles.css">
     {% with messages = get_flashed_messages() %}
         {% if messages %}
-        <span class=flashes>
+        <div class="flashes alert alert-success center good-dog-header" style="font-size: 150%">
         {% for message in messages %}
             {{ message }}<br>
         {% endfor %}
-    </span>
+    </div>
     {% endif %}
 {% endwith %}
 
@@ -42,20 +42,20 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
             {% if user %}
-                <a href="/users/{{ user.user_id }}">{{ user.email }}</a>
+                <a href="/users/{{ user.user_id }}"><span style="color: green">{{ user.email }}</span></a>
             {% else %}
-                <a>not logged in</a>
+                <a href="/login"><span class="orange">not logged in</span></a>
             {% endif %}
         </li>
         <li class="dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><img src="/static/img/home.png" height="23" width="25"><span class="caret"></span></a>
           <ul class="dropdown-menu">
             {% if user %}
-                <li><a href="/users/{{ user.user_id }}">Profile</a></li>
-                <li><a href="/logout">Logout</a></li>
+                <li style="font-size: 150%"><a href="/users/{{ user.user_id }}">Profile</a></li>
+                <li style="font-size: 150%"><a href="/logout">Logout</a></li>
             {% else %}
-                <li><a href="/login">Login</a></li>
-                <li><a href="/register">Register</a></li>
+                <li style="font-size: 150%"><a href="/login">Login</a></li>
+                <li style="font-size: 150%"><a href="/register">Register</a></li>
             {% endif %}
             <li role="separator" class="divider"></li>
 
