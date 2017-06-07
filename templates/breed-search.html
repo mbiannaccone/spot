@@ -10,7 +10,7 @@
     <div class="row">
         {% for result, breed in search_results %}
             <div class="col-md-4">
-                <div class="thumbnail gray">
+                <div class="thumbnail gray" style="min-height: 420px">
                     <span class="good-dog" style="font-size: 200%">{{ loop.index }}. <a href="/breeds/{{ breed.breed_id }}">{{ breed.name }}</a></span>
                     <div class="center">{{ breed.description|lower }}</div>
                     <img src='{{ breed.photo }}' height="200" width="200">
