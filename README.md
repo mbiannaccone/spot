@@ -4,10 +4,11 @@ Spot is an online marketplace for dog breeders and buyers to connect. Users can 
 Spot is a project I completed in 4 weeks during my software engineering fellowship at Hackbright. 
 
 # Contents
-* [Technologies](#technologiesused)
+* [Technologies Used](#technologiesused)
 * [Data Modeling](#data)
 * [Features](#features)
 * [Installation](#install)
+* [About the Author](#author)
 
 
 ## <a name="technologiesused"></a>Technologies Used
@@ -108,4 +109,8 @@ python server.py
 ```
 
 You can now navigate to 'localhost:5000/' to access and enjoy Spot!
+
+## <a name="author"></a>About the Author
+
+Hello! My name is [Michela Bestwick](https://www.linkedin.com/in/michela-bestwick/) and I am a software engineer. I grew up in the bay area and graduated from UCLA in 2012 with a B.S. in Mathematics. For five years I worked as a consultant at Triage Consulting Group, where I analyzed complex healthcare data sets (using SQL) and managed large databases. My love for data and problem solving led me to software engineering. I attended Hackbright Academy, a 12-week intensive software engineering fellowship for women, and graduated in June 2016. I am currently seeking full-time employment as a software developer in the San Francisco Bay Area. Feel free to email michelabestwick@gmail.com if you'd like to discuss my project or future employment. Thanks!
 
