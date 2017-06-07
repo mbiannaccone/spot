@@ -40,8 +40,6 @@ REGISTER/LOGIN: Users can login/register by clicking on the drop-down on the rig
 
 <kbd>![navbar](/static/img/readme/navbar-login-register.png)</kbd>
 
-<kbd>![login](/static/img/readme/login.png)</kbd> <kbd>![register](/static/img/readme/register.png)</kbd>
-
 BREED SEARCH: From the landing page users can search for a breed that fits their needs, using criteria from the American Kennel Club's website. The criteria are size, energy level, group, a list of traits ('good with kids', 'apartment dog', etc), and a keyword. 
 
 <kbd>![breed-search1](/static/img/readme/breed-search.png)</kbd>
