@@ -4,7 +4,7 @@ Spot is an online marketplace for dog breeders and buyers to connect. Users can 
 Spot is a project I completed in 4 weeks during my software engineering fellowship at Hackbright. 
 
 # Contents
-* [Technologies](#technologies)
+* [Technologies](#technologiesused)
 * [Data Modeling](#data)
 * [Features](#features)
 * [Installation](#install)
@@ -35,8 +35,77 @@ The breeder data provided in this repo is all fake data that was randomly genera
 
 ## <a name="features"></a>Features
 
-Users can search for a breed that fits their needs, using criteria from the American Kennel Club's website. The criteria are size, energy level, group, a list of traits ('good with kids', 'apartment dog', etc), and a keyword. 
+BREED SEARCH: Users can search for a breed that fits their needs, using criteria from the American Kennel Club's website. The criteria are size, energy level, group, a list of traits ('good with kids', 'apartment dog', etc), and a keyword. 
 
-<kbd>![breed1](/static/img/readme/breed-search.png)</kbd>
+<kbd>![breed-search1](/static/img/readme/breed-search.png)</kbd>
 
-An algorithm sorts the results based on relevance, and from there the user can go to a breed's home page for more information.
+An algorithm sorts the results based on relevance
+
+<kbd>![breed-search2](/static/img/readme/breed-search2.png)</kbd>
+
+From there the user can go to a breed's home page for more information and read through the breed standards and information that was web-scraped from the American Kennel Club's website.
+
+<kbd>![breed1](/static/img/readme/breed1.png)</kbd>
+<kbd>![breed2](/static/img/readme/breed2.png)</kbd>
+
+BREEDER SEARCH: It's easy to jump over to the breeder data from here using the "find a breeder" search button on the left side. That will pull up all the breeders of this breed and place them on a Google Map (using the Google Maps API). It also calculates the distance between the user and each of the breeders, and ranks them according to proximity. 
+
+Note: the user can also get to this same place from the homepage, by using the breeder search box on the right side.
+
+<kbd>![breeder-search1](/static/img/readme/breeder-search.png)</kbd>
+
+
+<kbd>![breeder-search1](/static/img/readme/breed-search1.png)</kbd>
+
+On a breeder's page, the user can find a host of information - photos, location, litters, dogs, awards, events, and a blog. 
+
+<kbd>![breeder1](/static/img/readme/breeder1.png)</kbd>
+
+You can also navigate to further pages for individuals components - for example one of the breeder's litter:
+
+<kbd>![litter](/static/img/readme/litter.png)</kbd>
+
+If the user decides they like this breeder, they can 'spot' it using the green paw in the corner of the breeder's photo gallery. Then, when the user navigates to their homepage they can see all the breeders (and breeds) that they've spotted, and any relevant information (litters, event) that might interest them. 
+
+<kbd>![homepage](/static/img/readme/homepage.png)</kbd>
+
+## <a name="install"></a>Installation
+
+To install Spot:
+
+Install PostgreSQL (Mac OSX)
+
+Clone or fork this repo:
+
+```
+https://github.com/mbestwick/spot
+```
+
+Create and activate a virtual environment inside your Spot directory:
+
+```
+virtualenv env
+source env/bin/activate
+```
+
+Install the dependencies:
+
+```
+pip install -r requirements.txt
+```
+
+Set up the database:
+
+```
+createdb spot
+psql spot < dogs.sql
+```
+
+Run the server:
+
+```
+python server.py
+```
+
+You can now navigate to 'localhost:5000/' to access and enjoy Spot!
+
