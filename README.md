@@ -55,13 +55,13 @@ Note: the user can also get to this same place from the homepage, by using the b
 <kbd>![breeder-search1](/static/img/readme/breeder-search.png)</kbd>
 
 
-<kbd>![breeder-search1](/static/img/readme/breed-search1.png)</kbd>
+<kbd>![breeder-search1](/static/img/readme/breeder-search1.png)</kbd>
 
 On a breeder's page, the user can find a host of information - photos, location, litters, dogs, awards, events, and a blog. 
 
 <kbd>![breeder1](/static/img/readme/breeder1.png)</kbd>
 
-You can also navigate to further pages for individuals components - for example one of the breeder's litter:
+You can also navigate to further pages for individuals components - for example one of the breeder's litters:
 
 <kbd>![litter](/static/img/readme/litter.png)</kbd>
 
