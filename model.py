@@ -434,7 +434,7 @@ def example_data():
     breeder = Breeder(breeder_id=1,
                       bio="Hi, I'm a breeder",
                       name="Dog Breeder & Co.",
-                      address="4101 Las Posas Rd, Camarillo, CA 93010",
+                      address="224 Evergreen Dr, Kentfield, CA 94904",
                       phone="(415)555-5551",
                       email="dogs@breeder.com")
     breederphoto = BreederPhoto(breeder_id=1,

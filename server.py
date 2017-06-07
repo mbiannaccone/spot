@@ -55,8 +55,8 @@ def register():
 
     if 'user_id' in session:
         user = User.query.get(session['user_id'])
-        flash("You're already logged in as %s!")
-        flash("If you'd like to register with a new email, please log out first." % user.email)
+        flash("You're already logged in as %s!" % user.email)
+        flash("If you'd like to register with a new email, please log out first.")
         return redirect('/users/%s' % user.user_id)
     else:
         user = None
@@ -320,12 +320,12 @@ def breeder_search_rank(geo_location, breeders):
             geo_breeder = geolocator.geocode(breeder.address[-5:])
         if not geo_breeder:
             dist_breeders.append((1, breeder))
-            return dist_breeders
-        dist = vincenty((geo_breeder.latitude, geo_breeder.longitude),
-                        (geo_location.latitude, geo_location.longitude)).miles
-        dist_breeders.append((dist, breeder))
+        else:
+            dist = vincenty((geo_breeder.latitude, geo_breeder.longitude),
+                            (geo_location.latitude, geo_location.longitude)).miles
+            dist_breeders.append((dist, breeder))
 
-        dist_breeders.sort()
+            dist_breeders.sort()
 
     return dist_breeders
 

@@ -16,12 +16,12 @@ class FlaskTestsBasic(TestCase):
     def test_login(self):
         """ Tests login - assuming not logged in yet. """
         result = self.client.get('/login')
-        self.assertIn('Please enter your email and password', result.data)
+        self.assertIn('please enter your email and password', result.data)
 
     def test_register(self):
         """ Tests register - assuming not logged in yet. """
         result = self.client.get('/register')
-        self.assertIn('Please enter your information below', result.data)
+        self.assertIn('please enter your information below', result.data)
 
 
 class FlaskTestsDatabase(TestCase):
@@ -41,13 +41,14 @@ class FlaskTestsDatabase(TestCase):
     def test_homepage(self):
         """ Tests home page. """
         result = self.client.get('/')
-        self.assertIn('welcome', result.data)
-        self.assertIn('Sporting Group', result.data)
+        self.assertIn('find a breed', result.data)
+        self.assertIn('sporting group', result.data)
+        self.assertIn('German Shorthaired Pointer', result.data)
 
     def test_breed_search(self):
         """ Tests breed search results page. """
         result = self.client.get('/breed-search')
-        self.assertIn('Results', result.data)
+        self.assertIn('find a breed - results', result.data)
 
     def test_breed_info(self):
         """ Tests breed info page. """
@@ -56,7 +57,7 @@ class FlaskTestsDatabase(TestCase):
 
     def test_breeder_search(self):
         """ Tests breeder search results page. """
-        data = {'breed': '1'}
+        data = {'breed': '1', 'location': '94904'}
         result = self.client.get('/breeder-search', query_string=data, follow_redirects=True)
         self.assertIn('breeder results near', result.data)
 
@@ -75,11 +76,6 @@ class FlaskTestsDatabase(TestCase):
         result = self.client.get('/breeders/1/dogs/1')
         self.assertIn('George is the best!', result.data)
 
-    def test_event_info(self):
-        """ Tests a breeder's event info page. """
-        result = self.client.get('/breeders/1/events/1')
-        self.assertIn('Doggy Day Care', result.data)
-
 
 class FlaskTestsLoggedOut(TestCase):
     """ Flask tests with user logged out of session. """
@@ -91,17 +87,17 @@ class FlaskTestsLoggedOut(TestCase):
     def test_breeder_spot(self):
         """ Tests that a breeder spot will redirect to login - assuming not logged in. """
         result = self.client.post('/breeder-spot', follow_redirects=True)
-        self.assertIn('Please enter your email and password', result.data)
+        self.assertIn('please enter your email and password', result.data)
 
     def test_breed_spot(self):
         """ Tests that a breed spot will redirect to login - assuming not logged in. """
         result = self.client.post('/breed-spot', follow_redirects=True)
-        self.assertIn('Please enter your email and password', result.data)
+        self.assertIn('please enter your email and password', result.data)
 
     def test_user_info(self):
         """ Tests that a user's page will redirect to login - assuming not logged in. """
         result = self.client.get('/users/1', follow_redirects=True)
-        self.assertIn('Please enter your email and password', result.data)
+        self.assertIn('please enter your email and password', result.data)
 
 
 class FlaskTestsLoggedIn(TestCase):
@@ -126,22 +122,22 @@ class FlaskTestsLoggedIn(TestCase):
     def test_register(self):
         """ Tests that doesn't let you try register if already logged in. """
         result = self.client.get('/register', follow_redirects=True)
-        self.assertIn('Spotted the following breeds', result.data)
+        self.assertIn('your breeder spots', result.data)
 
     def test_login(self):
         """ Tests that doesn't let you log in if already logged in. """
         result = self.client.get('/login', follow_redirects=True)
-        self.assertIn('Spotted the following breeds', result.data)
+        self.assertIn('your breeder spots', result.data)
 
     def test_breeder_spot(self):
         """ Tests that a breeder spot will work - assuming logged in. """
         result = self.client.post('/breeder-spot', data={'breeder': '1'}, follow_redirects=True)
-        self.assertIn('spot this breeder', result.data)
+        self.assertIn('spotted this breeder: Dog Breeder', result.data)
 
     def test_breed_spot(self):
         """ Tests that a breed spot will work - assuming logged in. """
         result = self.client.post('/breed-spot', data={'breed': '1'}, follow_redirects=True)
-        self.assertIn('spot this breed', result.data)
+        self.assertIn('spotted the German Shorthaired Pointer breed!', result.data)
 
 if __name__ == "__main__":
     import unittest
