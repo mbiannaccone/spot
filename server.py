@@ -319,7 +319,7 @@ def breeder_search_rank(geo_location, breeders):
         if not geo_breeder:
             geo_breeder = geolocator.geocode(breeder.address[-5:])
         if not geo_breeder:
-            dist_breeders.append(1, breeder)
+            dist_breeders.append((1, breeder))
             return dist_breeders
         dist = vincenty((geo_breeder.latitude, geo_breeder.longitude),
                         (geo_location.latitude, geo_location.longitude)).miles

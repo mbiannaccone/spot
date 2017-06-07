@@ -8,7 +8,7 @@
     <div class="good-dog-header"><a href='{{ breed.akc_url }}'>{{ breed.name }}</a></div>
 
     <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-3 fixed">
             <div class="image">
                 <img src='{{ breed.photo }}'>
                 <div class="image-text-left">
@@ -35,10 +35,10 @@
                         {% if user %}
                         <input type="text" class="form-control" name="location" placeholder="{{ user.zipcode }}">
                         {% else %}
-                        <input type="text" class="form=control" name="location" required>
+                        <input type="text" class="form-control" name="location" required>
                         {% endif %}
                         <div class="input-group-btn">
-                            <button class="btn btn-default" name="search" type="submit">search </button>
+                            <button class="btn btn-default form-control" name="search" type="submit">search </button>
                         </div>
                     </div>
                     <input type="hidden" name="breed" value="{{ breed.breed_id}}">
@@ -46,7 +46,7 @@
             </div>
         </div>
 
-        <div class="col-md-9">
+        <div class="col-md-9 scrollit">
             <p>{{ breed.description }}</p>
             <ul class="nav nav-tabs">
                 <li class="active"><a data-toggle="tab" href="#info"><span class="good-dog">Info</span></a></li>
