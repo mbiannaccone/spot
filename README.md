@@ -37,5 +37,6 @@ The breeder data provided in this repo is all fake data that was randomly genera
 
 Users can search for a breed that fits their needs, using criteria from the American Kennel Club's website. The criteria are size, energy level, group, a list of traits ('good with kids', 'apartment dog', etc), and a keyword. 
 
+<kbd>![breed1](/static/img/readme/breed-search.png)</kbd>
 
 An algorithm sorts the results based on relevance, and from there the user can go to a breed's home page for more information.
