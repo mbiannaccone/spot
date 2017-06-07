@@ -32,3 +32,10 @@ My favorite part of this project was designing the database structure. Knowing t
 The most challenging part of this project was web-scraping the breed information/standards from The American Kennel Club's website (www.akc.org). The breeds' html pages were all set up slightly differently, so I was unable to web-scrape them all at the same time. I clustered the breeds based on html setup-similarities and then web-scraped in groups. It was difficult - but in the end very fun and rewarding.
 
 The breeder data provided in this repo is all fake data that was randomly generated.
+
+## <a name="features"></a>Features
+
+Users can search for a breed that fits their needs, using criteria from the American Kennel Club's website. The criteria are size, energy level, group, a list of traits ('good with kids', 'apartment dog', etc), and a keyword. 
+
+
+An algorithm sorts the results based on relevance, and from there the user can go to a breed's home page for more information.
