@@ -8,11 +8,11 @@ from datetime import datetime, timedelta
 from model import (Award, Blog, Breed, BreedChar, Breeder, BreederPhoto, PupPhoto,
                    Dog, DogPhoto, Energy, Event, EventPhoto, Gender, Group, Pup,
                    Litter, LitterPhoto, Char, Size, User, BreedSpot, BreederSpot)
+from model import Addy
 from model import connect_to_db, db
 from geopy.geocoders import Nominatim
 from geopy.distance import vincenty
 import bcrypt
-from addys import addys
 
 app = Flask(__name__)
 
@@ -315,19 +315,8 @@ def breeder_search_rank(geo_location, breeders):
     dist_breeders = []
 
     for breeder in breeders:
-        # geolocator = Nominatim()
-        # geo_breeder = geolocator.geocode(breeder.address)
-        # if not geo_breeder:
-        #     geo_breeder = geolocator.geocode(breeder.address[-5:])
-        # if not geo_breeder:
-        #     dist_breeders.append((1, breeder))
-        # else:
-        #     dist = vincenty((geo_breeder.latitude, geo_breeder.longitude),
-        #                     (geo_location.latitude, geo_location.longitude)).miles
-        #     dist_breeders.append((dist, breeder))
-
-        geo = addys[breeder.address]
-        dist = vincenty(geo, (geo_location.latitude, geo_location.longitude)).miles
+        geo = Addy.query.filter(breeder.address == Addy.addys).first()
+        dist = vincenty((geo.lat, geo.long), (geo_location.latitude, geo_location.longitude)).miles
         dist_breeders.append((dist, breeder))
         dist_breeders.sort()
 

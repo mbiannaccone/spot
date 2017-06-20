@@ -385,6 +385,18 @@ class BreedSpot(db.Model):
     def __repr__(self):
         return '<User %s, Breed %s>' % (self.user_id, self.breed_id)
 
+
+class Addy(db.Model):
+    """A breeder address and geolocation."""
+
+    __tablename__ = "addys"
+
+    id = db.Column(db.Integer, primary_key=True)
+    addys = db.Column(db.String(200))
+    lat = db.Column(db.Float)
+    long = db.Column(db.Float)
+
+
 ##############################################################################
 # Helper functions
 
