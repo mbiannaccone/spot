@@ -531,7 +531,7 @@ def remove_breeder_spot():
 
 if __name__ == "__main__":
 
-    app.debug = True
+    # app.debug = True
     app.jinja_env.auto_reload = app.debug
 
     connect_to_db(app)
