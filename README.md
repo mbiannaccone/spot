@@ -74,6 +74,12 @@ If the user decides they like this breeder, they can 'spot' it using the green p
 
 <kbd>![homepage](/static/img/readme/homepage.png)</kbd>
 
+Also on the user's homepage is a dynamic form where the user can update their
+information. When the user clicks submit, it sends an AJAX call to the database
+to update the information (after the user verifies their password).
+
+<kbd>![user](/static/img/readme/user-info.png)
+
 ## <a name="install"></a>Installation
 
 To install Spot:
