@@ -3,7 +3,7 @@
 Spot is an online marketplace for dog breeders and buyers to connect. Users can search for dog breeds by characteristics (web-scraped from www.akc.org). Users can also search for dog breeders in their area (fake breeder data used for the purposes of this project). On a breeder's homepage, users can find information about the breeder, including location, litters, dogs, events, and a blog.
 Spot is a project I completed in 4 weeks during my software engineering fellowship at Hackbright.
 
-Deployed on AWS: [www.spot-spot.com](https://www.spot-spot.com/)
+Deployed on AWS: [www.spot-spot.com](http://www.spot-spot.com/)
 
 # Contents
 * [Technologies Used](#technologiesused)
@@ -124,5 +124,5 @@ You can now navigate to 'localhost:5000/' to access and enjoy Spot!
 
 ## <a name="author"></a>About the Author
 
-Hello! My name is [Michela Bestwick](https://www.linkedin.com/in/michela-bestwick/) and I am a software engineer. I grew up in the bay area and graduated from UCLA in 2012 with a B.S. in Mathematics. For five years I worked as a consultant at Triage Consulting Group, where I analyzed complex healthcare data sets (using SQL) and managed large databases. My love for data and problem solving led me to software engineering. I attended Hackbright Academy, a 12-week intensive software engineering fellowship for women, and graduated in June 2016. I am currently seeking full-time employment as a software developer in the San Francisco Bay Area. Feel free to email michelabestwick@gmail.com if you'd like to discuss my project or future employment. Thanks!
+Hello! My name is [Michela Bestwick](https://www.linkedin.com/in/michela-bestwick/) and I am a software engineer. I grew up in the bay area and graduated from UCLA in 2012 with a B.S. in Mathematics. For five years I worked as a consultant at Triage Consulting Group, where I analyzed complex healthcare data sets (using SQL) and managed large databases. My love for data and problem solving led me to software engineering. I attended Hackbright Academy, a 12-week intensive software engineering fellowship for women, and graduated in June 2017. I am currently seeking full-time employment as a software developer in the San Francisco Bay Area. Feel free to email michelabestwick@gmail.com if you'd like to discuss my project or future employment. Thanks!
 
