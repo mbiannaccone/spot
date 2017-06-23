@@ -1,7 +1,9 @@
 # Spot
 
 Spot is an online marketplace for dog breeders and buyers to connect. Users can search for dog breeds by characteristics (web-scraped from www.akc.org). Users can also search for dog breeders in their area (fake breeder data used for the purposes of this project). On a breeder's homepage, users can find information about the breeder, including location, litters, dogs, events, and a blog.
-Spot is a project I completed in 4 weeks during my software engineering fellowship at Hackbright. 
+Spot is a project I completed in 4 weeks during my software engineering fellowship at Hackbright.
+
+Deployed on AWS: [www.spot-spot.com](https://www.spot-spot.com/)
 
 # Contents
 * [Technologies Used](#technologiesused)
